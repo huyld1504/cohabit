@@ -1,0 +1,44 @@
+@import "tailwindcss";
+@import "slick-carousel/slick/slick.css";
+@import "slick-carousel/slick/slick-theme.css";
+
+/* Custom styles để tương thích với Ant Design */
+:root {
+  --color-primary: #1890ff;
+  --color-warning: #faad14;
+  --color-success: #52c41a;
+  --color-error: #f5222d;
+}
+
+/* React Slick Carousel Dots Custom Styling */
+.slick-dots {
+  position: relative !important;
+  bottom: 0 !important;
+  margin-top: 40px !important;
+}
+
+.slick-dots li {
+  margin: 0 12px !important;
+}
+
+.slick-dots li button:before {
+  font-size: 18px !important;
+  line-height: 18px !important;
+  width: 18px !important;
+  height: 18px !important;
+  color: #9ca3af !important;
+  opacity: 1 !important;
+}
+
+.slick-dots li.slick-active button:before {
+  color: #3b82f6 !important;
+  opacity: 1 !important;
+}
+
+.slick-dots li button:hover:before {
+  color: #6b7280 !important;
+}
+
+.slick-dots li.slick-active button:hover:before {
+  color: #2563eb !important;
+}
