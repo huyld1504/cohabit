@@ -81,7 +81,7 @@ const Footer = () => {
         </div>
       </div>
       {/* Copyright Bar */}
-      <disv className="bg-blue-600 py-3">
+      <div className="bg-[#1279a2] py-3">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <p className="text-white text-sm font-medium">
@@ -89,7 +89,7 @@ const Footer = () => {
             </p>
           </div>
         </div>
-      </disv>
+      </div>
     </footer>
   );
 };

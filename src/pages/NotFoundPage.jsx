@@ -36,16 +36,16 @@ const NotFoundPage = () => {
             </div>
             {/* Floating elements */}
             <div className="absolute top-4 left-8 w-4 h-4 bg-blue-400 rounded-full opacity-60 animate-bounce"></div>
-            <div className="absolute top-12 right-12 w-3 h-3 bg-orange-400 rounded-full opacity-60 animate-bounce" style={{animationDelay: '0.5s'}}></div>
-            <div className="absolute bottom-8 left-12 w-2 h-2 bg-blue-300 rounded-full opacity-60 animate-bounce" style={{animationDelay: '1s'}}></div>
+            <div className="absolute top-12 right-12 w-3 h-3 bg-orange-400 rounded-full opacity-60 animate-bounce" style={{ animationDelay: '0.5s' }}></div>
+            <div className="absolute bottom-8 left-12 w-2 h-2 bg-blue-300 rounded-full opacity-60 animate-bounce" style={{ animationDelay: '1s' }}></div>
           </div>
         </div>
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <Button 
-            type="primary" 
-            size="large" 
+          <Button
+            type="primary"
+            size="large"
             icon={<HomeOutlined />}
             className="bg-blue-600 hover:bg-blue-700 border-blue-600 hover:border-blue-700 px-8 py-6 h-auto"
           >
@@ -53,9 +53,9 @@ const NotFoundPage = () => {
               Về trang chủ
             </Link>
           </Button>
-          
-          <Button 
-            size="large" 
+
+          <Button
+            size="large"
             icon={<ArrowLeftOutlined />}
             onClick={() => window.history.back()}
             className="border-gray-300 text-gray-700 hover:border-blue-400 hover:text-blue-600 px-8 py-6 h-auto"
