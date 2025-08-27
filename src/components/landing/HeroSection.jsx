@@ -5,7 +5,7 @@ import { element1, logo, sloganImage, sloganImage2 } from '../../assets';
 const HeroSection = () => {
   return (
     <section className="bg-gray-50 py-10 lg:py-15">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:py-20 py-0">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-y-16 lg:gap-16 items-center">
           
           {/* Left Content - Text */}
@@ -63,7 +63,7 @@ const HeroSection = () => {
           {/* Right Content - Image */}
           <div className="col-span-12 lg:col-span-7 relative flex justify-center items-center">
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-[300px] h-[300px] sm:w-[450px] sm:h-[450px] lg:w-[700px] lg:h-[700px] bg-gradient-to-br from-blue-100 to-blue-200 rounded-full opacity-80 shadow-xl border border-blue-200 transform scale-110"></div>
+              <div className="w-[300px] h-[300px] sm:w-[450px] sm:h-[450px] md:w-[500px] md:h-[500px] lg:w-[700px] lg:h-[700px] bg-gradient-to-br from-blue-100 to-blue-200 rounded-full opacity-80 shadow-xl border border-blue-200 transform scale-110"></div>
             </div>
 
             {/* Main Image - Element 1 */}

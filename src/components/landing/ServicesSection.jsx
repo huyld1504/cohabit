@@ -44,9 +44,9 @@ const ServicesSection = () => {
             </div>
             <div className="relative z-10">
               <img
-                src={element2}
+                src={element2}                                                                                                                                                                                                                                   
                 alt="Our Services"
-                className="w-[300px] h-[300px] sm:w-[400px] sm:h-[350px] sm:mt-16 mr-5 md:w-[400px] md:h-[350px] lg:w-[600px] lg:h-[550px] object-cover"
+                className="w-[350px] h-[300px] sm:w-[420px] sm:h-[420px] md:w-[500px] md:h-[450px] lg:w-[700px] lg:h-[650px] object-cover"
               />
             </div>
           </div>
@@ -58,7 +58,7 @@ const ServicesSection = () => {
                 <span className="text-blue-600 font-medium">Dịch vụ của chúng tôi</span>
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-2 mt-2">
                 <h2 className="text-3xl lg:text-4xl font-bold leading-tight">
                   <span className="text-blue-600">Chúng tôi mở rộng </span>
                   <span className="text-yellow-500">dịch vụ</span>
@@ -73,7 +73,7 @@ const ServicesSection = () => {
               </div>
 
               {/* Description */}
-              <p className="text-gray-600 text-lg leading-relaxed max-w-lg mx-auto lg:mx-0">
+              <p className="text-gray-600 text-lg leading-relaxed max-w-lg mx-auto lg:mx-0 md:-ml-0 -ml-0">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit,
                 sed do eiusmod tempor incididunt ut labore et dolore
                 magna aliqua.

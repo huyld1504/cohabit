@@ -40,7 +40,7 @@ const MissionSection = () => {
               <img
                 src={element3}
                 alt="Our Services"
-                className="w-[300px] h-[300px] sm:w-[450px] sm:h-[450px] md:w-[500px] md:h-[450px] lg:w-[700px] lg:h-[650px] object-cover"
+                className="w-[350px] h-[300px] sm:w-[420px] sm:h-[420px] md:w-[500px] md:h-[450px] lg:w-[700px] lg:h-[650px] object-cover"
               />
             </div>
           </div>
