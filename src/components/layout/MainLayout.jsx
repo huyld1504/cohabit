@@ -10,7 +10,7 @@ const MainLayout = () => {
   return (
     <Layout className="min-h-screen">
       <Header />
-      <Content className="flex-1">
+      <Content className="flex-1" style={{ backgroundColor: '#FFFFFF', minHeight: '100vh' }}>
         <Outlet />
       </Content>
       <Footer />

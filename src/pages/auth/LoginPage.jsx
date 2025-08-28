@@ -14,7 +14,7 @@ const LoginPage = () => {
   }, []);
   
   return (
-    <div>
+    <div style={{ backgroundColor: '#FFFFFF', minHeight: '100vh' }}>
       <AuthForm type={authType} />
     </div>
   )

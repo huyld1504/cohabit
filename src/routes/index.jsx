@@ -6,6 +6,7 @@ import NotFoundPage from "../pages/NotFoundPage";
 import { MainLayout } from "../components/common";
 import LoginPage from "../pages/auth/LoginPage";
 import RegisterPage from "../pages/auth/RegisterPage";
+import OTPPage from "../pages/auth/OTPPage";
 
 
 export const router = createBrowserRouter([
@@ -28,6 +29,10 @@ export const router = createBrowserRouter([
       {
         path: '/register',
         element: <RegisterPage />
+      },
+      {
+        path: '/verify-otp',
+        element: <OTPPage />
       }
     ],
   },
