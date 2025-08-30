@@ -9,7 +9,10 @@ import { fetchUserSuccess } from '../../redux/features/user.slice';
 const user = {
   name: 'Nguyễn Văn A',
   phone: '0123456789',
-  type: 'pro'
+  type: 'pro',
+  gender: 'male',
+  dob: '1990-01-01',
+  character: ['vui vẻ', 'hòa đồng']
 }
 
 const AuthForm = ({ type }) => {
