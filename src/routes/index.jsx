@@ -1,8 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
 //layout
-import AppLayout from "../components/layout/AppLayout";
-import AuthLayout from "../components/layout/AuthLayout";
-import UserLayout from "../components/layout/UserLayout";
+import AppLayout from "../components/layouts/AppLayout";
+import AuthLayout from "../components/layouts/AuthLayout";
+import UserLayout from "../components/layouts/UserLayout";
 //pages
 import LandingPage from "../pages/landing/LandingPage";
 import NotFoundPage from "../pages/NotFoundPage";
@@ -12,8 +12,10 @@ import RegisterPage from "../pages/auth/RegisterPage";
 import OTPPage from "../pages/auth/OTPPage";
 import UserProfilePage from "../pages/user/UserProfilePage";
 import UserSettingsPage from "../pages/user/UserSettingsPage";
+import UserProfileUpdatePage from "../pages/user/UserProfileUpdatePage";
 import FavoritePage from "../pages/user/FavoritePage";
 import HistoryPage from "../pages/user/HistoryPage";
+import PropertyListingPage from "../pages/properties/PropertyListingPage";
 
 
 export const router = createBrowserRouter([
@@ -27,6 +29,10 @@ export const router = createBrowserRouter([
           {
             index: true,
             element: <LandingPage />,
+          },
+          {
+            path: "/properties",
+            element: <PropertyListingPage />,
           },
           {
             path: "*",
@@ -52,7 +58,7 @@ export const router = createBrowserRouter([
         ]
       },
       {
-        element: <UserLayout/>,
+        element: <UserLayout />,
         children: [
           {
             path: '/profile',
@@ -64,6 +70,10 @@ export const router = createBrowserRouter([
                 element: <UserSettingsPage />
               },
               {
+                path: 'update',
+                element: <UserProfileUpdatePage />
+              },
+              {
                 path: 'history',
                 element: <HistoryPage />
               },
@@ -72,7 +82,7 @@ export const router = createBrowserRouter([
                 element: <FavoritePage />
               }
             ]
-          }
+          },
         ]
       }
     ],

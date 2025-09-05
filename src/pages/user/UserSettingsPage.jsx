@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const user = {
   name: 'Nguyễn Văn A',
@@ -10,12 +11,13 @@ const user = {
 };
 
 const UserSettingsPage = () => {
+  const navigate = useNavigate();
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white">
       {/* Hồ sơ của tôi */}
       <div className="flex items-center justify-between mb-2">
         <h2 className="font-bold text-3xl">Hồ sơ của tôi</h2>
-        <button className="border border-[#1279a2] text-[#04537c] rounded-lg px-4 py-1 hover:bg-[#f0f8ff] cursor-pointer">Chỉnh sửa</button>
+        <button className="border border-[#1279a2] text-[#04537c] rounded-lg px-4 py-1 hover:bg-[#f0f8ff] cursor-pointer" >Chỉnh sửa</button>
       </div>
       <div className="divide-y">
         <div className="flex items-center py-3">
@@ -39,7 +41,12 @@ const UserSettingsPage = () => {
       {/* Tính cách của tôi */}
       <div className="flex items-center justify-between mt-8 mb-2">
         <h2 className="font-bold text-3xl">Tính cách của tôi</h2>
-        <button className="border border-[#1279a2] text-[#04537c] rounded-lg px-4 py-1 hover:bg-[#f0f8ff] cursor-pointer">Chỉnh sửa</button>
+        <button 
+          className="border border-[#1279a2] text-[#04537c] rounded-lg px-4 py-1 hover:bg-[#f0f8ff] cursor-pointer" 
+          onClick={() => {navigate('/profile/update')}}
+        >
+            Chỉnh sửa
+        </button>
       </div>
       <div className="flex gap-3 flex-wrap">
         {user.character.map((char, idx) => (
