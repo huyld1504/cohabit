@@ -182,7 +182,7 @@ const PropertyListingPage = () => {
   const currentProperties = properties.slice(startIndex, endIndex);
 
   return (
-    <Layout className="min-h-screen bg-gray-50">
+    <Layout className="min-h-screen bg-gray-50 overflow-x-hidden">
       {/* Hero Banner */}
       <HeroBanner backgroundImage={bannerExe} />
 

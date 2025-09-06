@@ -1,8 +1,11 @@
 import { createBrowserRouter } from "react-router-dom";
+
 //layout
 import AppLayout from "../components/layouts/AppLayout";
 import AuthLayout from "../components/layouts/AuthLayout";
 import UserLayout from "../components/layouts/UserLayout";
+import PropertyLayout from "../components/layouts/PropertyLayout";
+
 //pages
 import LandingPage from "../pages/landing/LandingPage";
 import NotFoundPage from "../pages/NotFoundPage";
@@ -16,6 +19,7 @@ import UserProfileUpdatePage from "../pages/user/UserProfileUpdatePage";
 import FavoritePage from "../pages/user/FavoritePage";
 import HistoryPage from "../pages/user/HistoryPage";
 import PropertyListingPage from "../pages/properties/PropertyListingPage";
+import PropertyDetailPage from "../pages/properties/PropertyDetailPage";
 
 
 export const router = createBrowserRouter([
@@ -31,10 +35,6 @@ export const router = createBrowserRouter([
             element: <LandingPage />,
           },
           {
-            path: "/properties",
-            element: <PropertyListingPage />,
-          },
-          {
             path: "*",
             element: <NotFoundPage />,
           },
@@ -44,15 +44,15 @@ export const router = createBrowserRouter([
         element: <AuthLayout />,
         children: [
           {
-            path: '/login',
+            path: 'login',
             element: <LoginPage />
           },
           {
-            path: '/register',
+            path: 'register',
             element: <RegisterPage />
           },
           {
-            path: '/verify-otp',
+            path: 'verify-otp',
             element: <OTPPage />
           }
         ]
@@ -61,7 +61,7 @@ export const router = createBrowserRouter([
         element: <UserLayout />,
         children: [
           {
-            path: '/profile',
+            path: 'profile',
             element: <UserProfilePage />,
             children: [
               {
@@ -82,6 +82,19 @@ export const router = createBrowserRouter([
                 element: <FavoritePage />
               }
             ]
+          },
+        ]
+      },
+      {
+        element: <PropertyLayout />,
+        children: [
+          {
+            path: "properties",
+            element: <PropertyListingPage />,
+          },
+          {
+            path: "properties/:id",
+            element: <PropertyDetailPage />,
           },
         ]
       }

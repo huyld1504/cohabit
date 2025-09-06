@@ -5,12 +5,15 @@ import {
   Button,
   Divider,
   Rate,
-  Tag
+  Tag,
+  Input
 } from 'antd';
 import {
   FilterOutlined,
   CloseOutlined,
-  StarFilled
+  StarFilled,
+  EnvironmentOutlined,
+  UserOutlined
 } from '@ant-design/icons';
 
 const FilterDrawer = ({
@@ -24,7 +27,9 @@ const FilterDrawer = ({
     rating: 'all',
     priceRange: 'all',
     propertyType: 'all',
-    userType: []
+    userType: [],
+    area: '',
+    lifestyle: ''
   });
 
   const ratingOptions = [
@@ -52,8 +57,8 @@ const FilterDrawer = ({
   ];
 
   const userTypes = [
-    { label: 'Plus', value: 'plus', color: '#52c41a' },
-    { label: 'Pro', value: 'pro', color: '#faad14' }
+    { label: 'Plus', value: 'plus', color: '#1279a1' },
+    { label: 'Pro', value: 'pro', color: '#fdc700' }
   ];
 
   const handleFilterChange = (key, value) => {
@@ -74,7 +79,9 @@ const FilterDrawer = ({
       rating: 'all',
       priceRange: 'all',
       propertyType: 'all',
-      userType: []
+      userType: [],
+      area: '',
+      lifestyle: ''
     };
     setFilters(defaultFilters);
     onFilterChange && onFilterChange(defaultFilters);
@@ -95,25 +102,66 @@ const FilterDrawer = ({
       onClose={onClose}
       open={visible}
       className="filter-drawer"
-      extra={
-        <Button type="link" onClick={resetFilters} className="text-blue-500">
-          Đặt lại
-        </Button>
-      }
       footer={
         <div className="p-4 border-t">
-          <Button
-            type="primary"
-            onClick={onClose}
-            className="w-full bg-blue-500 hover:bg-blue-600"
-            size="large"
-          >
-            Áp dụng bộ lọc
-          </Button>
+          <div className="flex gap-3">
+            <Button
+              onClick={resetFilters}
+              className="flex-1"
+              size="large"
+            >
+              Đặt lại
+            </Button>
+            <Button
+              type="primary"
+              onClick={() => {
+                onFilterChange && onFilterChange(filters);
+                onClose();
+              }}
+              className="flex-1 bg-blue-500 hover:bg-blue-600"
+              size="large"
+            >
+              Tìm kiếm
+            </Button>
+          </div>
         </div>
       }
     >
       <div className="px-2">
+        {/* Khu vực */}
+        <div className="mb-6">
+          <h4 className="font-semibold mb-3 flex items-center gap-2">
+            <EnvironmentOutlined className="text-blue-500" />
+            Khu vực
+          </h4>
+          <Input
+            placeholder="Nhập khu vực..."
+            value={filters.area}
+            onChange={(e) => handleFilterChange('area', e.target.value)}
+            allowClear
+            className="w-full"
+          />
+        </div>
+
+        <Divider />
+
+        {/* Thói quen sinh hoạt */}
+        <div className="mb-6">
+          <h4 className="font-semibold mb-3 flex items-center gap-2">
+            <UserOutlined className="text-green-500" />
+            Thói quen sinh hoạt
+          </h4>
+          <Input
+            placeholder="Nhập thói quen sinh hoạt..."
+            value={filters.lifestyle}
+            onChange={(e) => handleFilterChange('lifestyle', e.target.value)}
+            allowClear
+            className="w-full"
+          />
+        </div>
+
+        <Divider />
+
         {/* Điểm đánh giá */}
         <div className="mb-6">
           <h4 className="font-semibold mb-3 flex items-center gap-2">
@@ -189,7 +237,7 @@ const FilterDrawer = ({
 
         {/* Loại User */}
         <div className="mb-6">
-          <h4 className="font-semibold mb-3">Loại User</h4>
+          {/* <h4 className="font-semibold mb-3">Loại User</h4> */}
           <div className="flex flex-wrap gap-2">
             {userTypes.map(userType => (
               <Tag.CheckableTag

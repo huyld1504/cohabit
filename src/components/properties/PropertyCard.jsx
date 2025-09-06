@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, Button, Rate, Tooltip } from 'antd';
 import { EnvironmentOutlined, StarOutlined, StarFilled } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 
 const PropertyCard = ({
   id,
@@ -12,12 +13,17 @@ const PropertyCard = ({
   isLiked = false,
   rating = 4.5,
   reviewCount = 0,
-  onLike,
-  onViewDetails
+  onLike
 }) => {
+  const navigate = useNavigate();
+
   const handleLike = (e) => {
     e.stopPropagation();
     onLike && onLike(id);
+  };
+
+  const handleCardClick = () => {
+    navigate(`/properties/${id}`);
   };
 
   return (
@@ -46,7 +52,7 @@ const PropertyCard = ({
           </div>
         </div>
       }
-      onClick={() => onViewDetails && onViewDetails(id)}
+      onClick={handleCardClick}
     >
       <div className="space-y-3">
         {/* Title */}

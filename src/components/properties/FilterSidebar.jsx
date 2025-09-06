@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { Card, Radio, Button, Divider, Rate, Tag } from 'antd';
-import { FilterOutlined, StarFilled } from '@ant-design/icons';
+import { Card, Radio, Button, Divider, Rate, Tag, Input } from 'antd';
+import { FilterOutlined, StarFilled, EnvironmentOutlined, UserOutlined } from '@ant-design/icons';
 
 const FilterSidebar = ({ onFilterChange }) => {
   const [filters, setFilters] = useState({
     rating: 'all',
     priceRange: 'all',
     propertyType: 'all',
-    userType: []
+    userType: [],
+    area: '',
+    lifestyle: ''
   });
 
   const ratingOptions = [
@@ -35,8 +37,8 @@ const FilterSidebar = ({ onFilterChange }) => {
   ];
 
   const userTypes = [
-    { label: 'Plus', value: 'plus', color: '#52c41a' },
-    { label: 'Pro', value: 'pro', color: '#faad14' }
+    { label: 'Plus', value: 'plus', color: '#1279a1' },
+    { label: 'Pro', value: 'pro', color: '#fdc700' }
   ];
 
   const handleFilterChange = (key, value) => {
@@ -57,7 +59,9 @@ const FilterSidebar = ({ onFilterChange }) => {
       rating: 'all',
       priceRange: 'all',
       propertyType: 'all',
-      userType: []
+      userType: [],
+      area: '',
+      lifestyle: ''
     };
     setFilters(defaultFilters);
     onFilterChange && onFilterChange(defaultFilters);
@@ -78,6 +82,40 @@ const FilterSidebar = ({ onFilterChange }) => {
         </Button>
       }
     >
+      {/* Khu vực */}
+      <div className="mb-6">
+        <h4 className="font-semibold mb-3 flex items-center gap-2">
+          <EnvironmentOutlined className="text-blue-500" />
+          Khu vực
+        </h4>
+        <Input
+          placeholder="Nhập khu vực..."
+          value={filters.area}
+          onChange={(e) => handleFilterChange('area', e.target.value)}
+          allowClear
+          className="w-full"
+        />
+      </div>
+
+      <Divider />
+
+      {/* Thói quen sinh hoạt */}
+      <div className="mb-6">
+        <h4 className="font-semibold mb-3 flex items-center gap-2">
+          <UserOutlined className="text-green-500" />
+          Thói quen sinh hoạt
+        </h4>
+        <Input
+          placeholder="Nhập thói quen sinh hoạt..."
+          value={filters.lifestyle}
+          onChange={(e) => handleFilterChange('lifestyle', e.target.value)}
+          allowClear
+          className="w-full"
+        />
+      </div>
+
+      <Divider />
+
       {/* Điểm đánh giá */}
       <div className="mb-6">
         <h4 className="font-semibold mb-3 flex items-center gap-2">
@@ -151,29 +189,42 @@ const FilterSidebar = ({ onFilterChange }) => {
 
       {/* Loại User */}
       <div className="mb-6">
-        <h4 className="font-semibold mb-3">Loại User</h4>
+        {/* <h4 className="font-semibold mb-3">Loại User</h4> */}
         <div className="space-y-2">
           {userTypes.map(userType => (
             <Tag.CheckableTag
               key={userType.value}
               checked={filters.userType.includes(userType.value)}
               onChange={() => handleUserTypeChange(userType.value)}
+              className='!text-xl !font-bold'
               style={{
-                backgroundColor: filters.userType.includes(userType.value)
-                  ? userType.color
-                  : 'transparent',
-                color: filters.userType.includes(userType.value) ? 'white' : userType.color,
+                backgroundColor: userType.color,
+                color: 'white',
                 border: `1px solid ${userType.color}`,
                 borderRadius: '16px',
                 padding: '4px 12px',
                 margin: '2px',
-                fontSize: '14px'
+                cursor: 'pointer'
               }}
             >
               {userType.label}
             </Tag.CheckableTag>
           ))}
         </div>
+      </div>
+
+      <Divider />
+
+      {/* Button Tìm kiếm */}
+      <div className="mt-6">
+        <Button
+          type="primary"
+          size="large"
+          className="w-full bg-blue-500 hover:bg-blue-600 border-blue-500"
+          onClick={() => onFilterChange && onFilterChange(filters)}
+        >
+          Tìm kiếm
+        </Button>
       </div>
     </Card>
   );
