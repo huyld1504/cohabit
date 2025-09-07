@@ -6,12 +6,13 @@ const Logo = ({
   height = 90,
   className = "",
   alt = "CoHabit Logo",
-  onClick = null
+  onClick = null,
+  src = artboard
 }) => {
   return (
     <div className={`flex items-center ${className}`}>
       <img
-        src={artboard}
+        src={src}
         alt={alt}
         width={width}
         height={height}

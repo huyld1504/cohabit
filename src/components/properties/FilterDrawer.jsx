@@ -183,8 +183,7 @@ const FilterDrawer = ({
                     <Rate
                       disabled
                       value={option.value}
-                      className="ml-2 text-xs"
-                      style={{ fontSize: '14px' }}
+                      className="ml-2 text-xs [&_.ant-rate-star]:text-sm"
                     />
                   )}
                 </div>
@@ -244,16 +243,16 @@ const FilterDrawer = ({
                 key={userType.value}
                 checked={filters.userType.includes(userType.value)}
                 onChange={() => handleUserTypeChange(userType.value)}
+                className={`rounded-2xl py-1.5 px-4 text-sm cursor-pointer border transition-colors ${filters.userType.includes(userType.value)
+                    ? 'text-white'
+                    : ''
+                  }`}
                 style={{
                   backgroundColor: filters.userType.includes(userType.value)
                     ? userType.color
                     : 'transparent',
                   color: filters.userType.includes(userType.value) ? 'white' : userType.color,
-                  border: `1px solid ${userType.color}`,
-                  borderRadius: '16px',
-                  padding: '6px 16px',
-                  fontSize: '14px',
-                  cursor: 'pointer'
+                  borderColor: userType.color,
                 }}
               >
                 {userType.label}

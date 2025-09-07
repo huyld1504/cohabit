@@ -5,6 +5,7 @@ import { ArrowRightOutlined, RightOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { fetchUserSuccess } from '../../redux/features/user.slice';
+import { loginSuccess } from '../../redux/features/auth.slice';
 
 const user = {
   name: 'Nguyễn Văn A',
@@ -12,7 +13,8 @@ const user = {
   type: 'pro',
   gender: 'male',
   dob: '1990-01-01',
-  character: ['vui vẻ', 'hòa đồng']
+  character: ['vui vẻ', 'hòa đồng'],
+  role: 'admin'
 }
 
 const AuthForm = ({ type }) => {
@@ -20,6 +22,7 @@ const AuthForm = ({ type }) => {
   const navigate = useNavigate();
   const handleLogin = () => {
     dispatch(fetchUserSuccess(user));
+    // dispatch(loginSuccess(user));
     navigate('/');
   }
   return (
@@ -75,12 +78,12 @@ const AuthForm = ({ type }) => {
             <Typography.Title level={1} className="text-left mb-6 !text-5xl">
               <Typography.Text className="block text-left mt-3 text-base">
                 {type === 'login' ? 'Bạn chưa có tài khoản? ' : 'Bạn đã có tài khoản Cohabit? '}
-                <Typography.Link className='text-blue-500'>
+                <Typography className='text-blue-500'>
                   <Link to={type === 'login' ? '/register' : '/login'}>
                     {type === 'login' ? 'Đăng ký ngay' : 'Đăng nhập ngay'}
                     <RightOutlined className='ml-5 !text-black' />
                   </Link>
-                </Typography.Link>
+                </Typography>
               </Typography.Text>
             </Typography.Title>
           </Form>

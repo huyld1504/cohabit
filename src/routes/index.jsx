@@ -5,6 +5,7 @@ import AppLayout from "../components/layouts/AppLayout";
 import AuthLayout from "../components/layouts/AuthLayout";
 import UserLayout from "../components/layouts/UserLayout";
 import PropertyLayout from "../components/layouts/PropertyLayout";
+import AdminLayout from "../components/layouts/AdminLayout";
 
 //pages
 import LandingPage from "../pages/landing/LandingPage";
@@ -20,6 +21,10 @@ import FavoritePage from "../pages/user/FavoritePage";
 import HistoryPage from "../pages/user/HistoryPage";
 import PropertyListingPage from "../pages/properties/PropertyListingPage";
 import PropertyDetailPage from "../pages/properties/PropertyDetailPage";
+import AdminDashboard from "../pages/admin/AdminDashboard";
+import UserManagementPage from "../pages/admin/UserManagementPage";
+import UnauthorizedPage from "../pages/UnauthorizedPage";
+import RentalHistoryPage from "../pages/admin/RentalHistoryPage";
 
 
 export const router = createBrowserRouter([
@@ -38,6 +43,23 @@ export const router = createBrowserRouter([
             path: "*",
             element: <NotFoundPage />,
           },
+          {
+            path: "unauthorized",
+            element: <UnauthorizedPage />,
+          },
+          {
+            element: <PropertyLayout />,
+            children: [
+              {
+                path: "properties",
+                element: <PropertyListingPage />,
+              },
+              {
+                path: "properties/:id",
+                element: <PropertyDetailPage />,
+              },
+            ]
+          }
         ],
       },
       {
@@ -86,16 +108,20 @@ export const router = createBrowserRouter([
         ]
       },
       {
-        element: <PropertyLayout />,
+        element: <AdminLayout />,
         children: [
           {
-            path: "properties",
-            element: <PropertyListingPage />,
+            path: '/admin',
+            element: <AdminDashboard />,
           },
           {
-            path: "properties/:id",
-            element: <PropertyDetailPage />,
+            path: '/admin/users',
+            element: <UserManagementPage />,
           },
+          {
+            path: '/admin/rental-history',
+            element: <RentalHistoryPage />
+          }
         ]
       }
     ],

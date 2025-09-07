@@ -28,8 +28,7 @@ const PropertyCard = ({
 
   return (
     <Card
-      className="property-card bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 cursor-pointer border-0"
-      bodyStyle={{ padding: '16px' }}
+      className="property-card bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 cursor-pointer border-0 [&_.ant-card-body]:p-4"
       cover={
         <div className="relative">
           <img
@@ -79,8 +78,7 @@ const PropertyCard = ({
             disabled
             allowHalf
             value={rating}
-            className="text-xs"
-            style={{ fontSize: '14px', color: '#fadb14' }}
+            className="text-xs [&_.ant-rate-star]:text-sm [&_.ant-rate-star]:text-yellow-400"
           />
           <span className="ml-2 text-gray-600 font-medium">
             {rating.toFixed(1)}

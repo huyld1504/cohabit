@@ -135,8 +135,7 @@ const FilterSidebar = ({ onFilterChange }) => {
                   <Rate
                     disabled
                     value={option.value}
-                    className="ml-2 text-xs"
-                    style={{ fontSize: '12px' }}
+                    className="ml-2 text-xs [&_.ant-rate-star]:text-xs"
                   />
                 )}
               </div>
@@ -196,15 +195,10 @@ const FilterSidebar = ({ onFilterChange }) => {
               key={userType.value}
               checked={filters.userType.includes(userType.value)}
               onChange={() => handleUserTypeChange(userType.value)}
-              className='!text-xl !font-bold'
+              className={`!text-xl !font-bold text-white border rounded-2xl py-1 px-3 m-0.5 cursor-pointer`}
               style={{
                 backgroundColor: userType.color,
-                color: 'white',
-                border: `1px solid ${userType.color}`,
-                borderRadius: '16px',
-                padding: '4px 12px',
-                margin: '2px',
-                cursor: 'pointer'
+                borderColor: userType.color,
               }}
             >
               {userType.label}

@@ -32,8 +32,7 @@ const AmenitiesSection = ({ amenities = [] }) => {
           {amenities.map((amenity, index) => (
             <Col xs={24} sm={12} md={8} key={index}>
               <Card
-                className="h-full hover:shadow-md transition-shadow"
-                bodyStyle={{ padding: '16px' }}
+                className="h-full hover:shadow-md transition-shadow [&_.ant-card-body]:p-4"
               >
                 <div className="flex items-center space-x-3">
                   <div className="text-2xl">

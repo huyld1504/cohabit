@@ -6,12 +6,9 @@ import { Outlet } from 'react-router-dom';
 
 const PropertyLayout = () => {
   return (
-    <Layout className="min-h-screen">
-      <Header />
-      <Content className="flex-1" style={{ backgroundColor: '#FFFFFF', minHeight: '100vh' }}>
-        <Outlet />
-      </Content>
-    </Layout>
+    <div>
+      <Outlet />
+    </div>
   )
 }
 

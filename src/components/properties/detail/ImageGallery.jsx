@@ -14,11 +14,7 @@ const ImageGallery = ({ images = [] }) => {
             <Image
               src={mainImage}
               alt="Main property"
-              className="w-full h-full object-cover rounded-lg cursor-pointer"
-              style={{
-                height: '320px',
-                objectFit: 'cover'
-              }}
+              className="w-full h-80 object-cover rounded-lg cursor-pointer"
             />
           </div>
 
@@ -30,11 +26,7 @@ const ImageGallery = ({ images = [] }) => {
                   <Image
                     src={image}
                     alt={`Property ${index + 2}`}
-                    className="w-full h-full object-cover rounded-lg cursor-pointer"
-                    style={{
-                      height: '155px',
-                      objectFit: 'cover'
-                    }}
+                    className="w-full h-39 object-cover rounded-lg cursor-pointer"
                   />
                 </div>
               ))}
@@ -45,11 +37,7 @@ const ImageGallery = ({ images = [] }) => {
                   <Image
                     src={images[4]}
                     alt="More images"
-                    className="w-full h-full object-cover rounded-lg cursor-pointer"
-                    style={{
-                      height: '155px',
-                      objectFit: 'cover'
-                    }}
+                    className="w-full h-39 object-cover rounded-lg cursor-pointer"
                   />
                   <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-lg pointer-events-none">
                     <span className="text-white font-medium">
@@ -67,7 +55,7 @@ const ImageGallery = ({ images = [] }) => {
           <Image
             key={`hidden-${index}`}
             src={image}
-            style={{ display: 'none' }}
+            className="hidden"
             alt={`Property image ${index + 6}`}
           />
         ))}

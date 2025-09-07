@@ -1,0 +1,85 @@
+// Mock data for rental history
+export const mockRentalData = [
+  {
+    id: '001',
+    customer: {
+      name: 'Nguyễn Thị Lan',
+      email: 'lan.nguyen@email.com',
+      avatar: null,
+    },
+    room: 'Phòng trọ Sale',
+    startDate: '15/01/2024',
+    endDate: 'đến nay',
+    duration: '3 ngày',
+    rating: 'Tốt',
+    status: 'Đang thuê',
+    price: 500000,
+  },
+  {
+    id: '002',
+    customer: {
+      name: 'Trần Văn Nam',
+      email: 'nam.tran@email.com',
+      avatar: null,
+    },
+    room: 'Phòng trọ Luna',
+    startDate: '20/01/2024',
+    endDate: 'đến nay',
+    duration: '5 ngày',
+    rating: 'Tốt',
+    status: 'Đang thuê',
+    price: 750000,
+  },
+  {
+    id: '003',
+    customer: {
+      name: 'Lê Thị Hoa',
+      email: 'hoa.le@email.com',
+      avatar: null,
+    },
+    room: 'Phòng trọ gia rẻ',
+    startDate: '10/01/2024',
+    endDate: '12/01/2024',
+    duration: '3 ngày',
+    rating: 'Tạm',
+    status: 'Còn trống',
+    price: 300000,
+  },
+  {
+    id: '004',
+    customer: {
+      name: 'Phạm Minh Đức',
+      email: 'duc.pham@email.com',
+      avatar: null,
+    },
+    room: 'Phòng trọ Premium',
+    startDate: '05/01/2024',
+    endDate: '08/01/2024',
+    duration: '4 ngày',
+    rating: 'Tốt',
+    status: 'Hoàn thành',
+    price: 800000,
+  },
+  {
+    id: '005',
+    customer: {
+      name: 'Võ Thị Mai',
+      email: 'mai.vo@email.com',
+      avatar: null,
+    },
+    room: 'Phòng trọ Deluxe',
+    startDate: '01/01/2024',
+    endDate: '03/01/2024',
+    duration: '3 ngày',
+    rating: 'Kém',
+    status: 'Đã hủy',
+    price: 600000,
+  },
+];
+
+export const mockRentalStats = {
+  totalRentals: 1247,
+  activeRentals: 89,
+  availableRooms: 1158,
+  revenue: '92.4M',
+};

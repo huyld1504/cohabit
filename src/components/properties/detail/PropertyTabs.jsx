@@ -100,8 +100,12 @@ const PropertyTabs = ({ property }) => {
       <Tabs
         defaultActiveKey="overview"
         items={items}
-        className="property-tabs"
+        className="w-full [&_.ant-tabs-nav]:mb-6 [&_.ant-tabs-nav]:overflow-x-auto [&_.ant-tabs-nav]:overflow-y-hidden [&_.ant-tabs-nav]:whitespace-nowrap [&_.ant-tabs-nav]:border-b [&_.ant-tabs-nav]:border-gray-200 [&_.ant-tabs-tab]:px-3 [&_.ant-tabs-tab]:py-2 [&_.ant-tabs-tab]:font-medium [&_.ant-tabs-tab]:text-sm [&_.ant-tabs-tab]:flex-shrink-0 [&_.ant-tabs-tab-active]:text-blue-500 [&_.ant-tabs-content-holder]:overflow-visible sm:[&_.ant-tabs-tab]:px-4 sm:[&_.ant-tabs-tab]:py-3"
         size="large"
+        tabPosition="top"
+        type="line"
+        tabBarGutter={16}
+        animated={{ inkBar: true, tabPane: false }}
       />
     </div>
   );
