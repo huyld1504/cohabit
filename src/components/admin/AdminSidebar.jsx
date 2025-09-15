@@ -40,9 +40,9 @@ const AdminSidebar = ({ collapsed, setCollapsed }) => {
       label: <Link to="/admin/rental-history">Lịch sử thuê</Link>,
     },
     {
-      key: '/admin/analytics',
+      key: '/admin/posts-management',
       icon: <BarChartOutlined />,
-      label: <Link to="/admin/analytics">Tổng hợp bài đăng</Link>,
+      label: <Link to="/admin/posts-management">Tổng hợp bài đăng</Link>,
     },
     {
       type: 'divider',

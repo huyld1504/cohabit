@@ -25,6 +25,7 @@ import AdminDashboard from "../pages/admin/AdminDashboard";
 import UserManagementPage from "../pages/admin/UserManagementPage";
 import UnauthorizedPage from "../pages/UnauthorizedPage";
 import RentalHistoryPage from "../pages/admin/RentalHistoryPage";
+import PostManagementPage from "../pages/admin/PostManagementPage";
 
 
 export const router = createBrowserRouter([
@@ -121,6 +122,10 @@ export const router = createBrowserRouter([
           {
             path: '/admin/rental-history',
             element: <RentalHistoryPage />
+          },
+          {
+            path: 'admin/posts-management',
+            element: <PostManagementPage />
           }
         ]
       }

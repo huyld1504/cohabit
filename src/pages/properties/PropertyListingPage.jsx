@@ -238,7 +238,7 @@ const PropertyListingPage = () => {
                   </div>
 
                   {/* View Mode */}
-                  <div className="flex">
+                  <div className="flex gap-2">
                     <Button
                       type={viewMode === 'grid' ? 'primary' : 'default'}
                       icon={<AppstoreOutlined />}

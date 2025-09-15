@@ -75,7 +75,7 @@ const FilterSidebar = ({ onFilterChange }) => {
           <span>Bộ lọc tìm kiếm</span>
         </div>
       }
-      className="filter-sidebar h-fit sticky top-4"
+      className="filter-sidebar h-fit sticky"
       extra={
         <Button type="link" onClick={resetFilters} className="text-blue-500">
           Đặt lại

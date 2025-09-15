@@ -2,7 +2,7 @@ import React from 'react';
 import { Card } from 'antd';
 import PropTypes from 'prop-types';
 
-const RentalStatsCard = ({
+const PostStatsCard = ({
   title,
   value,
   icon,
@@ -34,7 +34,7 @@ const RentalStatsCard = ({
   );
 };
 
-RentalStatsCard.propTypes = {
+PostStatsCard.propTypes = {
   title: PropTypes.string.isRequired,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   icon: PropTypes.node.isRequired,
@@ -42,4 +42,4 @@ RentalStatsCard.propTypes = {
   iconBgColor: PropTypes.string,
 };
 
-export default RentalStatsCard;
+export default PostStatsCard;

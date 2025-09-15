@@ -24,38 +24,34 @@ const RentalToolbar = ({
 
   return (
     <div className="mb-4">
-      {/* Search Bar */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 space-y-2 sm:space-y-0">
-        <Input
-          placeholder="Tìm kiếm theo mã đơn, tên khách hàng, phòng trọ..."
-          prefix={<SearchOutlined />}
-          value={searchText}
-          onChange={(e) => onSearchChange(e.target.value)}
-          className="w-full sm:w-80"
-        />
-      </div>
-
-      {/* Filters */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 mb-4">
-        <div className="flex items-center space-x-2">
-          <span className="text-sm text-gray-600 whitespace-nowrap">Trạng thái:</span>
-          <Select
-            value={statusFilter}
-            onChange={onStatusChange}
-            options={statusOptions}
-            className="w-32"
+      {/* Search and Filters */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+          <Input
+            placeholder="Tìm kiếm theo mã đơn, tên khách hàng..."
+            prefix={<SearchOutlined />}
+            value={searchText}
+            onChange={(e) => onSearchChange(e.target.value)}
+            className="w-full sm:w-80"
           />
-        </div>
 
-        <div className="flex items-center space-x-2">
-          <span className="text-sm text-gray-600 whitespace-nowrap">Từ ngày:</span>
-          <RangePicker
-            value={dateRange}
-            onChange={onDateRangeChange}
-            format="DD/MM/YYYY"
-            placeholder={['Từ ngày', 'Đến ngày']}
-            className="w-64"
-          />
+          <Space>
+            <Select
+              value={statusFilter}
+              onChange={onStatusChange}
+              options={statusOptions}
+              className="w-40"
+              placeholder="Trạng thái"
+            />
+
+            <RangePicker
+              value={dateRange}
+              onChange={onDateRangeChange}
+              format="DD/MM/YYYY"
+              placeholder={['Từ ngày', 'Đến ngày']}
+              className="w-64"
+            />
+          </Space>
         </div>
 
         <Space>
