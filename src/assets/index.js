@@ -1,7 +1,11 @@
 import logo from './logo 1.png';
+import logoWhite from './logo_bg_white.png';
+import logoWhite2 from './logo_bg_white_2.png';
 import sloganImage from './slogan.png';
 import sloganImage2 from './slogan 2.png';
 import artboard from './Artboard 4.png';
+import premiumBg from './bg_premium_navy.png';
+import premiumBg2 from './bg_premium_gold.png';
 
 // ========================================
 // BANNERS & PROMOTIONAL
@@ -36,7 +40,9 @@ export const logos = {
   main: logo,
   slogan: sloganImage,
   slogan2: sloganImage2,
-  artboard: artboard
+  artboard: artboard,
+  white: logoWhite,
+  white2: logoWhite2,
 };
 
 // Banners
@@ -71,6 +77,8 @@ export {
   sloganImage,
   sloganImage2,
   artboard,
+  logoWhite,
+  logoWhite2,
   bannerExe,
   element1,
   element2,
@@ -79,6 +87,8 @@ export {
   registerImage,
   interiorBedroom,
   riverSunsetCity,
+  premiumBg,
+  premiumBg2
 };
 
 // ========================================

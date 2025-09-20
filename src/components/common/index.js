@@ -8,6 +8,5 @@ export { default as PropertyCard } from '../properties/PropertyCard';
 export { default as FilterSidebar } from '../properties/FilterSidebar';
 export { default as PropertyGrid } from '../properties/PropertyGrid';
 export { default as HeroBanner } from './HeroBanner';
-
-// Layout Components
-export { default as MainLayout } from '../layouts/MainLayout';
+export { default as SafeHTMLRenderer } from './SafeHTMLRenderer';
+export {default as Logo} from './Logo';

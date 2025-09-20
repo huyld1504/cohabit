@@ -76,7 +76,7 @@ const AuthForm = ({ type }) => {
             </Form.Item>
 
             <Typography.Title level={1} className="text-left mb-6 !text-5xl">
-              <Typography.Text className="block text-left mt-3 text-base">
+              <Typography.Text className="text-left mt-3 text-base flex justify-start items-center gap-2">
                 {type === 'login' ? 'Bạn chưa có tài khoản? ' : 'Bạn đã có tài khoản Cohabit? '}
                 <Typography className='text-blue-500'>
                   <Link to={type === 'login' ? '/register' : '/login'}>

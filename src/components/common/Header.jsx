@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { use, useState } from 'react';
 import { Button, Badge, Drawer, Divider, Tooltip, Avatar, Dropdown, Menu } from 'antd';
 import {
   SearchOutlined,
@@ -15,16 +15,29 @@ import {
   EditOutlined,
   LogoutOutlined,
 } from '@ant-design/icons';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Logo from './Logo';
 import { useSelector } from 'react-redux';
 
-const Header = () => {
+const Header = ({ variant = 'default' }) => {
+  const navigate = useNavigate();
   const { profile } = useSelector((state) => state.user);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const showDrawer = () => setIsDrawerOpen(true);
   const closeDrawer = () => setIsDrawerOpen(false);
+
+  // Style variants
+  const isPremium = variant === 'premium';
+  const headerStyles = isPremium
+    ? 'bg-transparent border-transparent'
+    : 'shadow-md border-b border-gray-200 backdrop-blur-sm';
+  const textStyles = isPremium
+    ? '!text-white hover:!text-[#1279a1]'
+    : 'text-black';
+  const iconButtonStyles = isPremium
+    ? '!text-white hover:text-white !rounded-full !w-12 !h-12'
+    : 'text-gray-600 hover:text-blue-600 hover:!bg-blue-50 !rounded-full !w-12 !h-12';
 
   const navLinks = [
     {
@@ -86,7 +99,7 @@ const Header = () => {
   );
 
   return (
-    <header className="shadow-md border-b border-gray-200 !sticky z-50 backdrop-blur-sm">
+    <header className={`!sticky z-50 ${headerStyles}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           <div className="flex items-center">
@@ -97,15 +110,16 @@ const Header = () => {
           <nav className="hidden lg:flex items-center justify-center flex-1 mx-4 gap-4 w-full max-w-screen">
             <div className="flex items-center gap-8">
               <Button
-                className="!bg-yellow-400 !border-yellow-400 !text-white font-medium rounded-full px-6 shadow-sm hover:!bg-yellow-500 hover:!border-yellow-500"
+                className={`!bg-yellow-400 !border-yellow-400 !text-white font-medium rounded-full px-6 shadow-sm hover:!bg-yellow-500 hover:!border-yellow-500 ${isPremium ? 'opacity-90' : ''}`}
                 size="middle"
+                onClick={() => navigate('/premium')}
               >
                 Premium
               </Button>
-              <Link to="/properties" className="!text-black font-bold whitespace-nowrap">
+              <Link to="/properties" className={`${textStyles} font-bold whitespace-nowrap transition-colors`}>
                 Danh mục Nhà Trọ
               </Link>
-              <Link to="/contracts" className="!text-black font-bold whitespace-nowrap">
+              <Link to="/contracts" className={`${textStyles} font-bold whitespace-nowrap transition-colors`}>
                 Mẫu Hợp Đồng
               </Link>
             </div>
@@ -114,7 +128,10 @@ const Header = () => {
                 <Button
                   type="primary"
                   icon={<PlusOutlined />}
-                  className="!bg-[#1279a1] border-blue-600 hover:bg-blue-700 hover:border-blue-700 rounded-full px-6 font-medium"
+                  className={isPremium
+                    ? "!bg-white/20 !border-white/30 !text-white hover:!bg-white/30 hover:!border-white/40 rounded-full px-6 font-medium backdrop-blur-sm"
+                    : "!bg-[#1279a1] border-blue-600 hover:bg-blue-700 hover:border-blue-700 rounded-full px-6 font-medium"
+                  }
                   size="middle"
                 >
                   Tạo bài đăng
@@ -122,21 +139,39 @@ const Header = () => {
               </Badge>
               <Badge count={0} showZero={false}>
                 <Tooltip title="Chatbot with AI" placement="bottom">
-                  <Button size='large' type="text" icon={<MessageOutlined className="text-2xl" />} className="text-gray-600 hover:text-blue-600 hover:!bg-blue-50 !rounded-full !w-12 !h-12" />
+                  <Button
+                    size='large'
+                    type="text"
+                    icon={<MessageOutlined className="text-2xl" />}
+                    className={iconButtonStyles}
+                  />
                 </Tooltip>
               </Badge>
               <Tooltip title="Tìm kiếm" placement="bottom">
-                <Button type="text" size='large' icon={<SearchOutlined className="text-2xl" />} className="text-gray-600 hover:text-blue-600 hover:!bg-blue-50 !rounded-full !w-12 !h-12" />
+                <Button
+                  type="text"
+                  size='large'
+                  icon={<SearchOutlined className="text-2xl" />}
+                  className={iconButtonStyles}
+                />
               </Tooltip>
               {profile === null ? (
                 <div className="flex items-center space-x-2">
                   <Link to="/login">
-                    <Button type="text" className="text-gray-700 hover:text-blue-600 font-medium" size="middle">
+                    <Button
+                      type="text"
+                      className={isPremium ? "!text-white font-medium hover:text-white" : "text-gray-700 hover:text-blue-600 font-medium"}
+                      size="middle"
+                    >
                       Đăng nhập
                     </Button>
                   </Link>
                   <Link to="/register">
-                    <Button className="!border-[#1279a1] !text-white !bg-[#1279a1] rounded-full px-6 font-medium" size="middle">
+                    <Button
+                      type="text"
+                      className={isPremium ? "!text-white font-medium hover:text-white !bg-[#1279a1]" : "!border-[#1279a1] !text-white !bg-[#1279a1] rounded-full px-6 font-medium"}
+                      size="middle"
+                    >
                       Đăng ký
                     </Button>
                   </Link>
@@ -157,7 +192,7 @@ const Header = () => {
               type="text"
               icon={<MenuOutlined className="text-2xl" />}
               onClick={showDrawer}
-              className="text-gray-600 hover:text-blue-600 hover:!bg-blue-50 !rounded-full !w-12 !h-12"
+              className={iconButtonStyles}
             />
           </div>
         </div>

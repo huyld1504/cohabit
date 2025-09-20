@@ -1,7 +1,29 @@
 import React from 'react';
-import { Card, Row, Col, Descriptions, Tag } from 'antd';
+import { Card, Row, Col, Descriptions, Tag, Alert } from 'antd';
+import SafeHTMLRenderer from '../../common/SafeHTMLRenderer';
 
-const RentalTerms = ({ terms = {} }) => {
+const RentalTerms = ({
+  terms = {},
+  rentalTermsContent = null // HTML content from database
+}) => {
+  // Nếu có HTML content từ database, ưu tiên hiển thị nội dung đó
+  if (rentalTermsContent) {
+    return (
+      <div className="space-y-6">
+        <h3 className="text-xl font-semibold">Điều kiện thuê trọ</h3>
+        <SafeHTMLRenderer
+          htmlContent={rentalTermsContent}
+          className="rental-terms-content"
+        />
+      </div>
+    );
+  }
+
+  // Fallback về hiển thị cũ nếu chưa có HTML content
+  // Chỉ hiển thị nếu có terms data
+  if (!terms || Object.keys(terms).length === 0) {
+    return null;
+  }
 
   return (
     <div className="space-y-6">
@@ -73,18 +95,8 @@ const RentalTerms = ({ terms = {} }) => {
               <div className="text-gray-700 text-sm">
                 <strong>Điều khoản hợp đồng:</strong>
                 <div className="mt-2 text-sm break-words leading-relaxed">
-                  {terms.contractPeriod || 'Có thể thoát thuộm miến hoặc viết tay theo ngân, không có thúc đẩi nào'}
+                  {terms.contractPeriod}
                 </div>
-              </div>
-
-              <div className="bg-orange-50 border-l-4 border-orange-400 p-4 rounded-r-lg">
-                <h4 className="font-semibold text-orange-800 mb-2 text-sm">Lưu ý quan trọng:</h4>
-                <ul className="text-orange-700 text-xs space-y-1 leading-relaxed">
-                  <li>• Hợp đồng được ký kết rõ ràng, minh bạch</li>
-                  <li>• Các điều khoản được thỏa thuận trước khi ký hợp đồng</li>
-                  <li>• Mọi thay đổi cần có sự đồng ý của cả hai bên</li>
-                  <li>• Bảo đảm quyền lợi cho cả chủ nhà và người thuê</li>
-                </ul>
               </div>
             </div>
           </Card>

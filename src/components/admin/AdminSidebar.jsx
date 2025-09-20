@@ -14,6 +14,7 @@ import {
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../../redux/features/auth.slice';
+import { logoWhite, logoWhite2 } from '../../assets';
 
 const { Title, Text } = Typography;
 
@@ -94,20 +95,28 @@ const AdminSidebar = ({ collapsed, setCollapsed }) => {
       }}
     >
       {/* Logo Section */}
-      <div className="flex items-center justify-center py-6 px-4 border-b border-white/10">
-        <div className="flex items-center space-x-3">
-          <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-lg">
-            <HomeOutlined className="text-xl text-[#1279a2]" />
+      <div className="flex items-center justify-center border-b border-white/10">
+        {collapsed ? (
+          // Logo khi collapsed - chỉ hiển thị icon
+          <div className="w-20 h-20 flex justify-center">
+            <img
+              alt='logo'
+              src={logoWhite}
+              className="w-full h-full object-contain"
+            />
           </div>
-          {!collapsed && (
-            <div>
-              <Title level={4} className="!text-white !mb-0 !font-bold">
-                COHABIT
-              </Title>
-              <Text className="text-white/80 text-sm font-medium">Admin Panel</Text>
+        ) : (
+          // Logo khi expanded - hiển thị full logo
+          <div className="flex items-start">
+            <div className="h-20">
+              <img
+                alt='logo'
+                src={logoWhite2}
+                className="h-full object-contain"
+              />
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
       {/* Navigation Menu */}
