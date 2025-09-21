@@ -1,15 +1,18 @@
 import React from 'react';
-import { Typography } from 'antd';
+import { Typography, Button } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 
 const { Title, Text } = Typography;
 
-const AdminPaper = ({
+const UserPostPaper = ({
   title,
   subtitle,
   children,
   extra,
   headerAction,
+  showCreateButton = false,
+  onCreatePost,
   className = '',
   bodyClassName = ''
 }) => {
@@ -17,7 +20,7 @@ const AdminPaper = ({
     <div className={`min-h-screen bg-gray-50 ${className}`}>
       <div className="w-full bg-white shadow-sm">
         {/* Header Section */}
-        {(title || subtitle || extra || headerAction) && (
+        {(title || subtitle || extra || headerAction || showCreateButton) && (
           <div className="px-6 py-4 border-b border-gray-100">
             <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4">
               <div className="flex-1">
@@ -33,9 +36,20 @@ const AdminPaper = ({
                 )}
               </div>
 
-              {(extra || headerAction) && (
+              {(extra || headerAction || showCreateButton) && (
                 <div className="flex items-center space-x-3">
                   {extra}
+                  {showCreateButton && (
+                    <Button
+                      type="primary"
+                      icon={<PlusOutlined />}
+                      onClick={onCreatePost}
+                      className="bg-blue-600 hover:bg-blue-700 border-0"
+                      size="large"
+                    >
+                      Tạo bài đăng
+                    </Button>
+                  )}
                   {headerAction}
                 </div>
               )}
@@ -52,14 +66,16 @@ const AdminPaper = ({
   );
 };
 
-AdminPaper.propTypes = {
+UserPostPaper.propTypes = {
   title: PropTypes.string,
   subtitle: PropTypes.string,
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
   extra: PropTypes.node,
   headerAction: PropTypes.node,
+  showCreateButton: PropTypes.bool,
+  onCreatePost: PropTypes.func,
   className: PropTypes.string,
   bodyClassName: PropTypes.string,
 };
 
-export default AdminPaper;
+export default UserPostPaper;

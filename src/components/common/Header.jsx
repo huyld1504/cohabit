@@ -84,7 +84,7 @@ const Header = ({ variant = 'default' }) => {
         <Link to="/my-posts">Danh sách yêu thích</Link>
       </Menu.Item>
       <Menu.Item key="manage" icon={<EditOutlined className='!text-xl !mt-2' />}>
-        <Link to="/my-posts" className='flex gap-3'>
+        <Link to="/user/posts" className='flex gap-3'>
           <span className='flex items-center gap-2 text-sm'>
             Quản lí bài đăng
           </span>
@@ -99,15 +99,18 @@ const Header = ({ variant = 'default' }) => {
   );
 
   return (
-    <header className={`!sticky z-50 ${headerStyles}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center">
-          <div className="flex items-center">
+    <header className={`!sticky z-50 ${headerStyles} w-full`}>
+      <div className="w-full px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
+          {/* Left Section - Logo */}
+          <div className="flex items-center flex-shrink-0">
             <Link to="/" className="flex items-center">
               <Logo />
             </Link>
           </div>
-          <nav className="hidden lg:flex items-center justify-center flex-1 mx-4 gap-4 w-full max-w-screen">
+
+          {/* Center Section - Navigation Links (Desktop) */}
+          <nav className="hidden lg:flex items-center justify-center flex-1 mx-8">
             <div className="flex items-center gap-8">
               <Button
                 className={`!bg-yellow-400 !border-yellow-400 !text-white font-medium rounded-full px-6 shadow-sm hover:!bg-yellow-500 hover:!border-yellow-500 ${isPremium ? 'opacity-90' : ''}`}
@@ -122,21 +125,30 @@ const Header = ({ variant = 'default' }) => {
               <Link to="/contracts" className={`${textStyles} font-bold whitespace-nowrap transition-colors`}>
                 Mẫu Hợp Đồng
               </Link>
+              {/* Create Post Button - Desktop */}
+              <Link className="hidden lg:block" to={'user/posts/create'}>
+                <Badge status='processing' count={'Plus'} color='#1279a1'>
+                  <Button
+                    type="primary"
+                    icon={<PlusOutlined />}
+                    className={isPremium
+                      ? "!bg-white/20 !border-white/30 !text-white hover:!bg-white/30 hover:!border-white/40 rounded-full px-6 font-medium backdrop-blur-sm"
+                      : "!bg-[#1279a1] border-blue-600 hover:bg-blue-700 hover:border-blue-700 rounded-full px-6 font-medium"
+                    }
+                    size="middle"
+                  >
+                    Tạo bài đăng
+                  </Button>
+                </Badge>
+              </Link>
             </div>
-            <div className="hidden lg:flex gap-5 items-center space-x-5">
-              <Badge status='processing' count={'Plus'} color='#1279a1'>
-                <Button
-                  type="primary"
-                  icon={<PlusOutlined />}
-                  className={isPremium
-                    ? "!bg-white/20 !border-white/30 !text-white hover:!bg-white/30 hover:!border-white/40 rounded-full px-6 font-medium backdrop-blur-sm"
-                    : "!bg-[#1279a1] border-blue-600 hover:bg-blue-700 hover:border-blue-700 rounded-full px-6 font-medium"
-                  }
-                  size="middle"
-                >
-                  Tạo bài đăng
-                </Button>
-              </Badge>
+          </nav>
+
+          {/* Right Section - User Actions */}
+          <div className="flex items-center gap-3 flex-shrink-0">
+
+            {/* Action Buttons - Desktop */}
+            <div className="hidden lg:flex items-center gap-2">
               <Badge count={0} showZero={false}>
                 <Tooltip title="Chatbot with AI" placement="bottom">
                   <Button
@@ -155,6 +167,10 @@ const Header = ({ variant = 'default' }) => {
                   className={iconButtonStyles}
                 />
               </Tooltip>
+            </div>
+
+            {/* Auth/User Section */}
+            <div className="hidden lg:flex items-center">
               {profile === null ? (
                 <div className="flex items-center space-x-2">
                   <Link to="/login">
@@ -186,14 +202,16 @@ const Header = ({ variant = 'default' }) => {
                 </Dropdown>
               )}
             </div>
-          </nav>
-          <div className="flex lg:hidden items-center">
-            <Button
-              type="text"
-              icon={<MenuOutlined className="text-2xl" />}
-              onClick={showDrawer}
-              className={iconButtonStyles}
-            />
+
+            {/* Mobile Menu Button */}
+            <div className="lg:hidden">
+              <Button
+                type="text"
+                icon={<MenuOutlined className="text-2xl" />}
+                onClick={showDrawer}
+                className={iconButtonStyles}
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -227,7 +245,7 @@ const Header = ({ variant = 'default' }) => {
                     <Link to="/my-posts" onClick={closeDrawer}>Danh sách yêu thích</Link>
                   </Menu.Item>
                   <Menu.Item key="manage" icon={<EditOutlined />}>
-                    <Link to="/my-posts" onClick={closeDrawer}>Quản lí bài đăng</Link>
+                    <Link to="/user/posts" onClick={closeDrawer}>Quản lí bài đăng</Link>
                   </Menu.Item>
                   <Menu.Divider />
                   <Menu.Item key="logout" icon={<LogoutOutlined />}>

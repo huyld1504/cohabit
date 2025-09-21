@@ -79,10 +79,6 @@ const Footer = ({ variant = 'default' }) => {
     ? "text-white/70 hover:text-white"
     : "text-gray-800 hover:text-blue-600";
 
-  const copyrightStyles = isPremium
-    ? "border-t border-white/20 pt-8"
-    : "bg-[#1279a2] py-3";
-
   return (
     <footer className={footerStyles}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -147,9 +143,9 @@ const Footer = ({ variant = 'default' }) => {
       </div>
 
       {/* Copyright Bar */}
-      <div className={copyrightStyles}>
+      <div className={isPremium ? "border-t border-white/20 pt-8" : "bg-[#1279a2] py-3"}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className={isPremium ? "flex flex-col md:flex-row justify-between items-center" : "text-center"}>
+          <div className={"text-center"}>
             <div className={`${isPremium ? "text-white/60" : "text-white"} text-sm ${isPremium ? "mb-4 md:mb-0" : "font-medium"}`}>
               "© 2025, Cohabit"
             </div>

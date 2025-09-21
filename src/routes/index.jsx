@@ -29,6 +29,12 @@ import RentalHistoryPage from "../pages/admin/RentalHistoryPage";
 import PostManagementPage from "../pages/admin/PostManagementPage";
 import PremiumPage from "../pages/premium/PremiumPage";
 import PaymentPage from "../pages/payment/PaymentPage";
+import UserPostManagementPage from "../pages/user-posts/UserPostManagementPage";
+import RentalManagementPage from "../pages/user-posts/RentalManagementPage";
+import CreatePostPage from "../pages/user-posts/CreatePostPage";
+
+// layouts
+import UserPostLayout from "../components/layouts/UserPostLayout";
 
 
 export const router = createBrowserRouter([
@@ -109,6 +115,24 @@ export const router = createBrowserRouter([
               }
             ]
           },
+        ]
+      },
+      {
+        element: <UserPostLayout />,
+        children: [
+          {
+            path: '/user/posts',
+            element: <UserPostManagementPage />,
+          },
+          {
+            path: '/user/posts/create',
+            element: <CreatePostPage />,
+          },
+          {
+            path: '/user/rentals',
+            element: <RentalManagementPage />,
+          },
+          // Add more user post management routes here
         ]
       },
       {

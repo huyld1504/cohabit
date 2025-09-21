@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
-import AdminSidebar from '../admin/AdminSidebar';
-import ProtectedRoute from '../common/ProtectedRoute';
+import UserPostSidebar from '../user-posts/common/UserPostSidebar';
 
-const AdminLayout = () => {
+const UserPostLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
 
   // Auto-collapse on mobile
@@ -20,9 +19,8 @@ const AdminLayout = () => {
   }, []);
 
   return (
-    // <ProtectedRoute allowedRoles={['admin']}>
     <div className="flex min-h-screen bg-gray-50">
-      <AdminSidebar collapsed={collapsed} setCollapsed={setCollapsed} />
+      <UserPostSidebar collapsed={collapsed} setCollapsed={setCollapsed} />
       <div
         className="flex-1 overflow-x-auto"
         style={{
@@ -33,8 +31,7 @@ const AdminLayout = () => {
         <Outlet />
       </div>
     </div>
-    // </ProtectedRoute>
   );
 };
 
-export default AdminLayout;
+export default UserPostLayout;

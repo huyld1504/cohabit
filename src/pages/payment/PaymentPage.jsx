@@ -48,7 +48,7 @@ const PaymentPage = () => {
 
   return (
     <div
-      className="relative bg-cover bg-center bg-no-repeat bg-fixed"
+      className="min-h-screen relative bg-cover bg-center bg-no-repeat bg-fixed"
       style={{
         backgroundImage: `url(${currentPlan.name === 'PLUS' ? premiumBg : premiumBg2})`,
       }}
