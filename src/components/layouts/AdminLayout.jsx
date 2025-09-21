@@ -21,13 +21,14 @@ const AdminLayout = () => {
 
   return (
     // <ProtectedRoute allowedRoles={['admin']}>
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50">
       <AdminSidebar collapsed={collapsed} setCollapsed={setCollapsed} />
       <div
-        className="flex-1 overflow-x-auto"
+        className="overflow-x-auto"
         style={{
           minHeight: '100vh',
-          transition: 'all 0.2s',
+          marginLeft: collapsed ? '80px' : '280px',
+          transition: 'margin-left 0.2s',
         }}
       >
         <Outlet />

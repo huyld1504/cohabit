@@ -42,7 +42,7 @@ const UserPostSidebar = ({ collapsed, setCollapsed }) => {
       label: 'Điều khoản cho bài đăng',
     },
     {
-      key: '/user/rented-posts',
+      key: '/user/posts/rented',
       icon: <CheckCircleOutlined />,
       label: 'Bài đăng được thuê',
     },
@@ -94,7 +94,10 @@ const UserPostSidebar = ({ collapsed, setCollapsed }) => {
         minHeight: '100vh',
         width: collapsed ? '80px' : '280px',
         transition: 'width 0.2s',
-        position: 'relative',
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        zIndex: 1000,
       }}
     >
       {/* Logo Section */}

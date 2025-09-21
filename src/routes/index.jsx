@@ -32,6 +32,8 @@ import PaymentPage from "../pages/payment/PaymentPage";
 import UserPostManagementPage from "../pages/user-posts/UserPostManagementPage";
 import RentalManagementPage from "../pages/user-posts/RentalManagementPage";
 import CreatePostPage from "../pages/user-posts/CreatePostPage";
+import RentedPostsPage from "../pages/user-posts/RentedPostsPage";
+import RentedPostDetailPage from "../pages/user-posts/RentedPostDetailPage";
 
 // layouts
 import UserPostLayout from "../components/layouts/UserPostLayout";
@@ -127,6 +129,14 @@ export const router = createBrowserRouter([
           {
             path: '/user/posts/create',
             element: <CreatePostPage />,
+          },
+          {
+            path: '/user/posts/rented',
+            element: <RentedPostsPage />,
+          },
+          {
+            path: '/user/posts/rented/:id',
+            element: <RentedPostDetailPage />,
           },
           {
             path: '/user/rentals',

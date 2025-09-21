@@ -91,7 +91,10 @@ const AdminSidebar = ({ collapsed, setCollapsed }) => {
         minHeight: '100vh',
         width: collapsed ? '80px' : '280px',
         transition: 'width 0.2s',
-        position: 'relative',
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        zIndex: 1000,
       }}
     >
       {/* Logo Section */}

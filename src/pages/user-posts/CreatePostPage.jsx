@@ -40,7 +40,7 @@ const CreatePostPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+    <div className="min-h-screen bg-gray-50">
       {hasRequiredPlan ? (
         <div className="flex items-center justify-center min-h-screen p-6">
           <Alert
@@ -76,9 +76,9 @@ const CreatePostPage = () => {
           />
         </div>
       ) : (
-        <div className="max-w-4xl mx-auto p-6">
-          {/* Sử dụng max-h-[80vh] để giới hạn chiều cao form là 80% viewport */}
-          <div className="max-h-[80vh] overflow-y-auto bg-white rounded-lg shadow-sm">
+        <div className="w-full p-6">
+          {/* Bỏ giới hạn chiều cao để form hiển thị đầy đủ */}
+          <div className="bg-white rounded-lg shadow-sm">
             <CreatePostForm
               onSubmit={handleSubmit}
               loading={loading}
