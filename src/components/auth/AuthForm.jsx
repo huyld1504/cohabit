@@ -5,7 +5,6 @@ import { ArrowRightOutlined, RightOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { fetchUserSuccess } from '../../redux/features/user.slice';
-import { loginSuccess } from '../../redux/features/auth.slice';
 
 const user = {
   name: 'Nguyễn Văn A',

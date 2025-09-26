@@ -85,10 +85,10 @@ export const router = createBrowserRouter([
             path: 'register',
             element: <RegisterPage />
           },
-          {
-            path: 'verify-otp',
-            element: <OTPPage />
-          }
+          // {
+          //   path: 'verify-otp',
+          //   element: <OTPPage />
+          // }
         ]
       },
       {

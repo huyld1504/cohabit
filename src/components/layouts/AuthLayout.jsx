@@ -7,7 +7,7 @@ const AuthLayout = () => {
   return (
     <Layout className="min-h-screen">
       <Header />
-      <Content className="flex-1" style={{ backgroundColor: '#FFFFFF', minHeight: '100vh' }}>
+      <Content className="flex-1 min-h-screen bg-white">
         <Outlet />
       </Content>
       <Footer />

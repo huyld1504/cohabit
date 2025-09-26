@@ -147,7 +147,7 @@ const Footer = ({ variant = 'default' }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className={"text-center"}>
             <div className={`${isPremium ? "text-white/60" : "text-white"} text-sm ${isPremium ? "mb-4 md:mb-0" : "font-medium"}`}>
-              "© 2025, Cohabit"
+              © 2025, Cohabit
             </div>
           </div>
         </div>

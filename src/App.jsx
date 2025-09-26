@@ -12,9 +12,9 @@ import 'react-toastify/dist/ReactToastify.css';
 function App() {
   return (
     <>
-      <ConfigProvider theme={themeConfig}>
+      <ConfigProvider theme={themeConfig} />
         <RouterProvider router={router} />
-      </ConfigProvider>
+      {/* </ConfigProvider> */}
       <ToastContainer />
     </>
   );

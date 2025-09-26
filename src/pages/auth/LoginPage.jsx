@@ -14,7 +14,7 @@ const LoginPage = () => {
   }, []);
   
   return (
-    <div style={{ backgroundColor: '#FFFFFF', minHeight: '100vh' }}>
+    <div className="bg-white min-h-screen">
       <AuthForm type={authType} />
     </div>
   )
