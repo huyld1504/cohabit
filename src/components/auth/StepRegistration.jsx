@@ -188,7 +188,7 @@ const StepRegistration = () => {
         </div>
 
         {/* Form section */}
-        <div className="flex items-center justify-center">
+        <div className="flex items-start justify-center mt-5">
           <div className="w-full">
             {/* Steps Progress */}
             <div className="mb-8">
