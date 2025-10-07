@@ -1,18 +1,38 @@
-import { Layout } from 'antd';
-import { Footer, Header } from '../common';
-import { Content } from 'antd/es/layout/layout';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
+import { getToken } from '../../utils/token.store.util';
+import { toast } from 'react-toastify';
+import { useEffect } from 'react';
+import { profileApi } from '../../api/profile.api';
+import { useDispatch } from 'react-redux';
+import { setUserProfile } from '../../redux/features/user.slice';
 
 const AppLayout = () => {
-  return (
-    <Layout className="min-h-screen">
-      <Header />
-      <Content className="flex-1" style={{ backgroundColor: '#FFFFFF' }}>
-        <Outlet />
-      </Content>
-      <Footer />
-    </Layout>
-  )
-}
+  const currentPath = window.location.pathname;
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-export default AppLayout
+  useEffect(() => {
+    const checkAuthenticated = async () => {
+      try {
+        const { token } = await getToken();
+        if (!token) {
+          toast.warning('Vui lòng đăng nhập để tiếp tục!');
+          navigate('/login');
+          return;
+        }
+      } catch (error) {
+        console.log(error);
+        toast.error('Lỗi xác thực, vui lòng đăng nhập lại!');
+        navigate('/login');
+      }
+    };
+
+    checkAuthenticated();
+  }, [navigate, dispatch, currentPath]);
+
+  return (
+    <Outlet />
+  );
+};
+
+export default AppLayout;

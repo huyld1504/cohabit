@@ -14,8 +14,6 @@ import LandingPage from "../pages/landing/LandingPage";
 import NotFoundPage from "../pages/NotFoundPage";
 import LoginPage from "../pages/auth/LoginPage";
 import RegisterPage from "../pages/auth/RegisterPage";
-import OTPPage from "../pages/auth/OTPPage";
-import UserProfilePage from "../pages/user/UserProfilePage";
 import UserSettingsPage from "../pages/user/UserSettingsPage";
 import UserProfileUpdatePage from "../pages/user/UserProfileUpdatePage";
 import FavoritePage from "../pages/user/FavoritePage";
@@ -37,44 +35,47 @@ import RentedPostDetailPage from "../pages/user-posts/RentedPostDetailPage";
 
 // layouts
 import UserPostLayout from "../components/layouts/UserPostLayout";
+import PublicLayout from "../components/layouts/PublicLayout";
 
 
 export const router = createBrowserRouter([
   {
-    path: "/",
-    element: <MainLayout />,
+    element: <PublicLayout />,
     children: [
+      // Public routes - không cần authentication
       {
-        element: <AppLayout />,
+        path: "/",
+        element: <MainLayout />,
         children: [
           {
             index: true,
             element: <LandingPage />,
           },
           {
-            path: "*",
-            element: <NotFoundPage />,
-          },
-          {
             path: "unauthorized",
             element: <UnauthorizedPage />,
           },
+          // Properties - public access
           {
+            path: "properties",
             element: <PropertyLayout />,
             children: [
               {
-                path: "properties",
+                index: true,
                 element: <PropertyListingPage />,
               },
               {
-                path: "properties/:id",
+                path: ":id",
                 element: <PropertyDetailPage />,
               },
             ]
-          }
-        ],
+          },
+        ]
       },
+
+      // Auth routes - không cần authentication
       {
+        path: "/",
         element: <AuthLayout />,
         children: [
           {
@@ -84,22 +85,25 @@ export const router = createBrowserRouter([
           {
             path: 'register',
             element: <RegisterPage />
-          },
-          // {
-          //   path: 'verify-otp',
-          //   element: <OTPPage />
-          // }
+          }
         ]
       },
+
+      // Protected routes - cần authentication
       {
-        element: <UserLayout />,
+        path: "/",
+        element: <AppLayout />,
         children: [
+          // User Profile routes
           {
             path: 'profile',
-            element: <UserProfilePage />,
+            element: <UserLayout />,
             children: [
               {
                 index: true,
+                element: <UserSettingsPage />
+              },
+              {
                 path: 'settings',
                 element: <UserSettingsPage />
               },
@@ -117,68 +121,74 @@ export const router = createBrowserRouter([
               }
             ]
           },
-        ]
-      },
-      {
-        element: <UserPostLayout />,
-        children: [
           {
-            path: '/user/posts',
-            element: <UserPostManagementPage />,
+            element: <UserPostLayout />,
+            children: [
+              {
+                path: '/user/posts',
+                element: <UserPostManagementPage />,
+              },
+              {
+                path: '/user/posts/create',
+                element: <CreatePostPage />,
+              },
+              {
+                path: '/user/posts/rented',
+                element: <RentedPostsPage />,
+              },
+              {
+                path: '/user/posts/rented/:id',
+                element: <RentedPostDetailPage />,
+              },
+              {
+                path: '/user/rentals',
+                element: <RentalManagementPage />,
+              },
+              // Add more user post management routes here
+            ]
           },
           {
-            path: '/user/posts/create',
-            element: <CreatePostPage />,
+            element: <AdminLayout />,
+            children: [
+              {
+                path: '/admin',
+                element: <AdminDashboard />,
+              },
+              {
+                path: '/admin/users',
+                element: <UserManagementPage />,
+              },
+              {
+                path: '/admin/rental-history',
+                element: <RentalHistoryPage />
+              },
+              {
+                path: 'admin/posts-management',
+                element: <PostManagementPage />
+              }
+            ]
           },
           {
-            path: '/user/posts/rented',
-            element: <RentedPostsPage />,
-          },
-          {
-            path: '/user/posts/rented/:id',
-            element: <RentedPostDetailPage />,
-          },
-          {
-            path: '/user/rentals',
-            element: <RentalManagementPage />,
-          },
-          // Add more user post management routes here
-        ]
-      },
-      {
-        element: <AdminLayout />,
-        children: [
-          {
-            path: '/admin',
-            element: <AdminDashboard />,
-          },
-          {
-            path: '/admin/users',
-            element: <UserManagementPage />,
-          },
-          {
-            path: '/admin/rental-history',
-            element: <RentalHistoryPage />
-          },
-          {
-            path: 'admin/posts-management',
-            element: <PostManagementPage />
+            element: <PremiumLayout />,
+            children: [
+              {
+                path: 'premium',
+                element: <PremiumPage />
+              },
+              {
+                path: 'payment/:plan',
+                element: <PaymentPage />
+              }
+            ]
           }
-        ]
+        ],
       },
+
+      // Catch all cho 404
       {
-        element: <PremiumLayout />,
-        children: [
-          {
-            path: 'premium',
-            element: <PremiumPage />
-          },
-          {
-            path: 'payment/:plan',
-            element: <PaymentPage />
-          }
-        ]
-      }
-    ],
-  },
+        path: "*",
+        element: <NotFoundPage />,
+      },
+    ]
+  }
 ]);

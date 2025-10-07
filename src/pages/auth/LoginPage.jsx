@@ -1,21 +1,9 @@
-import React, { useEffect, useState } from 'react'
 import AuthForm from '../../components/auth/AuthForm';
 
 const LoginPage = () => {
-  const [authType, setAuthType] = useState('login');
-
-  useEffect(() => {
-    const pathname = window.location.pathname;
-    if (pathname === '/login') {
-      setAuthType('login');
-    } else if (pathname === '/register') {
-      setAuthType('register');
-    }
-  }, []);
-  
   return (
     <div className="bg-white min-h-screen">
-      <AuthForm type={authType} />
+      <AuthForm/>
     </div>
   )
 }

@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  user: null,
   token: null,
+  refreshToken: null,
   loading: false,
   error: null,
 };
@@ -17,8 +17,8 @@ const authSlice = createSlice({
     },
     loginSuccess(state, action) {
       state.loading = false;
-      state.user = action.payload.user;
       state.token = action.payload.token;
+      state.refreshToken = action.payload.refreshToken;
       state.error = null;
     },
     loginFailure(state, action) {
@@ -26,13 +26,13 @@ const authSlice = createSlice({
       state.error = action.payload;
     },
     logout(state) {
-      state.user = null;
       state.token = null;
+      state.refreshToken = null;
       state.loading = false;
       state.error = null;
     }
   }
-})
+});
 
 export const { loginStart, loginSuccess, loginFailure, logout } = authSlice.actions;
 export default authSlice;

@@ -4,34 +4,28 @@ const initialState = {
   profile: null,
   rentHistory: [],
   favoriteList: [],
-  loading: false,
-  error: null,
 };
 
 const userSlice = createSlice({
   initialState: initialState,
   name: 'user',
   reducers: {
-    fetchUserStart(state) {
-      state.loading = true;
-      state.error = null;
+    setUserProfile(state, action) {
+      state.profile = action.payload.profile || action.payload;
     },
-    fetchUserSuccess(state, action) {
-      state.loading = false;
-      state.profile = action.payload;
-      state.error = null;
+    setRentHistory(state, action) {
+      state.rentHistory = action.payload.rentHistory || action.payload;
     },
-    fetchUserFailure(state, action) {
-      state.loading = false;
-      state.error = action.payload;
+    setFavoriteList(state, action) {
+      state.favoriteList = action.payload.favoriteList || action.payload;
     },
-    clearUser(state) {
-      state.profile = null;
-      state.loading = false;
-      state.error = null;
+    clearUserData(state) {
+      state.profile = {};
+      state.rentHistory = [];
+      state.favoriteList = [];
     }
   }
-})
+});
 
-export const { fetchUserStart, fetchUserSuccess, fetchUserFailure, clearUser } = userSlice.actions;
+export const { setUserProfile, setRentHistory, setFavoriteList, clearUserData } = userSlice.actions;
 export default userSlice;

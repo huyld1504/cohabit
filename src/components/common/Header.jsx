@@ -1,4 +1,4 @@
-import React, { use, useState } from 'react';
+import React, { useState } from 'react';
 import { Button, Badge, Drawer, Divider, Tooltip, Avatar, Dropdown, Menu } from 'antd';
 import {
   SearchOutlined,
@@ -17,12 +17,36 @@ import {
 } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import Logo from './Logo';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { clearUserData } from '../../redux/features/user.slice';
+import { logout } from '../../redux/features/auth.slice';
+import { removeToken } from '../../utils/token.store.util';
+import { toast } from 'react-toastify';
 
 const Header = ({ variant = 'default' }) => {
+  const { profile } = useSelector(state => state.user);
   const navigate = useNavigate();
-  const { profile } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  const handleLogout = () => {
+    try {
+      // Clear token from storage
+      removeToken();
+      // Clear Redux state
+      dispatch(logout());
+      dispatch(clearUserData());
+      // Show success message
+      toast.success('Đăng xuất thành công!');
+      
+      setTimeout(() => window.location.href = '/', 1000);
+      clearTimeout();
+
+    } catch (error) {
+      console.error('Logout error:', error);
+      toast.error('Có lỗi xảy ra khi đăng xuất');
+    }
+  };
 
   const showDrawer = () => setIsDrawerOpen(true);
   const closeDrawer = () => setIsDrawerOpen(false);
@@ -56,11 +80,11 @@ const Header = ({ variant = 'default' }) => {
     <Menu className='w-60 border-1'>
       <Menu.Item key="greeting" className='!my-2 !mr-2 flex justify-center align-center'>
         <div>
-          <Badge title='Pro' size={'default'} count={'Pro'} color='gold' >
-            <span className='text-2xl font-bold'>
-              {profile?.name}
-            </span>
-          </Badge>
+          {/* <Badge title='Pro' size={'default'} count={'Pro'} color='gold' > */}
+          <span className='text-2xl font-bold'>
+            {profile?.fullName}
+          </span>
+          {/* </Badge> */}
         </div>
         <div className='mt-1'>
           <span className='flex items-center gap-2 text-sm'>
@@ -93,7 +117,7 @@ const Header = ({ variant = 'default' }) => {
       </Menu.Item>
       <Menu.Divider />
       <Menu.Item key="logout" icon={<LogoutOutlined className='!text-xl !mt-2' />}>
-        <span onClick={() => {/* Xử lý logout ở đây */ }}>Đăng xuất</span>
+        <span onClick={handleLogout} className="cursor-pointer">Đăng xuất</span>
       </Menu.Item>
     </Menu>
   );
@@ -194,11 +218,19 @@ const Header = ({ variant = 'default' }) => {
                 </div>
               ) : (
                 <Dropdown overlay={userMenu} placement="bottomRight" trigger={['click']}>
-                  <Avatar
-                    size={'large'}
-                    icon={<UserOutlined />}
-                    className='!bg-[#1279a1] cursor-pointer'
-                  />
+                  {profile?.image ? (
+                    <Avatar
+                      size={'large'}
+                      src={profile.image}
+                      className='cursor-pointer'
+                    />
+                  ) : (
+                    <Avatar
+                      size={'large'}
+                      icon={<UserOutlined />}
+                      className='!bg-[#1279a1] cursor-pointer'
+                    />
+                  )}
                 </Dropdown>
               )}
             </div>
