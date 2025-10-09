@@ -1,16 +1,9 @@
-import React from 'react';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-const user = {
-  name: 'Nguyễn Văn A',
-  phone: '0123456789',
-  type: 'pro',
-  gender: 'male',
-  dob: '1990-01-01',
-  character: ['vui vẻ', 'hòa đồng']
-};
-
 const UserSettingsPage = () => {
+  const {profile: user} = useSelector((state) => state.user);
+  console.log(user);
   const navigate = useNavigate();
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white">
@@ -22,19 +15,19 @@ const UserSettingsPage = () => {
       <div className="divide-y">
         <div className="flex items-center py-3">
           <span className="w-1/3 font-medium text-lg">Số điện thoại</span>
-          <span className="w-2/3 text-lg">{user.phone}</span>
+          <span className="w-2/3 text-lg">{user?.phone}</span>
         </div>
         <div className="flex items-center py-3">
           <span className="w-1/3 font-medium text-lg">Họ và tên</span>
-          <span className="w-2/3 text-lg">{user.name}</span>
+          <span className="w-2/3 text-lg">{user?.fullName}</span>
         </div>
         <div className="flex items-center py-3">
           <span className="w-1/3 font-medium text-lg">Ngày sinh</span>
-          <span className="w-2/3 text-lg">{user.dob}</span>
+          <span className="w-2/3 text-lg">{user?.yob}</span>
         </div>
         <div className="flex items-center py-3">
           <span className="w-1/3 font-medium text-lg">Giới tính</span>
-          <span className="w-2/3 text-lg">{user.gender === 'male' ? 'Nam' : 'Nữ'}</span>
+          <span className="w-2/3 text-lg">{user?.sex}</span>
         </div>
       </div>
 
@@ -49,7 +42,7 @@ const UserSettingsPage = () => {
         </button>
       </div>
       <div className="flex gap-3 flex-wrap">
-        {user.character.map((char, idx) => (
+        {user?.character?.map((char, idx) => (
           <span key={idx} className="bg-[#1279a2] text-white rounded-full px-5 py-2 text-lg font-semibold">{char}</span>
         ))}
       </div>
