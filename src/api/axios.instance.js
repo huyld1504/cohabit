@@ -3,7 +3,7 @@ import queryString from 'query-string';
 import { API_CONSTANTS } from "../constants/api.constant.js";
 import { getToken, removeToken } from "../utils/token.store.util.js";
 
-const baseURL = API_CONSTANTS.API_URL;
+const baseURL = API_CONSTANTS.API_URL || 'https://cohabit-api-c2b8h0gechbvfyap.southeastasia-01.azurewebsites.net/api/v1';
 
 const axiosInstance = axios.create({
     baseURL: baseURL,

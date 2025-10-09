@@ -60,23 +60,14 @@ const AuthForm = () => {
         // Handle case khi success = false
         const errorMessage = response?.message || 'Đăng nhập thất bại!';
         console.log(errorMessage);
+        console.log("error login", response);
         dispatch(loginFailure(errorMessage));
         toast.error(errorMessage);
       }
     } catch (error) {
-      // Prevent any potential navigation or reload
-      try {
-        // Handle different error types
-        const errorMessage = error.response?.data?.message ||
-          error.message ||
-          'Đăng nhập thất bại. Vui lòng thử lại!';
-
-        dispatch(loginFailure(errorMessage));
-        toast.error(errorMessage);
-      } catch (innerError) {
-        dispatch(loginFailure(innerError.message));
-        toast.error(innerError.message);
-      }
+      console.log(error);
+      toast.error('Đã có lỗi xảy ra trong quá trình đăng nhập. Vui lòng thử lại.');
+      dispatch(loginFailure('Đã có lỗi xảy ra trong quá trình đăng nhập.'));
     }
   };
   return (
