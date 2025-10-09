@@ -1,9 +1,9 @@
 {
   "version": 2,
-  "buildCommand": "npm run build",
+  "buildCommand": "cp package.vercel.json package.json && npm run build",
   "outputDirectory": "dist",
   "framework": "vite",
-  "installCommand": "npm install --force",
+  "installCommand": "cp package.vercel.json package.json && npm install",
   "devCommand": "npm run dev",
   "rewrites": [
     { 
@@ -26,6 +26,6 @@
     }
   ],
   "env": {
-    "NODE_VERSION": "20.x"
+    "NODE_VERSION": "18.x"
   }
 }
