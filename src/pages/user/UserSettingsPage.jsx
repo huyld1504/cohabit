@@ -136,7 +136,7 @@ const UserSettingsPage = () => {
         {userCharacteristics.length > 0 ? (
           userCharacteristics.map((char, idx) => (
             <span key={idx} className="bg-[#1279a2] text-white rounded-full px-5 py-2 text-lg font-semibold">
-              {char}
+              {typeof char === 'string' ? char : char?.title || char?.name || String(char)}
             </span>
           ))
         ) : (

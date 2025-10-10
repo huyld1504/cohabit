@@ -1,65 +1,110 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Form, Input, Button, Tag, Space, Divider } from 'antd';
-import { PlusOutlined, CloseOutlined } from '@ant-design/icons';
+import { Modal, Form, Button, Tag, Space, Divider, Checkbox, Spin } from 'antd';
 import { toast } from 'react-toastify';
 import { profileApi } from '../../api/profile.api';
+import { characteristicApi } from '../../api/characteristic.api';
 
 const UpdateCharacteristicsModal = ({ open, onClose, userCharacteristics, onUpdateSuccess }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
-  const [selectedCharacteristics, setSelectedCharacteristics] = useState([]);
-  const [inputValue, setInputValue] = useState('');
+  const [loadingCharacteristics, setLoadingCharacteristics] = useState(false);
+  const [selectedCharacteristicIds, setSelectedCharacteristicIds] = useState([]);
+  const [availableCharacteristics, setAvailableCharacteristics] = useState([]);
 
   useEffect(() => {
     if (open) {
-      // Set initial selected characteristics from user data
-      if (userCharacteristics && Array.isArray(userCharacteristics)) {
-        setSelectedCharacteristics([...userCharacteristics]);
+      loadAvailableCharacteristics();
+    }
+  }, [open]);
+
+  // Separate useEffect to handle setting selected characteristics after both modal opens and characteristics are loaded
+  useEffect(() => {
+    if (open && availableCharacteristics.length > 0 && userCharacteristics) {
+      setInitialSelectedCharacteristics();
+    }
+  }, [open, availableCharacteristics, userCharacteristics]);
+
+  const loadAvailableCharacteristics = async () => {
+    try {
+      setLoadingCharacteristics(true);
+      const response = await characteristicApi.getAllCharacteristics();
+
+      if (response?.success && response?.data && Array.isArray(response.data)) {
+        setAvailableCharacteristics(response.data);
       } else {
-        setSelectedCharacteristics([]);
+        throw new Error('Invalid response format');
       }
+    } catch (error) {
+      console.error('Error loading characteristics:', error);
+      toast.error('Không thể tải danh sách tính cách. Vui lòng thử lại!');
+    } finally {
+      setLoadingCharacteristics(false);
     }
-  }, [open, userCharacteristics]);
+  };
 
-  const handleAddCharacteristic = () => {
-    const newCharacteristic = inputValue.trim();
-
-    if (!newCharacteristic) {
-      toast.warning('Vui lòng nhập tính cách!');
+  const setInitialSelectedCharacteristics = () => {
+    if (!userCharacteristics || !Array.isArray(userCharacteristics)) {
+      setSelectedCharacteristicIds([]);
       return;
     }
 
-    if (selectedCharacteristics.includes(newCharacteristic)) {
-      toast.warning('Tính cách này đã tồn tại!');
-      return;
+    const userCharacteristicIds = userCharacteristics.map(userChar => {
+      // If userChar is already an ID (starts with 'C'), use it directly
+      if (typeof userChar === 'string' && userChar.startsWith('C')) {
+        return userChar;
+      }
+
+      // If userChar is an object with id property, use the id
+      if (typeof userChar === 'object' && userChar?.id) {
+        return userChar.id;
+      }
+
+      // If userChar is a title string, find the corresponding ID
+      if (typeof userChar === 'string') {
+        const foundChar = availableCharacteristics.find(char => char.title === userChar);
+        return foundChar ? foundChar.id : null;
+      }
+
+      return null;
+    }).filter(Boolean); // Remove null values
+
+    console.log('Setting initial selected characteristics:', userCharacteristicIds);
+    setSelectedCharacteristicIds(userCharacteristicIds);
+  };
+
+  const handleCharacteristicToggle = (characteristicId) => {
+    if (selectedCharacteristicIds.includes(characteristicId)) {
+      // Remove from selection
+      const updatedIds = selectedCharacteristicIds.filter(id => id !== characteristicId);
+      setSelectedCharacteristicIds(updatedIds);
+
+      const characteristic = availableCharacteristics.find(char => char.id === characteristicId);
+      toast.info(`Đã bỏ chọn: ${characteristic?.title}`);
+    } else {
+      // Add to selection (max 10)
+      if (selectedCharacteristicIds.length >= 10) {
+        toast.warning('Chỉ được chọn tối đa 10 tính cách!');
+        return;
+      }
+
+      const updatedIds = [...selectedCharacteristicIds, characteristicId];
+      setSelectedCharacteristicIds(updatedIds);
+
+      const characteristic = availableCharacteristics.find(char => char.id === characteristicId);
+      toast.success(`Đã chọn: ${characteristic?.title}`);
     }
-
-    if (selectedCharacteristics.length >= 10) {
-      toast.warning('Chỉ được chọn tối đa 10 tính cách!');
-      return;
-    }
-
-    setSelectedCharacteristics([...selectedCharacteristics, newCharacteristic]);
-    setInputValue('');
-    toast.success(`Đã thêm tính cách: ${newCharacteristic}`);
   };
 
-  const handleRemoveCharacteristic = (characteristicToRemove) => {
-    const updatedCharacteristics = selectedCharacteristics.filter(
-      char => char !== characteristicToRemove
-    );
-    setSelectedCharacteristics(updatedCharacteristics);
-    toast.info(`Đã xóa tính cách: ${characteristicToRemove}`);
-  };
-
-  const handleInputChange = (e) => {
-    setInputValue(e.target.value);
-  };
-
-  const handleInputKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      handleAddCharacteristic();
+  const handleSelectAll = () => {
+    if (selectedCharacteristicIds.length === availableCharacteristics.length) {
+      // Deselect all
+      setSelectedCharacteristicIds([]);
+      toast.info('Đã bỏ chọn tất cả tính cách');
+    } else {
+      // Select all (limit to 10)
+      const allIds = availableCharacteristics.slice(0, 10).map(char => char.id);
+      setSelectedCharacteristicIds(allIds);
+      toast.success(`Đã chọn ${allIds.length} tính cách`);
     }
   };
 
@@ -67,25 +112,32 @@ const UpdateCharacteristicsModal = ({ open, onClose, userCharacteristics, onUpda
     try {
       setLoading(true);
 
-      // Send array of strings directly as API expects
-      const response = await profileApi.updateCharacteristics(selectedCharacteristics);
+      // Send array of characteristic IDs as API expects
+      const response = await profileApi.updateCharacteristics(selectedCharacteristicIds);
 
       console.log('Update characteristics response:', response);
 
       // Handle response - expecting string: "User characteristics updated successfully."
       if (response === "User characteristics updated successfully." || response?.message === "User characteristics updated successfully.") {
         toast.success('Cập nhật tính cách thành công!');
-        onUpdateSuccess && onUpdateSuccess(selectedCharacteristics);
-        handleClose();
-      } else if (Array.isArray(response)) {
-        // Fallback: if response is array format
-        toast.success('Cập nhật tính cách thành công!');
-        onUpdateSuccess && onUpdateSuccess(response);
+
+        // Convert IDs back to titles for display in parent component
+        const selectedTitles = selectedCharacteristicIds.map(id => {
+          const characteristic = availableCharacteristics.find(char => char.id === id);
+          return characteristic ? characteristic.title : id;
+        });
+
+        onUpdateSuccess && onUpdateSuccess(selectedTitles);
         handleClose();
       } else if (response?.success) {
-        // Fallback: if response has success property
         toast.success('Cập nhật tính cách thành công!');
-        onUpdateSuccess && onUpdateSuccess(selectedCharacteristics);
+
+        const selectedTitles = selectedCharacteristicIds.map(id => {
+          const characteristic = availableCharacteristics.find(char => char.id === id);
+          return characteristic ? characteristic.title : id;
+        });
+
+        onUpdateSuccess && onUpdateSuccess(selectedTitles);
         handleClose();
       } else {
         throw new Error('Có lỗi xảy ra khi cập nhật tính cách');
@@ -101,9 +153,13 @@ const UpdateCharacteristicsModal = ({ open, onClose, userCharacteristics, onUpda
 
   const handleClose = () => {
     form.resetFields();
-    setSelectedCharacteristics([]);
-    setInputValue('');
+    setSelectedCharacteristicIds([]);
+    setAvailableCharacteristics([]);
     onClose();
+  };
+
+  const getSelectedCharacteristics = () => {
+    return availableCharacteristics.filter(char => selectedCharacteristicIds.includes(char.id));
   };
 
   return (
@@ -112,117 +168,104 @@ const UpdateCharacteristicsModal = ({ open, onClose, userCharacteristics, onUpda
       open={open}
       onCancel={handleClose}
       footer={null}
-      width={700}
+      width={800}
       destroyOnClose
     >
       <div className="space-y-6">
-        {/* Input Section */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Thêm tính cách mới
-          </label>
-          <div className="flex gap-2">
-            <Input
-              placeholder="Nhập tính cách của bạn (ví dụ: Thân thiện, Gọn gàng, Yên tĩnh...)"
-              value={inputValue}
-              onChange={handleInputChange}
-              onKeyPress={handleInputKeyPress}
-              size="large"
-              maxLength={20}
-              className="flex-1"
-            />
-            <Button
-              type="primary"
-              icon={<PlusOutlined />}
-              onClick={handleAddCharacteristic}
-              size="large"
-              className="!bg-[#1279a2]"
-              disabled={!inputValue.trim() || selectedCharacteristics.length >= 10}
-            >
-              Add
-            </Button>
+        {loadingCharacteristics ? (
+          <div className="flex justify-center items-center py-8">
+            <Spin size="large" />
+            <span className="ml-3">Đang tải danh sách tính cách...</span>
           </div>
-          <div className="text-xs text-gray-500 mt-1">
-            💡 Nhập tính cách và nhấn Enter hoặc click Add để thêm vào danh sách
-          </div>
-        </div>
+        ) : (
+          <>
+            {/* Available Characteristics Selection */}
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <label className="block text-sm font-medium text-gray-700">
+                  Chọn tính cách của bạn ({selectedCharacteristicIds.length}/10)
+                </label>
+                <Button
+                  type="text"
+                  size="small"
+                  onClick={handleSelectAll}
+                  className="text-blue-500 hover:text-blue-700"
+                >
+                  {selectedCharacteristicIds.length === availableCharacteristics.length ? 'Bỏ chọn tất cả' : 'Chọn tất cả'}
+                </Button>
+              </div>
 
-        <Divider />
-
-        {/* Selected Characteristics Display */}
-        <div>
-          <div className="flex items-center justify-between mb-3">
-            <label className="block text-sm font-medium text-gray-700">
-              Tính cách đã chọn ({selectedCharacteristics.length}/10)
-            </label>
-            {selectedCharacteristics.length > 0 && (
-              <Button
-                type="text"
-                size="small"
-                onClick={() => setSelectedCharacteristics([])}
-                className="text-red-500 hover:text-red-700"
-              >
-                Xóa tất cả
-              </Button>
-            )}
-          </div>
-
-          {selectedCharacteristics.length > 0 ? (
-            <div className="space-y-2">
-              <Space size={[0, 8]} wrap>
-                {selectedCharacteristics.map((characteristic, index) => (
-                  <Tag
-                    key={index}
-                    closable
-                    onClose={() => handleRemoveCharacteristic(characteristic)}
-                    color="blue"
-                    className="text-sm px-3 py-1 cursor-pointer"
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-64 overflow-y-auto border border-gray-200 p-4 rounded-lg">
+                {availableCharacteristics.map((characteristic) => (
+                  <div
+                    key={characteristic.id}
+                    className={`p-3 rounded-lg border cursor-pointer transition-all duration-200 ${
+                      selectedCharacteristicIds.includes(characteristic.id)
+                        ? 'bg-blue-50 border-blue-300 shadow-sm'
+                        : 'bg-white border-gray-200 hover:bg-gray-50'
+                    }`}
+                    onClick={() => handleCharacteristicToggle(characteristic.id)}
                   >
-                    {characteristic}
-                  </Tag>
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        checked={selectedCharacteristicIds.includes(characteristic.id)}
+                        onChange={() => handleCharacteristicToggle(characteristic.id)}
+                        className="pointer-events-none"
+                      />
+                      <span className={`text-sm font-medium ${
+                        selectedCharacteristicIds.includes(characteristic.id) ? 'text-blue-700' : 'text-gray-700'
+                      }`}>
+                        {characteristic.title}
+                      </span>
+                    </div>
+                  </div>
                 ))}
-              </Space>
-            </div>
-          ) : (
-            <div className="text-center py-8 text-gray-500 border-2 border-dashed border-gray-200 rounded-lg">
-              <div className="text-lg mb-2">Chưa có tính cách nào</div>
-              <div className="text-sm">Hãy thêm tính cách mô tả về bạn ở phía trên</div>
-            </div>
-          )}
-        </div>
+              </div>
 
-        {/* Suggestions */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Gợi ý tính cách phổ biến
-          </label>
-          <Space size={[0, 8]} wrap>
-            {[
-              'Thân thiện', 'Vui vẻ', 'Hòa đồng', 'Yên tĩnh', 'Gọn gàng',
-              'Sạch sẽ', 'Chia sẻ', 'Tôn trọng', 'Linh hoạt', 'Chính trực'
-            ].map((suggestion) => (
-              <Tag
-                key={suggestion}
-                className={`cursor-pointer transition-colors ${
-                  selectedCharacteristics.includes(suggestion)
-                    ? 'bg-blue-100 border-blue-300 text-blue-700'
-                    : 'hover:bg-gray-100'
-                }`}
-                onClick={() => {
-                  if (!selectedCharacteristics.includes(suggestion) && selectedCharacteristics.length < 10) {
-                    setSelectedCharacteristics([...selectedCharacteristics, suggestion]);
-                    toast.success(`Đã thêm: ${suggestion}`);
-                  }
-                }}
-              >
-                + {suggestion}
-              </Tag>
-            ))}
-          </Space>
-          <div className="text-xs text-gray-500 mt-2">
-            💡 Click vào các gợi ý để thêm nhanh vào danh sách của bạn
-          </div>
-        </div>
+              {availableCharacteristics.length === 0 && (
+                <div className="text-center py-8 text-gray-500">
+                  Không có tính cách nào để chọn
+                </div>
+              )}
+            </div>
+
+            <Divider />
+
+            {/* Selected Characteristics Display */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-3">
+                Tính cách đã chọn ({selectedCharacteristicIds.length}/10)
+              </label>
+
+              {selectedCharacteristicIds.length > 0 ? (
+                <div className="space-y-2">
+                  <Space size={[0, 8]} wrap>
+                    {getSelectedCharacteristics().map((characteristic) => (
+                      <Tag
+                        key={characteristic.id}
+                        closable
+                        onClose={() => handleCharacteristicToggle(characteristic.id)}
+                        color="blue"
+                        className="text-sm px-3 py-1 cursor-pointer"
+                      >
+                        {characteristic.title}
+                      </Tag>
+                    ))}
+                  </Space>
+                </div>
+              ) : (
+                <div className="text-center py-8 text-gray-500 border-2 border-dashed border-gray-200 rounded-lg">
+                  <div className="text-lg mb-2">Chưa chọn tính cách nào</div>
+                  <div className="text-sm">Hãy chọn tính cách mô tả về bạn ở phía trên</div>
+                </div>
+              )}
+            </div>
+
+            <div className="text-xs text-gray-500">
+              💡 Chọn những tính cách mô tả đúng nhất về bạn để tìm được người bạn cùng phòng phù hợp
+            </div>
+          </>
+        )}
 
         {/* Footer Actions */}
         <div className="flex justify-end gap-3 pt-4 border-t">
@@ -235,9 +278,9 @@ const UpdateCharacteristicsModal = ({ open, onClose, userCharacteristics, onUpda
             loading={loading}
             size="large"
             className="!bg-[#1279a2]"
-            disabled={selectedCharacteristics.length === 0}
+            disabled={selectedCharacteristicIds.length === 0 || loadingCharacteristics}
           >
-            Cập nhật ({selectedCharacteristics.length})
+            Cập nhật ({selectedCharacteristicIds.length})
           </Button>
         </div>
       </div>
