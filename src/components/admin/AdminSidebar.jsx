@@ -14,6 +14,9 @@ import {
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../../redux/features/auth.slice';
+import { clearUserData } from '../../redux/features/user.slice';
+import { removeToken } from '../../utils/token.store.util';
+import { toast } from 'react-toastify';
 import { logoWhite, logoWhite2 } from '../../assets';
 
 const { Title, Text } = Typography;
@@ -57,8 +60,22 @@ const AdminSidebar = ({ collapsed, setCollapsed }) => {
   ];
 
   const handleLogout = () => {
-    dispatch(logout());
-    navigate('/login');
+    try {
+      // Clear token from storage
+      removeToken();
+      // Clear Redux state
+      dispatch(logout());
+      dispatch(clearUserData());
+      // Show success message
+      toast.success('Đăng xuất thành công!');
+
+      setTimeout(() => window.location.href = '/', 1000);
+      clearTimeout();
+
+    } catch (error) {
+      console.error('Logout error:', error);
+      toast.error('Có lỗi xảy ra khi đăng xuất');
+    }
   };
 
   const userMenuItems = [

@@ -3,12 +3,37 @@ import { useState } from 'react';
 import { Header } from '../common';
 import { Avatar, Divider, Layout, List } from 'antd';
 import { Link, Outlet } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { HeartOutlined, HistoryOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
+import { clearUserData } from '../../redux/features/user.slice';
+import { logout } from '../../redux/features/auth.slice';
+import { removeToken } from '../../utils/token.store.util';
+import { toast } from 'react-toastify';
 
 const UserLayout = () => {
   const { profile } = useSelector(state => state.user);
+  const dispatch = useDispatch();
   const [activeMenu, setActiveMenu] = useState('profile');
+
+  const handleLogout = () => {
+    try {
+      // Clear token from storage
+      removeToken();
+      // Clear Redux state
+      dispatch(logout());
+      dispatch(clearUserData());
+      // Show success message
+      toast.success('Đăng xuất thành công!');
+
+      setTimeout(() => window.location.href = '/', 1000);
+      clearTimeout();
+
+    } catch (error) {
+      console.error('Logout error:', error);
+      toast.error('Có lỗi xảy ra khi đăng xuất');
+    }
+  };
+
   return (
     <Layout className="min-h-screen">
       <Header />
@@ -54,7 +79,7 @@ const UserLayout = () => {
                 dataSource={[{ key: 'logout', label: 'Đăng xuất', icon: <LogoutOutlined className="mr-3 text-xl" /> }]}
                 renderItem={item => (
                   <List.Item className="cursor-pointer hover:bg-gray-100 rounded-lg px-4 py-2 flex items-center">
-                    <Link className='!ml-2 !text-black'>
+                    <Link className='!ml-2 !text-black' onClick={handleLogout}>
                       {item.icon}
                       {item.label}
                     </Link>

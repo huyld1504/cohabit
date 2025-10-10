@@ -66,8 +66,8 @@ const AuthForm = () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error('Đã có lỗi xảy ra trong quá trình đăng nhập. Vui lòng thử lại.');
-      dispatch(loginFailure('Đã có lỗi xảy ra trong quá trình đăng nhập.'));
+      toast.error(error?.data?.message || 'Đã có lỗi xảy ra trong quá trình đăng nhập. Vui lòng thử lại.');
+      dispatch(loginFailure(error?.data?.message || 'Đã có lỗi xảy ra trong quá trình đăng nhập.'));
     }
   };
   return (

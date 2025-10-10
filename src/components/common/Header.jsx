@@ -281,7 +281,7 @@ const Header = ({ variant = 'default' }) => {
                   </Menu.Item>
                   <Menu.Divider />
                   <Menu.Item key="logout" icon={<LogoutOutlined />}>
-                    <span onClick={() => {/* Xử lý logout ở đây */ closeDrawer(); }}>Đăng xuất</span>
+                    <span onClick={() => {handleLogout(); closeDrawer(); }} className="cursor-pointer">Đăng xuất</span>
                   </Menu.Item>
                 </Menu>
               </div>
