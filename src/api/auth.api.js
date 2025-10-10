@@ -18,7 +18,14 @@ export const authAPI = {
     register: async (credentials) => await callAPI('POST', authAPIRoute.register, credentials),
     refreshToken: async () => await callAPI('POST', authAPIRoute.refreshToken),
     logout: async () => await callAPI('POST', authAPIRoute.logout),
-    sendOTP: async (params, data) => await callAPI('POST', authAPIRoute.sendOTP + params.toString(), data),
+    sendOTP: async (data) => {
+        const params = new URLSearchParams({
+            email: data.email,
+            phoneNumber: data.phoneNumber
+        });
+        const urlWithParams = `${authAPIRoute.sendOTP}?${params.toString()}`;
+        return callAPI('POST', urlWithParams);
+    },
     verifyOTP: async (data) => await callAPI('POST', authAPIRoute.verifyOTP, data),
     changePassword: async (data) => await callAPI('POST', authAPIRoute.changePassword, data),
     forgotPassword: async (data) => await callAPI('POST', authAPIRoute.forgotPassword, data),

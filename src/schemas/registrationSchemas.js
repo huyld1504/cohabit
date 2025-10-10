@@ -2,6 +2,21 @@ import * as Yup from 'yup';
 
 // Validation functions for Ant Design Form
 export const registrationValidators = {
+  // Email validator
+  validateEmail: (_, value) => {
+    const emailSchema = Yup.string()
+      .required('Vui lòng nhập email!')
+      .email('Email không hợp lệ!')
+      .max(100, 'Email không được quá 100 ký tự');
+
+    try {
+      emailSchema.validateSync(value);
+      return Promise.resolve();
+    } catch (error) {
+      return Promise.reject(new Error(error.message));
+    }
+  },
+
   // Phone validator
   validatePhone: (_, value) => {
     const phoneSchema = Yup.string()
@@ -33,12 +48,13 @@ export const registrationValidators = {
     }
   },
 
-  // Password validator (simple version)
+  // Password validator
   validatePassword: (_, value) => {
     const passwordSchema = Yup.string()
       .required('Vui lòng nhập mật khẩu!')
       .min(6, 'Mật khẩu phải có ít nhất 6 ký tự')
-      .max(50, 'Mật khẩu không được quá 50 ký tự');
+      .max(50, 'Mật khẩu không được quá 50 ký tự')
+      .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, 'Mật khẩu phải chứa ít nhất 1 chữ hoa, 1 chữ thường và 1 số');
 
     try {
       passwordSchema.validateSync(value);
@@ -50,19 +66,17 @@ export const registrationValidators = {
 
   // Confirm password validator - needs access to form instance
   validateConfirmPassword: (form) => (_, value) => {
-    const password = form.getFieldValue('password');
-
-    const confirmPasswordSchema = Yup.string()
-      .required('Vui lòng xác nhận mật khẩu!')
-      .oneOf([password], 'Mật khẩu xác nhận không khớp!');
-
-    try {
-      confirmPasswordSchema.validateSync(value);
-      return Promise.resolve();
-    } catch (error) {
-      return Promise.reject(new Error(error.message));
+    if (!value) {
+      return Promise.reject(new Error('Vui lòng xác nhận mật khẩu!'));
     }
-  }
+
+    const password = form.getFieldValue('password');
+    if (password !== value) {
+      return Promise.reject(new Error('Mật khẩu xác nhận không khớp!'));
+    }
+
+    return Promise.resolve();
+  },
 };
 
 // Keep original schemas for reference (can be removed later)

@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Input, Typography, Steps, message, Form, Statistic } from 'antd';
-import { ArrowRightOutlined, ArrowLeftOutlined, PhoneOutlined, SafetyOutlined, LockOutlined, RightOutlined } from '@ant-design/icons';
+import React, { useState } from 'react';
+import { Button, Input, Typography, Steps, Form, Statistic } from 'antd';
+import { ArrowRightOutlined, ArrowLeftOutlined, PhoneOutlined, SafetyOutlined, LockOutlined, RightOutlined, MailOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { registerImage } from '../../assets';
-import mockRegistrationService, { showDemoGuide } from '../../services/mockRegistrationService';
+import { authAPI } from '../../api/auth.api';
 import { registrationValidators } from '../../schemas/registrationSchemas';
 
 const { Step } = Steps;
@@ -11,6 +12,7 @@ const { Step } = Steps;
 const StepRegistration = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({
+    email: '',
     phone: '',
     otp: '',
     password: '',
@@ -22,42 +24,57 @@ const StepRegistration = () => {
   const navigate = useNavigate();
 
   // Ant Design Form instances
-  const [phoneForm] = Form.useForm();
+  const [emailPhoneForm] = Form.useForm();
   const [otpForm] = Form.useForm();
   const [passwordForm] = Form.useForm();
 
-  // Show demo guide on component mount
-  useEffect(() => {
-    showDemoGuide();
-  }, []);
-
-  // Step 1: Phone Number Input
-  const handlePhoneSubmit = async (values) => {
+  // Step 1: Email và Phone Number Input
+  const handleEmailPhoneSubmit = async (values) => {
     try {
       setLoading(true);
 
-      // Sử dụng mock service để gửi OTP
-      const response = await mockRegistrationService.sendOTP(values.phone);
+      // Gửi email và phone number để xác minh tài khoản đăng ký
+      const response = await authAPI.sendOTP({
+        email: values.email,
+        phoneNumber: values.phone
+      });
 
-      setFormData(prev => ({ ...prev, phone: values.phone }));
-      setCurrentStep(1);
-      message.success(response.message);
+      if (response.success) {
+        setFormData(prev => ({
+          ...prev,
+          email: values.email,
+          phone: values.phone
+        }));
+        setCurrentStep(1);
+        toast.success(response.message || 'OTP đã được gửi thành công!');
 
-      // Thiết lập thời gian hết hạn OTP (5 phút từ bây giờ)
-      const expirationTime = Date.now() + 5 * 60 * 1000; // 5 phút
-      setOtpExpiration(expirationTime);
-      setIsOtpExpired(false);
+        // Thiết lập thời gian hết hạn OTP (5 phút từ bây giờ)
+        const expirationTime = Date.now() + 5 * 60 * 1000; // 5 phút
+        setOtpExpiration(expirationTime);
+        setIsOtpExpired(false);
 
-      // Reset OTP form khi chuyển step
-      otpForm.resetFields();
+        // Reset OTP form khi chuyển step
+        otpForm.resetFields();
+      } else {
+        throw new Error(response.message || 'Có lỗi xảy ra khi gửi OTP');
+      }
 
     } catch (error) {
       console.error('Error sending OTP:', error);
-      message.error(error.message || 'Có lỗi xảy ra khi gửi OTP. Vui lòng thử lại!');
-      phoneForm.setFields([{
-        name: 'phone',
-        errors: [error.message]
-      }]);
+      const errorMessage = error?.data?.message || error?.message || 'Có lỗi xảy ra khi gửi OTP. Vui lòng thử lại!';
+      toast.error(errorMessage);
+
+      // Hiển thị lỗi cụ thể cho từng field nếu có
+      if (error?.data?.errors) {
+        const fieldErrors = [];
+        if (error.data.errors.email) {
+          fieldErrors.push({ name: 'email', errors: [error.data.errors.email] });
+        }
+        if (error.data.errors.phone) {
+          fieldErrors.push({ name: 'phone', errors: [error.data.errors.phone] });
+        }
+        emailPhoneForm.setFields(fieldErrors);
+      }
     } finally {
       setLoading(false);
     }
@@ -68,57 +85,72 @@ const StepRegistration = () => {
     try {
       setLoading(true);
 
-      // Sử dụng mock service để xác thực OTP
-      const response = await mockRegistrationService.verifyOTP(formData.phone, values.otp);
+      // Verify OTP với code, email, phone
+      const response = await authAPI.verifyOTP({
+        code: values.otp,
+        email: formData.email,
+        phone: formData.phone
+      });
 
-      setFormData(prev => ({ ...prev, otp: values.otp }));
-      setCurrentStep(2);
-      message.success(response.message);
+      if (response.success) {
+        setFormData(prev => ({ ...prev, otp: values.otp }));
+        setCurrentStep(2);
+        toast.success(response.message || 'OTP xác thực thành công!');
 
-      // Reset password form khi chuyển step
-      passwordForm.resetFields();
+        // Reset password form khi chuyển step
+        passwordForm.resetFields();
+      } else {
+        throw new Error(response.message || 'OTP không hợp lệ');
+      }
 
     } catch (error) {
       console.error('Error verifying OTP:', error);
-      message.error(error.message || 'Có lỗi xảy ra khi xác thực OTP. Vui lòng thử lại!');
+      const errorMessage = error?.data?.message || error?.message || 'Có lỗi xảy ra khi xác thực OTP. Vui lòng thử lại!';
+      toast.error(errorMessage);
       otpForm.setFields([{
         name: 'otp',
-        errors: [error.message]
+        errors: [errorMessage]
       }]);
     } finally {
       setLoading(false);
     }
   };
 
-  // Step 3: Password Setup
+  // Step 3: Password Setup và Complete Registration
   const handlePasswordSubmit = async (values) => {
     try {
       setLoading(true);
 
-      // Sử dụng mock service để hoàn thành đăng ký
-      const response = await mockRegistrationService.completeRegistration(
-        formData.phone,
-        values.password
-      );
+      // Hoàn thành đăng ký với email, password, phone
+      const response = await authAPI.register({
+        email: formData.email,
+        password: values.password,
+        phone: formData.phone
+      });
 
-      message.success(response.message + ' Chào mừng bạn đến với Cohabit!');
+      if (response.success) {
+        toast.success(response.message || 'Đăng ký thành công! Chào mừng bạn đến với Cohabit!');
 
-      // Log thông tin user mới đăng ký
-      console.log('✅ Registration completed:', response.user);
-      console.log('📊 All registered users:', mockRegistrationService.getRegisteredUsers());
-
-      // Redirect to login
-      setTimeout(() => {
-        navigate('/login');
-      }, 1500);
+        // Redirect to login sau khi đăng ký thành công
+        setTimeout(() => {
+          navigate('/login');
+        }, 1500);
+      } else {
+        throw new Error(response.message || 'Có lỗi xảy ra khi đăng ký');
+      }
 
     } catch (error) {
       console.error('Error completing registration:', error);
-      message.error(error.message || 'Có lỗi xảy ra khi đăng ký. Vui lòng thử lại!');
-      passwordForm.setFields([{
-        name: 'password',
-        errors: [error.message]
-      }]);
+      const errorMessage = error?.data?.message || error?.message || 'Có lỗi xảy ra khi đăng ký. Vui lòng thử lại!';
+      toast.error(errorMessage);
+
+      if (error?.data?.errors) {
+        const fieldErrors = [];
+        if (error.data.errors.password) {
+          fieldErrors.push({ name: 'password', errors: [error.data.errors.password] });
+        }
+        passwordForm.setFields(fieldErrors);
+      }
     } finally {
       setLoading(false);
     }
@@ -128,25 +160,31 @@ const StepRegistration = () => {
     try {
       setLoading(true);
 
-      // Sử dụng mock service để gửi lại OTP
-      const response = await mockRegistrationService.resendOTP(formData.phone);
+      // Gửi lại OTP với email và phone đã lưu
+      const response = await authAPI.sendOTP({
+        email: formData.email,
+        phoneNumber: formData.phone
+      });
 
-      // Reset thời gian hết hạn OTP khi gửi lại
-      const expirationTime = Date.now() + 5 * 60 * 1000; // 5 phút
-      setOtpExpiration(expirationTime);
-      setIsOtpExpired(false);
+      if (response.success) {
+        // Reset thời gian hết hạn OTP khi gửi lại
+        const expirationTime = Date.now() + 5 * 60 * 1000; // 5 phút
+        setOtpExpiration(expirationTime);
+        setIsOtpExpired(false);
 
-      message.success(response.message);
+        toast.success(response.message || 'OTP đã được gửi lại thành công!');
+      } else {
+        throw new Error(response.message || 'Có lỗi xảy ra khi gửi lại OTP');
+      }
 
     } catch (error) {
       console.error('Error resending OTP:', error);
-      message.error(error.message || 'Có lỗi xảy ra khi gửi lại OTP!');
+      const errorMessage = error?.data?.message || error?.message || 'Có lỗi xảy ra khi gửi lại OTP!';
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
   };
-
-
 
   const hidePhoneNumber = (phone) => {
     if (!phone) return '';
@@ -156,7 +194,7 @@ const StepRegistration = () => {
   // Handle khi OTP hết hạn
   const handleOtpExpire = () => {
     setIsOtpExpired(true);
-    message.warning('Mã OTP đã hết hạn. Vui lòng yêu cầu mã mới!');
+    toast.warning('Mã OTP đã hết hạn. Vui lòng yêu cầu mã mới!');
   };
 
   // Handle step click để quay về step trước đó
@@ -198,28 +236,39 @@ const StepRegistration = () => {
                 onChange={handleStepClick}
                 className="clickable-steps"
               >
-                <Step title="Số điện thoại" icon={<PhoneOutlined />} />
+                <Step title="Email & Số điện thoại" icon={<MailOutlined />} />
                 <Step title="Xác thực OTP" icon={<SafetyOutlined />} />
                 <Step title="Tạo mật khẩu" icon={<LockOutlined />} />
               </Steps>
             </div>
 
-            {/* Step 1: Phone Number */}
+            {/* Step 1: Email and Phone Number */}
             {currentStep === 0 && (
               <div className="w-full">
                 <Typography.Title level={1} className="text-left mb-6">
                   Cohabit xin chào!
                   <Typography.Text className="block text-left mt-3 text-base">
-                    Nhập số điện thoại để bắt đầu đăng ký tài khoản
+                    Nhập email và số điện thoại để bắt đầu đăng ký tài khoản
                   </Typography.Text>
                 </Typography.Title>
 
                 <Form
-                  form={phoneForm}
-                  onFinish={handlePhoneSubmit}
+                  form={emailPhoneForm}
+                  onFinish={handleEmailPhoneSubmit}
                   layout="vertical"
                   requiredMark={false}
                 >
+                  <Form.Item
+                    name="email"
+                    rules={[{ validator: registrationValidators.validateEmail }]}
+                  >
+                    <Input
+                      prefix={<MailOutlined />}
+                      placeholder='Email của bạn'
+                      size='large'
+                    />
+                  </Form.Item>
+
                   <Form.Item
                     name="phone"
                     rules={[{ validator: registrationValidators.validatePhone }]}
