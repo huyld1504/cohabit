@@ -8,7 +8,7 @@ const AuthorInfo = ({ avatar, name }) => {
     <div className="flex items-center !space-x-3">
       <Avatar
         size={40}
-        src={avatar}
+        src={avatar || null}
         icon={<UserOutlined />}
         className="flex-shrink-0 !bg-[#1279a2]"
       />

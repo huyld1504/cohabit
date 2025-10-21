@@ -1,7 +1,7 @@
 import {callAPI} from "./axios.instance.js";
 
 const CHARACTERISTIC_API_BASE = {
-    GET_ALL: '/Characteristic'
+    GET_ALL: '/v1/Characteristic'
 };
 
 export const characteristicApi = {

@@ -3,9 +3,7 @@ import { Table, Dropdown, Button } from 'antd';
 import { MoreOutlined, EyeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import PostInfo from './PostInfo';
 import AuthorInfo from './AuthorInfo';
-import CategoryBadge from './CategoryBadge';
 import PostStatusBadge from './PostStatusBadge';
-import dayjs from 'dayjs';
 import PropTypes from 'prop-types';
 
 const PostTable = ({
@@ -43,16 +41,29 @@ const PostTable = ({
   const handleMenuClick = (key, record) => {
     switch (key) {
       case 'view':
-        onView(record);
+        onView && onView(record);
         break;
       case 'edit':
-        onEdit(record);
+        onEdit && onEdit(record);
         break;
       case 'delete':
-        onDelete(record);
+        onDelete && onDelete(record);
         break;
       default:
         break;
+    }
+  };
+
+  const mapStatus = (s) => {
+    switch (s) {
+      case 0:
+        return 'chờ duyệt';
+      case 1:
+        return 'đã xuất bản';
+      case -1:
+        return 'bị từ chối';
+      default:
+        return String(s);
     }
   };
 
@@ -60,10 +71,10 @@ const PostTable = ({
     {
       title: 'Bài viết',
       key: 'post',
-      width: 300,
+      width: 360,
       render: (_, record) => (
         <PostInfo
-          thumbnail={record.thumbnail}
+          thumbnail={record.imageUrl && record.imageUrl.length > 0 ? record.imageUrl[0] : ''}
           title={record.title}
           description={record.description}
         />
@@ -72,39 +83,39 @@ const PostTable = ({
     {
       title: 'Tác giả',
       key: 'author',
-      width: 180,
+      width: 200,
       render: (_, record) => (
         <AuthorInfo
-          avatar={record.author.avatar}
-          name={record.author.name}
+          avatar={record.user?.avatarUrl}
+          name={`${record.user?.firstName || ''} ${record.user?.lastName || ''}`.trim()}
         />
       ),
     },
     {
-      title: 'Danh mục',
-      dataIndex: 'category',
-      key: 'category',
-      width: 120,
-      render: (category) => <CategoryBadge category={category} />,
+      title: 'Địa chỉ',
+      dataIndex: 'address',
+      key: 'address',
+      width: 260,
+      render: (address) => <div className="text-sm text-gray-600">{address}</div>
+    },
+    {
+      title: 'Giá',
+      dataIndex: 'price',
+      key: 'price',
+      width: 140,
+      render: (price) => price != null ? new Intl.NumberFormat('vi-VN').format(price) + ' ₫' : '-',
     },
     {
       title: 'Trạng thái',
       dataIndex: 'status',
       key: 'status',
-      width: 120,
-      render: (status) => <PostStatusBadge status={status} />,
-    },
-    {
-      title: 'Ngày tạo',
-      dataIndex: 'createdDate',
-      key: 'createdDate',
-      width: 100,
-      render: (date) => dayjs(date, 'DD/MM/YYYY').format('DD/MM/YYYY'),
+      width: 140,
+      render: (status) => <PostStatusBadge status={mapStatus(status)} />,
     },
     {
       title: 'Thao tác',
       key: 'action',
-      width: 80,
+      width: 100,
       render: (_, record) => (
         <Dropdown
           menu={{
@@ -130,20 +141,22 @@ const PostTable = ({
     ],
   };
 
+  const tablePagination = pagination === false ? false : {
+    ...pagination,
+    showSizeChanger: false,
+    showQuickJumper: false,
+    simple: false,
+  };
+
   return (
     <Table
       columns={columns}
       dataSource={data}
-      rowKey="id"
+      rowKey={(record) => record.postId || record.id}
       rowSelection={rowSelection}
       loading={loading}
-      pagination={{
-        ...pagination,
-        showSizeChanger: false,
-        showQuickJumper: false,
-        simple: false,
-      }}
-      scroll={{ x: 1200 }}
+      pagination={tablePagination}
+      scroll={{ x: 1400 }}
     />
   );
 };
@@ -153,7 +166,7 @@ PostTable.propTypes = {
   loading: PropTypes.bool,
   selectedRowKeys: PropTypes.array,
   onSelectionChange: PropTypes.func,
-  pagination: PropTypes.object,
+  pagination: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
   onView: PropTypes.func,
   onEdit: PropTypes.func,
   onDelete: PropTypes.func,

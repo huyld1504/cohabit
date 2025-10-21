@@ -1,16 +1,16 @@
 import {callAPI} from "./axios.instance.js";
 
 const authAPIRoute = {
-    login: '/Auth/login',
-    register: '/Auth/register',
-    refreshToken: '/Auth/refresh-token',
-    logout: '/Auth/logout',
-    sendOTP: '/Auth/send-otp',
-    verifyOTP: '/Auth/verify-otp',
-    changePassword: '/Auth/change-password',
-    forgotPassword: '/Auth/forgot-password',
-    revoke: '/Auth/revoke',
-    roleAssign: '/Auth/role/assign',
+    login: '/v1/Auth/login',
+    register: '/v1/Auth/register',
+    refreshToken: '/v1/Auth/refresh-token',
+    logout: '/v1/Auth/logout',
+    sendOTP: '/v1/Auth/send-otp',
+    verifyOTP: '/v1/Auth/verify-otp',
+    changePassword: '/v1/Auth/change-password',
+    forgotPassword: '/v1/Auth/forgot-password',
+    revoke: '/v1/Auth/revoke',
+    roleAssign: '/v1/Auth/role/assign',
 }
 
 export const authAPI = {

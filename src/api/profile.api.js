@@ -1,12 +1,12 @@
 import {callAPI} from "./axios.instance";
 
 const PROFILE_API_BASE = {
-    GET_PROFILE: '/Profile',
-    UPDATE_PROFILE: '/Profile',
-    CHANGE_PASSWORD: '/Profile/ChangePassword',
-    GET_CHARACTERISTICS: '/Profile/Characteristics',
-    UPDATE_CHARACTERISTICS: '/Profile/Characteristics',
-    ADD_CHARACTERISTICS: '/Profile/Characteristics',
+    GET_PROFILE: '/v1/Profile',
+    UPDATE_PROFILE: '/v1/Profile',
+    CHANGE_PASSWORD: '/v1/Profile/ChangePassword',
+    GET_CHARACTERISTICS: '/v1/Profile/Characteristics',
+    UPDATE_CHARACTERISTICS: '/v1/Profile/Characteristics',
+    ADD_CHARACTERISTICS: '/v1/Profile/Characteristics',
 };
 
 const convertSexFieldToNumber = (sex) => {
