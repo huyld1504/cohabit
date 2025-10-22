@@ -1,13 +1,14 @@
 import React from 'react';
 import { Button } from 'antd';
 import { element1, logo, sloganImage, sloganImage2 } from '../../assets';
+import { Link } from 'react-router-dom';
 
 const HeroSection = () => {
   return (
     <section className="bg-gray-50 py-10 lg:py-15">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:py-20 py-0">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-y-16 lg:gap-16 items-center">
-          
+
           {/* Left Content - Text */}
           <div className="col-span-12 lg:col-span-5 lg:space-y-8 md:space-y-8 space-y-6 md:mx-33 lg:mx-5">
             {/* Logo Badge */}
@@ -34,23 +35,24 @@ const HeroSection = () => {
                 className="w-[320px] md:w-[400px] lg:w-[480px] h-auto object-contain -mt-24 md:-mt-28 lg:-mt-36 lg:-ml-2 md:-ml-1 -ml-1"
               />
             </div>
-            
+
             {/* Description */}
             <div className='-mt-12 md:-mt-16 lg:-mt-20'>
               <p className="text-gray-600 text-lg leading-relaxed max-w-md">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                Hành trình tìm kiếm một nơi để ở không chỉ là về những bức tường. CoHabit mang đến một nền tảng thuê nhà hoàn toàn mới, nơi mọi thông tin đều được xác thực, giúp bạn an tâm tìm kiếm không gian sống lý tưởng và những người bạn ở ghép phù hợp nhất.
               </p>
             </div>
 
             {/* CTA Buttons */}
             <div className="flex flex-row gap-4 justify-start">
-              <Button
-                size="large"
-                className="!bg-blue-600 border-blue-600 !text-white hover:bg-blue-700 hover:border-blue-700 px-8 py-3 h-auto font-medium text-base rounded-lg"
-              >
-                Đăng ký
-              </Button>
+              <Link to={'/register'}>
+                <Button
+                  size="large"
+                  className="!bg-blue-600 border-blue-600 !text-white hover:bg-blue-700 hover:border-blue-700 px-8 py-3 h-auto font-medium text-base rounded-lg"
+                >
+                  Đăng ký
+                </Button>
+              </Link>
               <Button
                 size="large"
                 className="border-blue-600 text-blue-600 hover:bg-blue-50 hover:border-blue-700 px-8 py-3 h-auto font-medium text-base rounded-lg"

@@ -25,9 +25,7 @@ const MissionSection = () => {
 
             {/* Description */}
             <p className="text-gray-600 text-lg leading-relaxed">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-              sed do eiusmod tempor incididunt ut labore et dolore
-              magna aliqua.
+              Chúng tôi tin rằng ai cũng xứng đáng có một nơi ở an toàn để gọi là nhà. Xuất phát từ chính những trải nghiệm khó khăn khi tìm trọ, CoHabit ra đời với cam kết mạnh mẽ về sự minh bạch, tạo ra một môi trường kết nối đáng tin cậy, mang lại sự tiện lợi và bình yên cho cả người đi thuê và chủ cho thuê.
             </p>
           </div>
 

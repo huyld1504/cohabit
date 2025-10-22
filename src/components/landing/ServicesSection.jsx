@@ -74,9 +74,7 @@ const ServicesSection = () => {
 
               {/* Description */}
               <p className="text-gray-600 text-lg leading-relaxed max-w-lg mx-auto lg:mx-0 md:-ml-0 -ml-0">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                sed do eiusmod tempor incididunt ut labore et dolore
-                magna aliqua.
+                Không chỉ dừng lại ở việc kết nối người thuê và chủ trọ, chúng tôi xây dựng một hệ sinh thái toàn diện với các công cụ thông minh, nhằm mang lại trải nghiệm thuê nhà dễ dàng và hiệu quả nhất cho tất cả mọi người.
               </p>
 
               {/* Service Cards Grid */}

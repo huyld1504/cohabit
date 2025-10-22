@@ -16,6 +16,8 @@ const UserPostTable = ({
       'pending': { color: 'orange', text: 'Đang duyệt' },
       'approved': { color: 'green', text: 'Đã duyệt' },
       'rejected': { color: 'red', text: 'Từ chối' },
+      'closed': { color: 'default', text: 'Đã đóng' },
+      'hidden': { color: 'purple', text: 'Đã ẩn' },
     };
 
     const config = statusConfig[status] || statusConfig.pending;
@@ -117,13 +119,7 @@ const UserPostTable = ({
         dataSource={data}
         loading={loading}
         rowKey="id"
-        pagination={{
-          pageSize: 10,
-          showSizeChanger: false,
-          showQuickJumper: false,
-          showTotal: false,
-          simple: false,
-        }}
+        pagination={false}
         scroll={{ x: 800 }}
         className="custom-table"
         size="large"

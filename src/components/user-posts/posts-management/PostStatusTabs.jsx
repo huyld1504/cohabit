@@ -7,7 +7,9 @@ const PostStatusTabs = ({
   onTabChange,
   pendingCount = 0,
   approvedCount = 0,
-  rejectedCount = 0
+  rejectedCount = 0,
+  closedCount = 0,
+  hiddenCount = 0
 }) => {
   const tabItems = [
     {
@@ -55,6 +57,36 @@ const PostStatusTabs = ({
         </div>
       ),
     },
+    {
+      key: 'closed',
+      label: (
+        <div className="flex items-center space-x-2">
+          <span>Đã đóng</span>
+          {closedCount > 0 && (
+            <Badge
+              count={closedCount}
+              className="bg-gray-500"
+              size="small"
+            />
+          )}
+        </div>
+      ),
+    },
+    {
+      key: 'hidden',
+      label: (
+        <div className="flex items-center space-x-2">
+          <span>Đã ẩn</span>
+          {hiddenCount > 0 && (
+            <Badge
+              count={hiddenCount}
+              className="bg-purple-500"
+              size="small"
+            />
+          )}
+        </div>
+      ),
+    },
   ];
 
   return (
@@ -79,6 +111,8 @@ PostStatusTabs.propTypes = {
   pendingCount: PropTypes.number,
   approvedCount: PropTypes.number,
   rejectedCount: PropTypes.number,
+  closedCount: PropTypes.number,
+  hiddenCount: PropTypes.number,
 };
 
 export default PostStatusTabs;

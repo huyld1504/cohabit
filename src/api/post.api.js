@@ -4,7 +4,7 @@ const POST_API_ROUTES = {
     CREATE_POST: '/Post',
     GET_POSTS: '/Post',
     GET_ADMIN_POST: '/Post/admin',
-    GET_ALL_USER_POST: '/Post/user/all',
+    GET_USER_POSTS: '/Post/user/all',
     GET_PUBLIC_USER_POST: '/Post/user/public',
     HIDDEN_POST: (postId) => `Post/user/${postId}/hidden`,
     UPDATE_STATUS_POST: (postId, status) => `Post/user/${postId}/${status}`,
@@ -15,10 +15,10 @@ const POST_API_ROUTES = {
 
 export const postApi = {
     createPost: async (postData) => callAPIWithFormData('POST', POST_API_ROUTES.CREATE_POST, postData),
-    getPosts: async (params) => callAPI('GET', POST_API_ROUTES.GET_POSTS, null, params),
-    getAdminPost: async (params) => callAPI('GET', POST_API_ROUTES.GET_ADMIN_POST, null, params),
-    getAllUserPost: async (params) => callAPI('GET', POST_API_ROUTES.GET_ALL_USER_POST, null, params),
-    getPublicUserPost: async (params) => callAPI('GET', POST_API_ROUTES.GET_PUBLIC_USER_POST, null, params),
+    getPosts: async (params) => callAPI('GET', POST_API_ROUTES.GET_POSTS, params),
+    getAdminPost: async (params) => callAPI('GET', POST_API_ROUTES.GET_ADMIN_POST, params),
+    getAllUserPost: async (params) => callAPI('GET', POST_API_ROUTES.GET_USER_POSTS, params),
+    getPublicUserPost: async (params) => callAPI('GET', POST_API_ROUTES.GET_PUBLIC_USER_POST, params),
     hidePost: async (postId) => callAPI('PATCH', POST_API_ROUTES.HIDDEN_POST(postId)),
     updateStatusPost: async (postId, status) => callAPI('PATCH', POST_API_ROUTES.UPDATE_STATUS_POST(postId, status)),
     getPostDetail: async (postId) => callAPI('GET', POST_API_ROUTES.GET_POST_DETAIL(postId)),

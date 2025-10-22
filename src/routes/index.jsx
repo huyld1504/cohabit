@@ -28,11 +28,11 @@ import PostManagementPage from "../pages/admin/PostManagementPage";
 import PostDetailPage from "../pages/admin/PostDetailPage";
 import PremiumPage from "../pages/premium/PremiumPage";
 import PaymentPage from "../pages/payment/PaymentPage";
+import UserPostDetailPage from "../pages/user-posts/UserPostDetailPage";
 import UserPostManagementPage from "../pages/user-posts/UserPostManagementPage";
-import RentalManagementPage from "../pages/user-posts/RentalManagementPage";
 import CreatePostPage from "../pages/user-posts/CreatePostPage";
 import RentedPostsPage from "../pages/user-posts/RentedPostsPage";
-import RentedPostDetailPage from "../pages/user-posts/RentedPostDetailPage";
+import RentalManagementPage from "../pages/user-posts/RentalManagementPage";
 
 // layouts
 import UserPostLayout from "../components/layouts/UserPostLayout";
@@ -126,23 +126,27 @@ export const router = createBrowserRouter([
             element: <UserPostLayout />,
             children: [
               {
-                path: '/user/posts',
+                index: true,
+                element: <UserPostManagementPage />
+              },
+              {
+                path: 'user/posts',
                 element: <UserPostManagementPage />,
               },
               {
-                path: '/user/posts/create',
+                path: 'user/posts/create',
                 element: <CreatePostPage />,
               },
               {
-                path: '/user/posts/rented',
+                path: 'user/posts/rented',
                 element: <RentedPostsPage />,
               },
               {
-                path: '/user/posts/rented/:id',
-                element: <RentedPostDetailPage />,
+                path: 'user/posts/:postId',
+                element: <UserPostDetailPage />,
               },
               {
-                path: '/user/rentals',
+                path: 'user/rentals',
                 element: <RentalManagementPage />,
               },
               // Add more user post management routes here
