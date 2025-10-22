@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import AdminSidebar from '../admin/AdminSidebar';
-import ProtectedRoute from '../common/ProtectedRoute';
+import { AdminRoute } from '../common/ProtectedRoute';
 
 const AdminLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -20,21 +20,21 @@ const AdminLayout = () => {
   }, []);
 
   return (
-    // <ProtectedRoute allowedRoles={['admin']}>
-    <div className="min-h-screen bg-gray-50">
-      <AdminSidebar collapsed={collapsed} setCollapsed={setCollapsed} />
-      <div
-        className="overflow-x-auto"
-        style={{
-          minHeight: '100vh',
-          marginLeft: collapsed ? '80px' : '280px',
-          transition: 'margin-left 0.2s',
-        }}
-      >
-        <Outlet />
+    <AdminRoute>
+      <div className="min-h-screen bg-gray-50">
+        <AdminSidebar collapsed={collapsed} setCollapsed={setCollapsed} />
+        <div
+          className="overflow-x-auto"
+          style={{
+            minHeight: '100vh',
+            marginLeft: collapsed ? '80px' : '280px',
+            transition: 'margin-left 0.2s',
+          }}
+        >
+          <Outlet />
+        </div>
       </div>
-    </div>
-    // </ProtectedRoute>
+    </AdminRoute>
   );
 };
 

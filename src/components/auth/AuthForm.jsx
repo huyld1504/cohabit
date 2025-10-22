@@ -59,8 +59,6 @@ const AuthForm = () => {
       } else {
         // Handle case khi success = false
         const errorMessage = response?.message || 'Đăng nhập thất bại!';
-        console.log(errorMessage);
-        console.log("error login", response);
         dispatch(loginFailure(errorMessage));
         toast.error(errorMessage);
       }

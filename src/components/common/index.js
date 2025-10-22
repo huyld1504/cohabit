@@ -9,4 +9,6 @@ export { default as FilterSidebar } from '../properties/FilterSidebar';
 export { default as PropertyGrid } from '../properties/PropertyGrid';
 export { default as HeroBanner } from './HeroBanner';
 export { default as SafeHTMLRenderer } from './SafeHTMLRenderer';
-export {default as Logo} from './Logo';
+export { default as Logo } from './Logo';
+export { default as ProtectedRoute, AdminRoute, ProMemberRoute, PlusMemberRoute, ModeratorRoute, UserPostRoute } from './ProtectedRoute';
+export { default as UpgradePrompt } from './UpgradePrompt';

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import UserPostSidebar from '../user-posts/common/UserPostSidebar';
+import { UserPostRoute } from '../common/ProtectedRoute';
 
 const UserPostLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -19,19 +20,21 @@ const UserPostLayout = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <UserPostSidebar collapsed={collapsed} setCollapsed={setCollapsed} />
-      <div
-        className="overflow-x-auto"
-        style={{
-          minHeight: '100vh',
-          marginLeft: collapsed ? '80px' : '280px',
-          transition: 'margin-left 0.2s',
-        }}
-      >
-        <Outlet />
+    <UserPostRoute>
+      <div className="min-h-screen bg-gray-50">
+        <UserPostSidebar collapsed={collapsed} setCollapsed={setCollapsed} />
+        <div
+          className="overflow-x-auto"
+          style={{
+            minHeight: '100vh',
+            marginLeft: collapsed ? '80px' : '280px',
+            transition: 'margin-left 0.2s',
+          }}
+        >
+          <Outlet />
+        </div>
       </div>
-    </div>
+    </UserPostRoute>
   );
 };
 

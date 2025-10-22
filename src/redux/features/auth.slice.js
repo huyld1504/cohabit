@@ -30,6 +30,7 @@ const authSlice = createSlice({
       state.refreshToken = null;
       state.loading = false;
       state.error = null;
+      // Note: User data will be cleared by clearUserData action
     }
   }
 });
