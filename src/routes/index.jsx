@@ -25,6 +25,7 @@ import UserManagementPage from "../pages/admin/UserManagementPage";
 import UnauthorizedPage from "../pages/UnauthorizedPage";
 import RentalHistoryPage from "../pages/admin/RentalHistoryPage";
 import PostManagementPage from "../pages/admin/PostManagementPage";
+import PostDetailPage from "../pages/admin/PostDetailPage";
 import PremiumPage from "../pages/premium/PremiumPage";
 import PaymentPage from "../pages/payment/PaymentPage";
 import UserPostManagementPage from "../pages/user-posts/UserPostManagementPage";
@@ -165,6 +166,10 @@ export const router = createBrowserRouter([
               {
                 path: 'admin/posts-management',
                 element: <PostManagementPage />
+              },
+              {
+                path: 'admin/posts/:postId',
+                element: <PostDetailPage />
               }
             ]
           },

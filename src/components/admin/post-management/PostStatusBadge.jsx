@@ -4,35 +4,42 @@ import PropTypes from 'prop-types';
 
 const PostStatusBadge = ({ status }) => {
   const getStatusConfig = (status) => {
-    switch (status.toLowerCase()) {
-      case 'chờ duyệt':
+    switch (status) {
+      case 0:
       case 'pending':
         return {
           color: 'orange',
-          text: 'Chờ duyệt'
+          text: 'Đang chờ duyệt'
         };
-      case 'đã xuất bản':
+      case 1:
+      case 'publish':
       case 'published':
         return {
           color: 'success',
-          text: 'Đã xuất bản'
+          text: 'Đang hoạt động'
         };
-      case 'bị từ chối':
+      case 2:
       case 'rejected':
         return {
           color: 'error',
-          text: 'Bị từ chối'
+          text: 'Đã từ chối'
         };
-      case 'nháp':
-      case 'draft':
+      case 3:
+      case 'closed':
         return {
           color: 'default',
-          text: 'Nháp'
+          text: 'Đã đóng'
+        };
+      case 4:
+      case 'hidden':
+        return {
+          color: 'purple',
+          text: 'Đã ẩn'
         };
       default:
         return {
           color: 'default',
-          text: status
+          text: 'Không xác định'
         };
     }
   };

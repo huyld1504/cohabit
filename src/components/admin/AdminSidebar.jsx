@@ -23,9 +23,8 @@ const { Title, Text } = Typography;
 
 const AdminSidebar = ({ collapsed, setCollapsed }) => {
   const location = useLocation();
-  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
+  const { profile } = useSelector((state) => state.user);
 
   const menuItems = [
     {
@@ -217,18 +216,18 @@ const AdminSidebar = ({ collapsed, setCollapsed }) => {
                 <div className="relative">
                   <Avatar
                     size={46}
-                    src={user?.avatar}
-                    icon={<UserOutlined />}
+                    src={profile?.image || null}
+                    icon={profile?.image === '' ? <UserOutlined /> : null}
                     className="flex-shrink-0 border-2 border-white/40 group-hover:border-white/60 transition-all duration-200"
                   />
                   <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-green-400 border-2 border-white rounded-full"></div>
                 </div>
                 <div className="flex-1 min-w-0">
                   <Text className="text-white font-semibold text-sm block truncate group-hover:text-white transition-colors">
-                    {user?.name || 'Admin User'}
+                    {profile?.fullName || 'Admin User'}
                   </Text>
                   <Text className="text-white/70 text-xs block truncate group-hover:text-white/85 transition-colors">
-                    {user?.email || 'admin@cohabit.com'}
+                    {profile?.email || profile?.phone || 'admin@cohabit.com'}
                   </Text>
                 </div>
                 <DownOutlined className="text-white/50 text-xs group-hover:text-white/70 transition-colors" />
@@ -250,7 +249,7 @@ const AdminSidebar = ({ collapsed, setCollapsed }) => {
               <div className="relative cursor-pointer">
                 <Avatar
                   size={48}
-                  src={user?.avatar}
+                  src={profile?.image}
                   icon={<UserOutlined />}
                   className="border-2 border-white/40 group-hover:border-white/60 transition-all duration-200 shadow-xl group-hover:shadow-2xl group-hover:scale-105"
                 />

@@ -26,7 +26,7 @@ const UserPostSidebar = ({ collapsed, setCollapsed }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
+  const { profile } = useSelector((state) => state.user);
 
   const menuItems = [
     {
@@ -217,15 +217,16 @@ const UserPostSidebar = ({ collapsed, setCollapsed }) => {
               <div className="flex items-center !space-x-3">
                 <Avatar
                   size="large"
-                  icon={<UserOutlined />}
+                  src={profile?.image || null}
+                  icon={profile?.image === '' ? <UserOutlined /> : null}
                   className="bg-white/20"
                 />
                 <div className="flex-1 min-w-0">
                   <Text className="text-white text-sm font-medium block truncate">
-                    {user?.name || 'User'}
+                    {profile?.fullName || 'User'}
                   </Text>
                   <Text className="text-white/70 text-xs block truncate">
-                    {user?.email || 'user@example.com'}
+                    {profile?.email || profile?.phone || 'user@example.com'}
                   </Text>
                 </div>
               </div>
@@ -246,6 +247,7 @@ const UserPostSidebar = ({ collapsed, setCollapsed }) => {
             <div className="flex justify-center p-2 rounded-lg hover:bg-white/15 cursor-pointer transition-all duration-300 hover:scale-110 active:scale-95">
               <Avatar
                 size="large"
+                src={profile?.image}
                 icon={<UserOutlined />}
                 className="bg-white/20"
               />
