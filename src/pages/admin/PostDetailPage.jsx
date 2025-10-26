@@ -5,6 +5,7 @@ import { ArrowLeftOutlined, UserOutlined, PhoneOutlined, EnvironmentOutlined, Do
 import { toast } from 'react-toastify';
 import AdminPaper from '../../components/admin/AdminPaper';
 import ImageGallery from '../../components/properties/detail/ImageGallery';
+import SafeHTMLRenderer from '../../components/common/SafeHTMLRenderer';
 import { postApi } from '../../api/post.api';
 
 const PostDetailPage = () => {
@@ -170,9 +171,9 @@ const PostDetailPage = () => {
                 {post.description && (
                   <div>
                     <h3 className="text-xl font-semibold mb-4 text-gray-800">Mô tả</h3>
-                    <p className="text-gray-700 leading-relaxed">
-                      {post.description}
-                    </p>
+                    <div className="text-gray-700 leading-relaxed">
+                      <SafeHTMLRenderer htmlContent={post.description} />
+                    </div>
                   </div>
                 )}
 
@@ -182,9 +183,9 @@ const PostDetailPage = () => {
                     <Divider />
                     <div>
                       <h3 className="text-xl font-semibold mb-4 text-gray-800">Tình trạng phòng</h3>
-                      <p className="text-gray-700 leading-relaxed">
-                        {post.condition}
-                      </p>
+                      <div className="text-gray-700 leading-relaxed">
+                        <SafeHTMLRenderer htmlContent={post.condition} />
+                      </div>
                     </div>
                   </>
                 )}
@@ -195,9 +196,9 @@ const PostDetailPage = () => {
                     <Divider />
                     <div>
                       <h3 className="text-xl font-semibold mb-4 text-gray-800">Chính sách đặt cọc</h3>
-                      <p className="text-gray-700 leading-relaxed">
-                        {post.depositPolicy}
-                      </p>
+                      <div className="text-gray-700 leading-relaxed">
+                        <SafeHTMLRenderer htmlContent={post.depositPolicy} />
+                      </div>
                     </div>
                   </>
                 )}

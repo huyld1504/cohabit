@@ -5,13 +5,15 @@ import { useNavigate } from 'react-router-dom';
 import UserPostPaper from '../../components/user-posts/common/UserPostPaper';
 import PostStatusTabs from '../../components/user-posts/posts-management/PostStatusTabs';
 import UserPostTable from '../../components/user-posts/posts-management/UserPostTable';
+import EditPostModal from '../../components/user-posts/EditPostModal';
 import { postApi } from '../../api/post.api';
-import { toast } from 'react-toastify';
 
 const UserPostManagementPage = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('pending');
   const [loading, setLoading] = useState(false);
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [selectedPost, setSelectedPost] = useState(null);
   const [postsData, setPostsData] = useState({
     pending: [],
     approved: [],
@@ -110,8 +112,18 @@ const UserPostManagementPage = () => {
   };
 
   const handleEditPost = (record) => {
-    message.info(`Chỉnh sửa bài đăng: ${record.title}`);
-    // Navigate to edit post
+    setSelectedPost(record);
+    setEditModalVisible(true);
+  };
+
+  const handleEditSuccess = () => {
+    // Refresh data after successful edit
+    fetchUserPosts();
+  };
+
+  const handleEditCancel = () => {
+    setEditModalVisible(false);
+    setSelectedPost(null);
   };
 
   const handleDeletePost = (record) => {
@@ -148,6 +160,14 @@ const UserPostManagementPage = () => {
         onView={handleViewPost}
         onEdit={handleEditPost}
         onDelete={handleDeletePost}
+      />
+
+      {/* Edit Post Modal */}
+      <EditPostModal
+        visible={editModalVisible}
+        onCancel={handleEditCancel}
+        post={selectedPost}
+        onSuccess={handleEditSuccess}
       />
     </UserPostPaper>
   );

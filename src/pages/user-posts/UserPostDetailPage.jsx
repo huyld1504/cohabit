@@ -5,6 +5,8 @@ import { ArrowLeftOutlined, UserOutlined, PhoneOutlined, EnvironmentOutlined, Do
 import { toast } from 'react-toastify';
 import UserPostPaper from '../../components/user-posts/common/UserPostPaper';
 import ImageGallery from '../../components/properties/detail/ImageGallery';
+import EditPostModal from '../../components/user-posts/EditPostModal';
+import SafeHTMLRenderer from '../../components/common/SafeHTMLRenderer';
 import { postApi } from '../../api/post.api';
 
 const UserPostDetailPage = () => {
@@ -12,6 +14,7 @@ const UserPostDetailPage = () => {
   const navigate = useNavigate();
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [editModalVisible, setEditModalVisible] = useState(false);
 
   const fetchPostDetail = useCallback(async () => {
     setLoading(true);
@@ -78,6 +81,15 @@ const UserPostDetailPage = () => {
     });
   };
 
+  const handleEditPost = () => {
+    setEditModalVisible(true);
+  };
+
+  const handleEditSuccess = () => {
+    // Refresh post data after successful edit
+    fetchPostDetail();
+  };
+
   const formatPrice = (price) => {
     return new Intl.NumberFormat('vi-VN', {
       style: 'currency',
@@ -127,7 +139,7 @@ const UserPostDetailPage = () => {
           <Button onClick={() => navigate('/user/posts')} icon={<ArrowLeftOutlined />}>
             Quay lại danh sách
           </Button>
-          <Button type="primary" icon={<EditOutlined />}>
+          <Button type="primary" icon={<EditOutlined />} onClick={handleEditPost}>
             Chỉnh sửa
           </Button>
           <Button danger icon={<EyeInvisibleOutlined />} onClick={handleHidePost}>
@@ -153,9 +165,9 @@ const UserPostDetailPage = () => {
                 {post.description && (
                   <div>
                     <h3 className="text-xl font-semibold mb-4 text-gray-800">Mô tả</h3>
-                    <p className="text-gray-700 leading-relaxed">
-                      {post.description}
-                    </p>
+                    <div className="text-gray-700 leading-relaxed">
+                      <SafeHTMLRenderer htmlContent={post.description} />
+                    </div>
                   </div>
                 )}
 
@@ -165,9 +177,9 @@ const UserPostDetailPage = () => {
                     <Divider />
                     <div>
                       <h3 className="text-xl font-semibold mb-4 text-gray-800">Tình trạng phòng</h3>
-                      <p className="text-gray-700 leading-relaxed">
-                        {post.condition}
-                      </p>
+                      <div className="text-gray-700 leading-relaxed">
+                        <SafeHTMLRenderer htmlContent={post.condition} />
+                      </div>
                     </div>
                   </>
                 )}
@@ -178,9 +190,9 @@ const UserPostDetailPage = () => {
                     <Divider />
                     <div>
                       <h3 className="text-xl font-semibold mb-4 text-gray-800">Chính sách đặt cọc</h3>
-                      <p className="text-gray-700 leading-relaxed">
-                        {post.depositPolicy}
-                      </p>
+                      <div className="text-gray-700 leading-relaxed">
+                        <SafeHTMLRenderer htmlContent={post.depositPolicy} />
+                      </div>
                     </div>
                   </>
                 )}
@@ -261,6 +273,14 @@ const UserPostDetailPage = () => {
           </div>
         </Col>
       </Row>
+
+      {/* Edit Post Modal */}
+      <EditPostModal
+        visible={editModalVisible}
+        onCancel={() => setEditModalVisible(false)}
+        post={post}
+        onSuccess={handleEditSuccess}
+      />
     </UserPostPaper>
   );
 };

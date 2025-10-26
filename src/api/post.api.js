@@ -1,4 +1,4 @@
-import {callAPI, callAPIWithFormData} from "./axios.instance.js";
+import { callAPI, callAPIWithFormData } from "./axios.instance.js";
 
 const POST_API_ROUTES = {
     CREATE_POST: '/Post',
@@ -11,7 +11,7 @@ const POST_API_ROUTES = {
     GET_POST_DETAIL: (postId) => `Post/${postId}`,
     UPDATE_POST: (postId) => `Post/${postId}`,
     UPDATE_FURNITURE: (postId) => `Post/furniture/${postId}`
-}
+};
 
 export const postApi = {
     createPost: async (postData) => callAPIWithFormData('POST', POST_API_ROUTES.CREATE_POST, postData),
@@ -23,5 +23,6 @@ export const postApi = {
     updateStatusPost: async (postId, status) => callAPI('PATCH', POST_API_ROUTES.UPDATE_STATUS_POST(postId, status)),
     getPostDetail: async (postId) => callAPI('GET', POST_API_ROUTES.GET_POST_DETAIL(postId)),
     updatePost: async (postId, postData) => callAPIWithFormData('PUT', POST_API_ROUTES.UPDATE_POST(postId), postData),
+    updatePostInfo: async (postId, postInfo) => callAPI('PUT', POST_API_ROUTES.UPDATE_POST(postId), postInfo),
     updateFurniture: async (postId, furnitureData) => callAPIWithFormData('PATCH', POST_API_ROUTES.UPDATE_FURNITURE(postId), furnitureData),
-}
+};
