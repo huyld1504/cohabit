@@ -28,6 +28,11 @@ const AdminSidebar = ({ collapsed, setCollapsed }) => {
 
   const menuItems = [
     {
+      key: '/',
+      icon: <HomeOutlined />,
+      label: <Link to="/">Trang chủ</Link>,
+    },
+    {
       key: '/admin',
       icon: <HomeOutlined />,
       label: <Link to="/admin">Tổng quan</Link>,

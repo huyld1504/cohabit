@@ -16,29 +16,6 @@ const CreatePostPage = () => {
     navigate('/premium');
   };
 
-  const handleSubmit = async (formData) => {
-    try {
-      setLoading(true);
-
-      // Simulate API call
-      console.log('Creating post with data:', formData);
-
-      // TODO: Replace with actual API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-
-      message.success('Tạo bài đăng thành công!');
-
-      // Redirect to user posts management page
-      navigate('/user/posts', { replace: true });
-
-    } catch (error) {
-      console.error('Error creating post:', error);
-      message.error('Có lỗi xảy ra khi tạo bài đăng');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-gray-50">
       {hasRequiredPlan ? (
@@ -79,10 +56,7 @@ const CreatePostPage = () => {
         <div className="w-full p-6">
           {/* Bỏ giới hạn chiều cao để form hiển thị đầy đủ */}
           <div className="bg-white rounded-lg shadow-sm">
-            <CreatePostForm
-              onSubmit={handleSubmit}
-              loading={loading}
-            />
+            <CreatePostForm />
           </div>
         </div>
       )}

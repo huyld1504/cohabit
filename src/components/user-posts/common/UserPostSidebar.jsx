@@ -30,6 +30,11 @@ const UserPostSidebar = ({ collapsed, setCollapsed }) => {
 
   const menuItems = [
     {
+      key: '/',
+      icon: <HomeOutlined />,
+      label: 'Trang chủ',
+    },
+    {
       key: '/user/posts',
       icon: <EditOutlined />,
       label: 'Bài đăng của tôi',
