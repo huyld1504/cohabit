@@ -22,12 +22,18 @@ import { clearUserData } from '../../redux/features/user.slice';
 import { logout } from '../../redux/features/auth.slice';
 import { removeToken } from '../../utils/token.store.util';
 import { toast } from 'react-toastify';
+import { USER_ROLES } from '../../constants/roles.constant';
 
 const Header = ({ variant = 'default' }) => {
   const { profile } = useSelector(state => state.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  // Helper function to get display name
+  const getDisplayName = (userProfile) => {
+    return userProfile?.fullName || userProfile?.name || 'User';
+  };
 
   const handleLogout = () => {
     try {
@@ -38,7 +44,7 @@ const Header = ({ variant = 'default' }) => {
       dispatch(clearUserData());
       // Show success message
       toast.success('Đăng xuất thành công!');
-      
+
       setTimeout(() => window.location.href = '/', 1000);
       clearTimeout();
 
@@ -80,11 +86,32 @@ const Header = ({ variant = 'default' }) => {
     <Menu className='w-60 border-1'>
       <Menu.Item key="greeting" className='!my-2 !mr-2 flex justify-center align-center'>
         <div>
-          {/* <Badge title='Pro' size={'default'} count={'Pro'} color='gold' > */}
-          <span className='text-2xl font-bold'>
-            {profile?.fullName}
-          </span>
-          {/* </Badge> */}
+          {profile?.role === USER_ROLES.ADMIN && (
+            <Badge title='Admin' size={'default'} count={'Admin'} color='red' className='!mb-2'>
+              <span className='text-2xl font-bold'>
+                {getDisplayName(profile)}
+              </span>
+            </Badge>
+          )}
+          {profile?.role === USER_ROLES.PRO_MEMBER && (
+            <Badge title='Pro' size={'default'} count={'Pro'} color='gold' className='!mb-2'>
+              <span className='text-2xl font-bold'>
+                {getDisplayName(profile)}
+              </span>
+            </Badge>
+          )}
+          {profile?.role === USER_ROLES.PLUS_MEMBER && (
+            <Badge title='Plus' size={'default'} count={'Plus'} color='blue' className='!mb-2'>
+              <span className='text-2xl font-bold'>
+                {getDisplayName(profile)}
+              </span>
+            </Badge>
+          )}
+          {(!profile?.role || profile?.role === USER_ROLES.USER) && (
+            <span className='text-2xl font-bold'>
+              {getDisplayName(profile)}
+            </span>
+          )}
         </div>
         <div className='mt-1'>
           <span className='flex items-center gap-2 text-sm'>
@@ -94,6 +121,15 @@ const Header = ({ variant = 'default' }) => {
         </div>
         <Divider style={{ margin: '5px 0', color: '#111111' }} />
       </Menu.Item>
+      {profile?.role === USER_ROLES.ADMIN && (
+        <Menu.Item key="admin" icon={<CrownOutlined className='!text-xl !mt-2' />}>
+          <Link to="/admin">
+            <span className='flex items-center gap-2 text-sm font-semibold text-yellow-600'>
+              Trang Quản Trị
+            </span>
+          </Link>
+        </Menu.Item>
+      )}
       <Menu.Item key="profile" icon={<UserOutlined className='!text-xl !mt-2' />}>
         <Link to="/profile">
           <span className='flex items-center gap-2 text-sm'>
@@ -112,7 +148,9 @@ const Header = ({ variant = 'default' }) => {
           <span className='flex items-center gap-2 text-sm'>
             Quản lí bài đăng
           </span>
-          <Badge title='Pro' size={'default'} count={'Plus'} color='blue' />
+          {(profile?.role === USER_ROLES.PLUS_MEMBER || profile?.role === USER_ROLES.PRO_MEMBER) && (
+            <Badge title='Plus' size={'default'} count={'Plus'} color='blue' />
+          )}
         </Link>
       </Menu.Item>
       <Menu.Divider />
@@ -262,11 +300,48 @@ const Header = ({ variant = 'default' }) => {
           <div className="flex-grow p-6 space-y-6">
             {profile ? (
               <div className="flex flex-col items-center gap-4 mb-6">
-                <Avatar size={64} icon={<UserOutlined />} className="!bg-[#1279a1]" />
-                <span className="font-bold text-lg">{profile.name}</span>
+                <div className="flex flex-col items-center">
+                  <Avatar size={64} icon={<UserOutlined />} className="!bg-[#1279a1]" />
+                </div>
+                <div className="text-center">
+                  {profile?.role === USER_ROLES.ADMIN && (
+                    <Badge title='Admin' size={'default'} count={'Admin'} color='red'>
+                      <span className="font-bold text-lg">{getDisplayName(profile)}</span>
+                    </Badge>
+                  )}
+                  {profile?.role === USER_ROLES.PRO_MEMBER && (
+                    <Badge title='Pro' size={'default'} count={'Pro'} color='gold'>
+                      <span className="font-bold text-lg">{getDisplayName(profile)}</span>
+                    </Badge>
+                  )}
+                  {profile?.role === USER_ROLES.PLUS_MEMBER && (
+                    <Badge title='Plus' size={'default'} count={'Plus'} color='blue'>
+                      <span className="font-bold text-lg">{getDisplayName(profile)}</span>
+                    </Badge>
+                  )}
+                  {(!profile?.role || profile?.role === USER_ROLES.USER) && (
+                    <span className="font-bold text-lg">{getDisplayName(profile)}</span>
+                  )}
+                </div>
                 <span className="text-gray-500 text-base flex items-center gap-2"><PhoneOutlined />{profile.phone}</span>
                 <Divider className="!my-2" />
                 <Menu className="w-full border-none">
+                  {profile?.role === USER_ROLES.ADMIN && (
+                    <Menu.ItemGroup
+                      title={
+                        <span className="text-xs font-semibold text-yellow-600 uppercase tracking-wide">
+                          Quản trị hệ thống
+                        </span>
+                      }
+                      className="!text-yellow-600"
+                    >
+                      <Menu.Item key="admin" icon={<CrownOutlined />} className="!bg-yellow-50 !border-l-4 !border-yellow-400">
+                        <Link to="/admin" onClick={closeDrawer}>
+                          <span className="!text-yellow-700">Trang Quản Trị</span>
+                        </Link>
+                      </Menu.Item>
+                    </Menu.ItemGroup>
+                  )}
                   <Menu.Item key="profile" icon={<UserOutlined />}>
                     <Link to="/profile" onClick={closeDrawer}>Tài khoản</Link>
                   </Menu.Item>
@@ -277,11 +352,14 @@ const Header = ({ variant = 'default' }) => {
                     <Link to="/my-posts" onClick={closeDrawer}>Danh sách yêu thích</Link>
                   </Menu.Item>
                   <Menu.Item key="manage" icon={<EditOutlined />}>
-                    <Link to="/user/posts" onClick={closeDrawer}>Quản lí bài đăng</Link>
+                    <Link to="/user/posts" onClick={closeDrawer}>
+                      <span className='mr-2'>Quản lí bài đăng</span>
+                      <Badge title='Plus' size={'default'} count={'Plus'} color='blue' />
+                    </Link>
                   </Menu.Item>
                   <Menu.Divider />
                   <Menu.Item key="logout" icon={<LogoutOutlined />}>
-                    <span onClick={() => {handleLogout(); closeDrawer(); }} className="cursor-pointer">Đăng xuất</span>
+                    <span onClick={() => { handleLogout(); closeDrawer(); }} className="cursor-pointer">Đăng xuất</span>
                   </Menu.Item>
                 </Menu>
               </div>
