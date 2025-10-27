@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Layout, Pagination, Select, Button, Row, Col } from 'antd';
 import { AppstoreOutlined, BarsOutlined, FilterOutlined } from '@ant-design/icons';
 import HeroBanner from '../../components/common/HeroBanner';
@@ -7,151 +7,70 @@ import FilterDrawer from '../../components/properties/FilterDrawer';
 import PropertyGrid from '../../components/properties/PropertyGrid';
 import { bannerExe } from '../../assets';
 import { interiorBedroom } from '../../assets';
+import { postApi } from '../../api/post.api';
 
 const { Content } = Layout;
 const { Option } = Select;
 
-// Mock data cho properties
-const mockProperties = [
-  {
-    id: 1,
-    title: 'Lorem ipsum dolor sit amet consectetur. Quis tristique ultrices nunc pharetra.',
-    description: 'Lorem ipsum dolor sit amet consectetur. Quis tristique ultrices nunc pharetra.',
-    price: 1000000,
-    originalPrice: 1200000,
-    location: 'Lorem ipsum dolor sit amet',
-    image: interiorBedroom,
-    isLiked: false
-  },
-  {
-    id: 2,
-    title: 'Lorem ipsum dolor sit amet consectetur. Quis tristique ultrices nunc pharetra.',
-    description: 'Lorem ipsum dolor sit amet consectetur. Quis tristique ultrices nunc pharetra.',
-    price: 1000000,
-    originalPrice: null,
-    location: 'Lorem ipsum dolor sit amet',
-    image: interiorBedroom,
-    isLiked: true
-  },
-  {
-    id: 3,
-    title: 'Lorem ipsum dolor sit amet consectetur. Quis tristique ultrices nunc pharetra.',
-    description: 'Lorem ipsum dolor sit amet consectetur. Quis tristique ultrices nunc pharetra.',
-    price: 1000000,
-    originalPrice: 1200000,
-    location: 'Lorem ipsum dolor sit amet',
-    image: interiorBedroom,
-    isLiked: false
-  },
-  {
-    id: 4,
-    title: 'Lorem ipsum dolor sit amet consectetur. Quis tristique ultrices nunc pharetra.',
-    description: 'Lorem ipsum dolor sit amet consectetur. Quis tristique ultrices nunc pharetra.',
-    price: 1000000,
-    originalPrice: null,
-    location: 'Lorem ipsum dolor sit amet',
-    image: interiorBedroom,
-    isLiked: false
-  },
-  {
-    id: 5,
-    title: 'Lorem ipsum dolor sit amet consectetur. Quis tristique ultrices nunc pharetra.',
-    description: 'Lorem ipsum dolor sit amet consectetur. Quis tristique ultrices nunc pharetra.',
-    price: 1000000,
-    originalPrice: 1200000,
-    location: 'Lorem ipsum dolor sit amet',
-    image: interiorBedroom,
-    isLiked: false
-  },
-  {
-    id: 6,
-    title: 'Lorem ipsum dolor sit amet consectetur. Quis tristique ultrices nunc pharetra.',
-    description: 'Lorem ipsum dolor sit amet consectetur. Quis tristique ultrices nunc pharetra.',
-    price: 1000000,
-    originalPrice: null,
-    location: 'Lorem ipsum dolor sit amet',
-    image: interiorBedroom,
-    isLiked: false
-  },
-  {
-    id: 7,
-    title: 'Phòng trọ cao cấp gần trung tâm thành phố',
-    description: 'Phòng trọ được thiết kế hiện đại, đầy đủ tiện nghi.',
-    price: 1500000,
-    originalPrice: 1800000,
-    location: 'Quận 1, TP.HCM',
-    image: interiorBedroom,
-    isLiked: false
-  },
-  {
-    id: 8,
-    title: 'Homestay ấm cúng cho sinh viên',
-    description: 'Không gian sống thân thiện, an toàn cho sinh viên.',
-    price: 800000,
-    originalPrice: null,
-    location: 'Quận Thủ Đức, TP.HCM',
-    image: interiorBedroom,
-    isLiked: true
-  },
-  {
-    id: 9,
-    title: 'Phòng trọ mini tiện nghi đầy đủ',
-    description: 'Phòng nhỏ gọn nhưng đầy đủ tiện nghi cần thiết.',
-    price: 1200000,
-    originalPrice: 1400000,
-    location: 'Quận 3, TP.HCM',
-    image: interiorBedroom,
-    isLiked: false
-  },
-  {
-    id: 10,
-    title: 'Chung cư mini cao cấp',
-    description: 'Chung cư mini với đầy đủ tiện ích hiện đại.',
-    price: 2000000,
-    originalPrice: null,
-    location: 'Quận 7, TP.HCM',
-    image: interiorBedroom,
-    isLiked: false
-  },
-  {
-    id: 11,
-    title: 'Phòng trọ giá rẻ gần trường đại học',
-    description: 'Vị trí thuận tiện, gần các trường đại học lớn.',
-    price: 700000,
-    originalPrice: 900000,
-    location: 'Quận Bình Thạnh, TP.HCM',
-    image: interiorBedroom,
-    isLiked: true
-  },
-  {
-    id: 12,
-    title: 'Studio apartment hiện đại',
-    description: 'Studio được thiết kế thông minh, tối ưu không gian.',
-    price: 1800000,
-    originalPrice: null,
-    location: 'Quận 2, TP.HCM',
-    image: interiorBedroom,
-    isLiked: false
-  }
-];
-
 const PropertyListingPage = () => {
-  const [properties, setProperties] = useState(mockProperties);
+  const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize] = useState(6);
+  const [pageSize] = useState(10);
+  const [totalCount, setTotalCount] = useState(0);
   const [sortBy, setSortBy] = useState('newest');
   const [viewMode, setViewMode] = useState('grid');
   const [filters, setFilters] = useState({});
   const [filterDrawerVisible, setFilterDrawerVisible] = useState(false);
 
-  // Simulate loading
-  useEffect(() => {
-    setLoading(true);
-    setTimeout(() => {
+  // Load posts on mount and when filters change
+  const loadPosts = useCallback(async () => {
+    try {
+      setLoading(true);
+      const params = {
+        currentPage: currentPage,
+        pageSize: pageSize,
+        ...filters
+      };
+
+      const response = await postApi.getPosts(params);
+      console.log(response);
+
+      if (response.success && response.data) {
+        const { items, totalCount, currentPage: responseCurrentPage } = response.data;
+        const mappedProperties = items.map(post => ({
+          id: post.postId,
+          title: post.title,
+          description: post.description, // Keep HTML content as is
+          price: post.price,
+          location: post.address,
+          image: post.imageUrl && post.imageUrl.length > 0 ? post.imageUrl[0] : interiorBedroom,
+          rating: post.averageRating || 0,
+          reviewCount: 0, // TODO: Add review count if available
+          isLiked: false // TODO: Add like status from user preferences
+        }));
+
+        setProperties(mappedProperties);
+        setTotalCount(totalCount);
+
+        // Sync currentPage with response from BE
+        if (responseCurrentPage && responseCurrentPage !== currentPage) {
+          setCurrentPage(responseCurrentPage);
+        }
+      }
+    } catch (error) {
+      console.error('Error loading posts:', error);
+      // Fallback to empty array if API fails
+      setProperties([]);
+      setTotalCount(0);
+    } finally {
       setLoading(false);
-    }, 1000);
-  }, [filters]);
+    }
+  }, [currentPage, pageSize, filters]);
+
+  useEffect(() => {
+    loadPosts();
+  }, [loadPosts]);
 
   const handleFilterChange = (newFilters) => {
     setFilters(newFilters);
@@ -177,10 +96,6 @@ const PropertyListingPage = () => {
     setCurrentPage(page);
   };
 
-  const startIndex = (currentPage - 1) * pageSize;
-  const endIndex = startIndex + pageSize;
-  const currentProperties = properties.slice(startIndex, endIndex);
-
   return (
     <Layout className="min-h-screen bg-gray-50 overflow-x-hidden">
       {/* Hero Banner */}
@@ -205,7 +120,7 @@ const PropertyListingPage = () => {
                     Danh mục nhà trọ
                   </h2>
                   <p className="text-gray-600">
-                    Tìm thấy {properties.length} kết quả
+                    Tìm thấy {totalCount} kết quả
                   </p>
                 </div>
 
@@ -258,23 +173,23 @@ const PropertyListingPage = () => {
 
             {/* Property Grid */}
             <PropertyGrid
-              properties={currentProperties}
+              properties={properties}
               loading={loading}
               onLike={handleLike}
               onViewDetails={handleViewDetails}
             />
 
             {/* Pagination */}
-            {properties.length > pageSize && (
+            {properties.length > 0 && (
               <div className="flex justify-center mt-8">
                 <Pagination
                   current={currentPage}
-                  total={properties.length}
+                  total={totalCount}
                   pageSize={pageSize}
                   onChange={handlePageChange}
                   showSizeChanger={false}
-                  showQuickJumper={false}
-                  showTotal={false}
+                  showQuickJumper={true}
+                  showTotal={(total, range) => `${range[0]}-${range[1]} của ${total} phòng trọ`}
                   size="default"
                   className="simple-pagination"
                 />

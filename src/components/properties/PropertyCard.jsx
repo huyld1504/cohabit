@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, Button, Rate, Tooltip } from 'antd';
 import { EnvironmentOutlined, StarOutlined, StarFilled } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
+import SafeHTMLRenderer from '../common/SafeHTMLRenderer';
 
 const PropertyCard = ({
   id,
@@ -28,7 +29,7 @@ const PropertyCard = ({
 
   return (
     <Card
-      className="property-card bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 cursor-pointer border-0 [&_.ant-card-body]:p-4"
+      className="property-card bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 cursor-pointer border-0 [&_.ant-card-body]:p-5"
       cover={
         <div className="relative">
           <img
@@ -53,7 +54,7 @@ const PropertyCard = ({
       }
       onClick={handleCardClick}
     >
-      <div className="space-y-3">
+      <div className="space-y-6">
         {/* Title */}
         <Tooltip title={title} placement="top">
           <h3 className="font-semibold text-base text-gray-900 leading-tight truncate cursor-pointer">
@@ -62,9 +63,12 @@ const PropertyCard = ({
         </Tooltip>
 
         {/* Description */}
-        <p className="text-gray-600 text-sm leading-relaxed line-clamp-2">
-          {description}
-        </p>
+        <div className="h-12 overflow-hidden">
+          <SafeHTMLRenderer
+            htmlContent={description}
+            className="text-gray-600 text-sm leading-relaxed line-clamp-2 overflow-hidden"
+          />
+        </div>
 
         {/* Location */}
         <div className="flex items-center text-gray-500 text-sm">

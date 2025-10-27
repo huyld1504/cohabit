@@ -71,7 +71,7 @@ const PostTable = ({
         <PostInfo
           thumbnail={record.imageUrl && record.imageUrl.length > 0 ? record.imageUrl[0] : ''}
           title={record.title}
-          description={record.description}
+          // description={record.description}
         />
       ),
     },

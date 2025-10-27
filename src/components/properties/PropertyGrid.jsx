@@ -40,24 +40,16 @@ const PropertyGrid = ({
   }
 
   return (
-    <div className="property-grid">
-      <Row gutter={[24, 24]}>
-        {properties.map((property) => (
-          <Col
-            key={property.id}
-            xs={24}
-            sm={12}
-            lg={8}
-            className="property-grid-item"
-          >
-            <PropertyCard
-              {...property}
-              onLike={onLike}
-              onViewDetails={onViewDetails}
-            />
-          </Col>
-        ))}
-      </Row>
+    <div className="property-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {properties.map((property) => (
+        <div key={property.id} className="property-grid-item">
+          <PropertyCard
+            {...property}
+            onLike={onLike}
+            onViewDetails={onViewDetails}
+          />
+        </div>
+      ))}
     </div>
   );
 };

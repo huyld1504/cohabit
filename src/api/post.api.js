@@ -15,7 +15,10 @@ const POST_API_ROUTES = {
 
 export const postApi = {
     createPost: async (postData) => callAPIWithFormData('POST', POST_API_ROUTES.CREATE_POST, postData),
-    getPosts: async (params) => callAPI('GET', POST_API_ROUTES.GET_POSTS, params),
+    getPosts: async (params) => {
+        const paramsURL = new URLSearchParams(params).toString();
+        return callAPI('GET', `${POST_API_ROUTES.GET_POSTS}?${paramsURL}`);
+    },
     getAdminPost: async (params) => callAPI('GET', POST_API_ROUTES.GET_ADMIN_POST, params),
     getAllUserPost: async (params) => callAPI('GET', POST_API_ROUTES.GET_USER_POSTS, params),
     getPublicUserPost: async (params) => callAPI('GET', POST_API_ROUTES.GET_PUBLIC_USER_POST, params),

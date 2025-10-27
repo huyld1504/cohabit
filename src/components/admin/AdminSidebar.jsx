@@ -254,7 +254,7 @@ const AdminSidebar = ({ collapsed, setCollapsed }) => {
               <div className="relative cursor-pointer">
                 <Avatar
                   size={48}
-                  src={profile?.image}
+                  src={profile?.image || null}
                   icon={<UserOutlined />}
                   className="border-2 border-white/40 group-hover:border-white/60 transition-all duration-200 shadow-xl group-hover:shadow-2xl group-hover:scale-105"
                 />

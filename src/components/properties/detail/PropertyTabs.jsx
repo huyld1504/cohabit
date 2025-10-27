@@ -1,18 +1,8 @@
 import React from 'react';
-import { Tabs, Alert } from 'antd';
-import AmenitiesSection from './AmenitiesSection';
-import ReviewsSection from '../detail/ReviewsSection';
-import RentalTerms from '../detail/RentalTerms';
+import { Tabs } from 'antd';
 import SafeHTMLRenderer from '../../common/SafeHTMLRenderer';
 
 const PropertyTabs = ({ property }) => {
-  // Destructure content từ property object
-  const {
-    amenitiesContent,
-    rentalTermsContent,
-    policiesContent
-  } = property;
-
   const items = [];
 
   // Tổng quan tab - luôn hiển thị nếu có description hoặc address
@@ -26,9 +16,9 @@ const PropertyTabs = ({ property }) => {
           {property.description && (
             <div>
               <h3 className="text-xl font-semibold mb-4">Giới thiệu</h3>
-              <p className="text-gray-700 leading-relaxed">
-                {property.description}
-              </p>
+              <div className="text-gray-700 leading-relaxed">
+                <SafeHTMLRenderer htmlContent={property.description} />
+              </div>
             </div>
           )}
 
@@ -46,61 +36,55 @@ const PropertyTabs = ({ property }) => {
     });
   }
 
-  // Tiện ích tab - chỉ hiển thị nếu có amenitiesContent hoặc amenities
-  if (amenitiesContent || (property.amenities && property.amenities.length > 0)) {
+  // Tình trạng & Nội thất tab - hiển thị condition và furnitures
+  if (property.condition || (property.furnitures && property.furnitures.length > 0)) {
     items.push({
-      key: 'amenities',
-      label: 'Tiện ích',
+      key: 'condition',
+      label: 'Tình trạng & Nội thất',
       children: (
-        <AmenitiesSection
-          amenities={property.amenities}
-          amenitiesContent={amenitiesContent}
-        />
+        <div className="space-y-6">
+          {/* Tình trạng phòng */}
+          {property.condition && (
+            <div>
+              <h3 className="text-xl font-semibold mb-4">🏠 Tình trạng phòng</h3>
+              <div className="text-gray-700 leading-relaxed">
+                <SafeHTMLRenderer htmlContent={property.condition} />
+              </div>
+            </div>
+          )}
+
+          {/* Nội thất có sẵn */}
+          {property.furnitures && property.furnitures.length > 0 && (
+            <div>
+              <h3 className="text-xl font-semibold mb-4">🛋️ Nội thất có sẵn</h3>
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  {property.furnitures.map((furniture, index) => (
+                    <li key={index} className="flex items-center text-gray-700">
+                      <span className="w-2 h-2 bg-blue-500 rounded-full mr-3 flex-shrink-0"></span>
+                      {furniture.name}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )}
+        </div>
       ),
     });
   }
 
-  // Reviews tab - chỉ hiển thị nếu có reviews
-  if (property.reviews && property.reviews.length > 0) {
-    items.push({
-      key: 'reviews',
-      label: 'Đánh giá người thuê',
-      children: (
-        <ReviewsSection
-          reviews={property.reviews}
-          rating={property.rating}
-          reviewCount={property.reviewCount}
-        />
-      ),
-    });
-  }
-
-  // Terms tab - chỉ hiển thị nếu có rentalTermsContent hoặc terms
-  if (rentalTermsContent || property.rentalTerms) {
-    items.push({
-      key: 'terms',
-      label: 'Điều khoản thuê trọ',
-      children: (
-        <RentalTerms
-          terms={property.rentalTerms}
-          rentalTermsContent={rentalTermsContent}
-        />
-      ),
-    });
-  }
-
-  // Policies tab - chỉ hiển thị nếu có policiesContent
-  if (policiesContent) {
+  // Chính sách đặt cọc tab - hiển thị depositPolicy
+  if (property.depositPolicy) {
     items.push({
       key: 'policies',
-      label: 'Chính sách cọc & hủy thuê',
+      label: 'Chính sách đặt cọc',
       children: (
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold mb-3">Chính sách cọc & hủy thuê</h3>
-          <SafeHTMLRenderer
-            htmlContent={policiesContent}
-            className="policies-content"
-          />
+          <h3 className="text-xl font-semibold mb-4">💰 Chính sách đặt cọc</h3>
+          <div className="text-gray-700 leading-relaxed">
+            <SafeHTMLRenderer htmlContent={property.depositPolicy} />
+          </div>
         </div>
       ),
     });
