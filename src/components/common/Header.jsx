@@ -107,11 +107,14 @@ const Header = ({ variant = 'default' }) => {
               </span>
             </Badge>
           )}
-          {(!profile?.role || profile?.role === USER_ROLES.USER) && (
-            <span className='text-2xl font-bold'>
-              {getDisplayName(profile)}
-            </span>
-          )}
+          {/* Show name for all users who are not Admin/Pro/Plus */}
+          {profile?.role !== USER_ROLES.ADMIN &&
+            profile?.role !== USER_ROLES.PRO_MEMBER &&
+            profile?.role !== USER_ROLES.PLUS_MEMBER && (
+              <span className='text-2xl font-bold'>
+                {getDisplayName(profile)}
+              </span>
+            )}
         </div>
         <div className='mt-1'>
           <span className='flex items-center gap-2 text-sm'>
@@ -319,9 +322,12 @@ const Header = ({ variant = 'default' }) => {
                       <span className="font-bold text-lg">{getDisplayName(profile)}</span>
                     </Badge>
                   )}
-                  {(!profile?.role || profile?.role === USER_ROLES.USER) && (
-                    <span className="font-bold text-lg">{getDisplayName(profile)}</span>
-                  )}
+                  {/* Show name for all users who are not Admin/Pro/Plus */}
+                  {profile?.role !== USER_ROLES.ADMIN &&
+                    profile?.role !== USER_ROLES.PRO_MEMBER &&
+                    profile?.role !== USER_ROLES.PLUS_MEMBER && (
+                      <span className="font-bold text-lg">{getDisplayName(profile)}</span>
+                    )}
                 </div>
                 <span className="text-gray-500 text-base flex items-center gap-2"><PhoneOutlined />{profile.phone}</span>
                 <Divider className="!my-2" />

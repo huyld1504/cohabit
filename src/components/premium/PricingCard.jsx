@@ -1,7 +1,8 @@
 import React from 'react';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import { CheckOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const PricingCard = ({
   plan,
@@ -9,14 +10,21 @@ const PricingCard = ({
   period = 'tháng',
   features = [],
   buttonText = 'Đăng ký gói',
-  variant = 'plus', // 'plus' or 'pro'
+  variant = 'plus',
 }) => {
   const navigate = useNavigate();
+  const { profile } = useSelector(state => state.user);
   const isPlus = variant === 'plus';
 
   const handleSubscribe = () => {
-      // Navigate to payment page
-      navigate(`/payment/${variant}`);
+    if (!profile) {
+      message.warning('Vui lòng đăng nhập để tiếp tục');
+      navigate('/login');
+      return;
+    }
+
+    // Navigate to payment detail page
+    navigate(`/premium/payment-detail/${variant}`);
   };
 
   // Color schemes

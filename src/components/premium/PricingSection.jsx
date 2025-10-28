@@ -1,29 +1,10 @@
-import React from 'react';
 import PricingCard from './PricingCard';
+import { PAYMENT_PACKAGES } from '../../constants/payment.constant';
 
 const PricingSection = () => {
-  const plusFeatures = [
-    'Đăng tin tìm kiếm bạn phòng',
-    'Tìm kiếm nâng cao với bộ lọc chi tiết',
-    'Nhận thông báo tin mới qua email',
-    'Lưu danh sách yêu thích',
-    'Liên hệ trực tiếp với chủ nhà'
-  ];
-
-  const proFeatures = [
-    'Tất cả tính năng của gói Plus',
-    'Đăng nhiều tin cho thuê cùng lúc',
-    'Tin đăng ưu tiên hiển thị trên đầu',
-    'Công cụ quản lý phòng trọ chuyên nghiệp',
-    'Báo cáo thống kê chi tiết',
-    'Hỗ trợ khách hàng ưu tiên 24/7',
-    'Tích hợp chatbot thông minh',
-    'Quản lý hợp đồng và thanh toán'
-  ];
-
   const handleSubscribe = (plan) => {
     console.log(`Subscribing to ${plan} plan`);
-    // Handle subscription logic here
+    // Handle subscription logic here - now handled in PricingCard
   };
 
   return (
@@ -43,20 +24,20 @@ const PricingSection = () => {
         <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
           {/* Plus Card */}
           <PricingCard
-            plan="Plus"
-            price="30.000đ"
-            period="/tháng"
-            features={plusFeatures}
+            plan={PAYMENT_PACKAGES.PLUS.name}
+            price={PAYMENT_PACKAGES.PLUS.displayPrice}
+            period={PAYMENT_PACKAGES.PLUS.period}
+            features={PAYMENT_PACKAGES.PLUS.features}
             variant="plus"
             onSubscribe={() => handleSubscribe('Plus')}
           />
 
           {/* Pro Card */}
           <PricingCard
-            plan="Pro"
-            price="80.000đ"
-            period="/tháng"
-            features={proFeatures}
+            plan={PAYMENT_PACKAGES.PRO.name}
+            price={PAYMENT_PACKAGES.PRO.displayPrice}
+            period={PAYMENT_PACKAGES.PRO.period}
+            features={PAYMENT_PACKAGES.PRO.features}
             variant="pro"
             onSubscribe={() => handleSubscribe('Pro')}
           />

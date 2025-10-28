@@ -64,24 +64,20 @@ const UserSettingsPage = () => {
 
   const handleProfileUpdateSuccess = (updatedProfile) => {
     console.log('Profile updated successfully:', updatedProfile);
-    // Optionally refresh page data or update store
-    // dispatch(updateUserProfile(updatedProfile));
   };
 
   const handleCharacteristicsUpdateSuccess = (updatedCharacteristics) => {
     console.log('Characteristics updated successfully:', updatedCharacteristics);
     setUserCharacteristics(updatedCharacteristics);
     toast.success('Tính cách đã được cập nhật thành công!');
-    // Optionally update Redux store
-    // dispatch(updateUserCharacteristics(updatedCharacteristics));
   };
 
   const getSexLabel = (sex) => {
     switch (sex) {
-      case 1: return 'Male';
-      case 2: return 'Female';
+      case 0: return 'Male';
+      case 1: return 'Female';
       case 3: return 'Other';
-      default: return 'Not specified';
+      default: return 'Other';
     }
   };
 

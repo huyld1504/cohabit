@@ -27,6 +27,8 @@ import RentalHistoryPage from "../pages/admin/RentalHistoryPage";
 import PostManagementPage from "../pages/admin/PostManagementPage";
 import PostDetailPage from "../pages/admin/PostDetailPage";
 import PremiumPage from "../pages/premium/PremiumPage";
+import PremiumPaymentPage from "../pages/premium/PremiumPaymentPage";
+import PremiumPaymentDetailPage from "../pages/premium/PremiumPaymentDetailPage";
 import PaymentPage from "../pages/payment/PaymentPage";
 import UserPostDetailPage from "../pages/user-posts/UserPostDetailPage";
 import UserPostManagementPage from "../pages/user-posts/UserPostManagementPage";
@@ -183,6 +185,14 @@ export const router = createBrowserRouter([
               {
                 path: 'premium',
                 element: <PremiumPage />
+              },
+              {
+                path: 'premium/payment-detail/:plan',
+                element: <PremiumPaymentDetailPage />
+              },
+              {
+                path: 'premium/payment',
+                element: <PremiumPaymentPage />
               },
               {
                 path: 'payment/:plan',
