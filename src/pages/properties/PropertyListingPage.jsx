@@ -33,8 +33,29 @@ const PropertyListingPage = () => {
         ...filters
       };
 
-      const response = await postApi.getPosts(params);
-      console.log(response);
+      console.log('═══════════════════════════════════════');
+      console.log('🚀 Loading Posts with Parameters:');
+      console.log('  • Current Page:', params.currentPage);
+      console.log('  • Page Size:', params.pageSize);
+      console.log('  • Address:', params.address || '(none)');
+      console.log('  • Max Price:', params.maxPrice || '(none)');
+      console.log('  • Average Rating:', params.averageRating || '(none)');
+      console.log('  • Full params object:', params);
+
+      // Show URL params as they will be sent
+      const urlParams = new URLSearchParams(params);
+      console.log('  • URL Query String:', urlParams.toString());
+      console.log('  • Will call: /Post/search?' + urlParams.toString());
+      console.log('═══════════════════════════════════════');
+
+      const response = await postApi.searchPost(params);
+
+      console.log('📦 API Response received:');
+      console.log('  • Success:', response.success);
+      console.log('  • Total Count:', response.data?.totalCount);
+      console.log('  • Items Count:', response.data?.items?.length);
+      console.log('  • Full response:', response);
+      console.log('═══════════════════════════════════════');
 
       if (response.success && response.data) {
         const { items, totalCount, currentPage: responseCurrentPage } = response.data;
@@ -73,8 +94,10 @@ const PropertyListingPage = () => {
   }, [loadPosts]);
 
   const handleFilterChange = (newFilters) => {
+    console.log('📥 PropertyListingPage received new filters:', newFilters);
     setFilters(newFilters);
     setCurrentPage(1);
+    console.log('🔄 Page reset to 1, will reload posts with new filters');
   };
 
   const handleLike = (propertyId) => {
@@ -104,8 +127,8 @@ const PropertyListingPage = () => {
       <Content className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Row gutter={[24, 24]}>
           {/* Filter Sidebar - Desktop Only */}
-          <Col xs={0} lg={6}>
-            <div className="hidden lg:block">
+          <Col xs={0} lg={6} className="flex-shrink-0">
+            <div className="hidden lg:block w-full">
               <FilterSidebar onFilterChange={handleFilterChange} />
             </div>
           </Col>

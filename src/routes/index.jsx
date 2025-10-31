@@ -29,12 +29,12 @@ import PostDetailPage from "../pages/admin/PostDetailPage";
 import PremiumPage from "../pages/premium/PremiumPage";
 import PremiumPaymentPage from "../pages/premium/PremiumPaymentPage";
 import PremiumPaymentDetailPage from "../pages/premium/PremiumPaymentDetailPage";
-import PaymentPage from "../pages/payment/PaymentPage";
 import UserPostDetailPage from "../pages/user-posts/UserPostDetailPage";
 import UserPostManagementPage from "../pages/user-posts/UserPostManagementPage";
 import CreatePostPage from "../pages/user-posts/CreatePostPage";
 import RentedPostsPage from "../pages/user-posts/RentedPostsPage";
 import RentalManagementPage from "../pages/user-posts/RentalManagementPage";
+import ChatPage from "../pages/chat/ChatPage";
 
 // layouts
 import UserPostLayout from "../components/layouts/UserPostLayout";
@@ -97,6 +97,17 @@ export const router = createBrowserRouter([
         path: "/",
         element: <AppLayout />,
         children: [
+          // Routes with MainLayout (Header + Footer)
+          {
+            element: <MainLayout />,
+            children: [
+              // Chat routes (Plus/Pro only)
+              {
+                path: 'chat',
+                element: <ChatPage />
+              }
+            ]
+          },
           // User Profile routes
           {
             path: 'profile',
@@ -194,11 +205,12 @@ export const router = createBrowserRouter([
                 path: 'premium/payment',
                 element: <PremiumPaymentPage />
               },
-              {
-                path: 'payment/:plan',
-                element: <PaymentPage />
-              }
             ]
+          },
+          // Chat routes (Plus/Pro only)
+          {
+            path: 'chat',
+            element: <ChatPage />
           }
         ],
       },

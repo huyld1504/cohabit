@@ -3,6 +3,7 @@ import {themeConfig} from './theme/antd.config';
 import {RouterProvider} from 'react-router-dom';
 import {router} from './routes/index';
 import {ToastContainer} from 'react-toastify';
+import {ChatProvider} from './contexts/ChatContext';
 
 import 'antd/dist/reset.css';
 import 'react-toastify/dist/ReactToastify.css';
@@ -13,7 +14,9 @@ function App() {
     return (
         <>
             <ConfigProvider theme={themeConfig}/>
-            <RouterProvider router={router}/>
+            <ChatProvider>
+                <RouterProvider router={router}/>
+            </ChatProvider>
             <ToastContainer
                 autoClose={3000}
                 position="bottom-left"

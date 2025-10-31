@@ -23,12 +23,17 @@ import { logout } from '../../redux/features/auth.slice';
 import { removeToken } from '../../utils/token.store.util';
 import { toast } from 'react-toastify';
 import { USER_ROLES } from '../../constants/roles.constant';
+import { useChatContext } from '../../contexts/ChatContext';
 
 const Header = ({ variant = 'default' }) => {
   const { profile } = useSelector(state => state.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  // Get unread message count from ChatContext
+  const { getTotalUnreadCount } = useChatContext();
+  const unreadCount = getTotalUnreadCount ? getTotalUnreadCount() : 0;
 
   // Helper function to get display name
   const getDisplayName = (userProfile) => {
@@ -214,13 +219,17 @@ const Header = ({ variant = 'default' }) => {
 
             {/* Action Buttons - Desktop */}
             <div className="hidden lg:flex items-center gap-2">
-              <Badge count={0} showZero={false}>
-                <Tooltip title="Chatbot with AI" placement="bottom">
+              <Badge count={unreadCount} showZero={false} overflowCount={99}>
+                <Tooltip title="Tin nhắn" placement="bottom">
                   <Button
                     size='large'
                     type="text"
                     icon={<MessageOutlined className="text-2xl" />}
                     className={iconButtonStyles}
+                    onClick={() => {
+                      window.scrollTo({ top: 0, behavior: 'instant' });
+                      navigate('/chat');
+                    }}
                   />
                 </Tooltip>
               </Badge>
@@ -304,7 +313,12 @@ const Header = ({ variant = 'default' }) => {
             {profile ? (
               <div className="flex flex-col items-center gap-4 mb-6">
                 <div className="flex flex-col items-center">
-                  <Avatar size={64} icon={<UserOutlined />} className="!bg-[#1279a1]" />
+                  <Avatar
+                    size={64}
+                    src={profile?.image || undefined}
+                    icon={!profile?.image && <UserOutlined />}
+                    className={!profile?.image ? '!bg-[#1279a1]' : ''}
+                  />
                 </div>
                 <div className="text-center">
                   {profile?.role === USER_ROLES.ADMIN && (

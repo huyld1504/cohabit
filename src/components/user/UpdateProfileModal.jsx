@@ -3,10 +3,13 @@ import { Modal, Form, Input, Select, Button, DatePicker } from 'antd';
 import { toast } from 'react-toastify';
 import dayjs from 'dayjs';
 import { profileApi } from '../../api/profile.api';
+import { useDispatch } from 'react-redux';
+import { setUserProfile } from '../../redux/features/user.slice';
 
 const { Option } = Select;
 
 const UpdateProfileModal = ({ open, onClose, userProfile, onUpdateSuccess }) => {
+  const dispatch = useDispatch();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
@@ -51,11 +54,12 @@ const UpdateProfileModal = ({ open, onClose, userProfile, onUpdateSuccess }) => 
       };
 
       const response = await profileApi.updateProfile(updateData);
-      console.log(response);
 
       // Handle the actual response format - just a simple message string
       if (response === "Profile updated successfully." || response?.message === "Profile updated successfully." || response?.success) {
         toast.success('Cập nhật hồ sơ thành công!');
+        const profileResponse = await profileApi.getProfile();
+        dispatch(setUserProfile(profileResponse));
         onUpdateSuccess && onUpdateSuccess(response);
         handleClose();
       } else {
