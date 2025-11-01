@@ -89,14 +89,14 @@ export const ChatProvider = ({ children }) => {
 
     reconnectAttempts.current += 1;
     hasInitialized.current = false; // Allow reconnection attempt
-    
+
     const success = await connectToChat();
-    
+
     if (success) {
       console.log('✅ Successfully reconnected to SignalR');
       reconnectAttempts.current = 0; // Reset counter on success
     }
-    
+
     return success;
   }, [connectToChat]);
 
@@ -394,29 +394,29 @@ export const ChatProvider = ({ children }) => {
           // Try to reconnect with retry logic
           console.log('⚠️ SignalR not connected, attempting to reconnect...');
           let reconnected = false;
-          
+
           for (let i = 0; i < MAX_RECONNECT_ATTEMPTS; i++) {
             const delay = RECONNECT_DELAYS[i];
-            
+
             if (delay > 0) {
               console.log(`🔄 Retry attempt ${i + 1}/${MAX_RECONNECT_ATTEMPTS} in ${delay}ms...`);
               await new Promise(resolve => setTimeout(resolve, delay));
             }
-            
+
             hasInitialized.current = false;
             reconnected = await connectToChat();
-            
+
             if (reconnected) {
               console.log('✅ Reconnected successfully, retrying send...');
               const success = await signalRService.sendMessage(conversationId, content.trim());
-              
+
               if (success) {
                 return true;
               }
               break;
             }
           }
-          
+
           if (!reconnected) {
             console.warn('⚠️ Failed to reconnect after all attempts, using REST API fallback');
           }
