@@ -1,17 +1,29 @@
 import React, { useState } from 'react';
-import { Card, Radio, Button, Divider, Rate, Input, InputNumber, Modal } from 'antd';
+import { Card, Radio, Button, Divider, Rate, Input, Slider, Modal } from 'antd';
 import { FilterOutlined, StarFilled, EnvironmentOutlined, DollarOutlined, CrownOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useRole } from '../../hooks/useRole';
 
 const FilterSidebar = ({ onFilterChange }) => {
   const navigate = useNavigate();
   const { isPlusMember } = useRole();
-  const [filters, setFilters] = useState({
-    address: '',
-    maxPrice: null,
-    averageRating: null
-  });
+  const [searchParams] = useSearchParams();
+
+  // Initialize filters from URL params
+  const getInitialFilters = () => {
+    const address = searchParams.get('address') || '';
+    const maxPrice = searchParams.get('maxPrice');
+    const averageRating = searchParams.get('averageRating');
+
+    return {
+      address,
+      maxPrice: maxPrice ? parseInt(maxPrice) : 10000000,
+      averageRating: averageRating ? parseInt(averageRating) : null
+    };
+  };
+
+  const [filters, setFilters] = useState(getInitialFilters());
+  const [isPriceChanged, setIsPriceChanged] = useState(!!searchParams.get('maxPrice')); // Track if user changed price
   const [upgradeModalVisible, setUpgradeModalVisible] = useState(false);
 
   const ratingOptions = [
@@ -28,16 +40,22 @@ const FilterSidebar = ({ onFilterChange }) => {
     console.log(`Filter changed - ${key}:`, value);
     console.log('Current filters state:', newFilters);
     setFilters(newFilters);
+
+    // Track if user manually changed the price
+    if (key === 'maxPrice') {
+      setIsPriceChanged(true);
+    }
   };
 
   const resetFilters = () => {
     const defaultFilters = {
       address: '',
-      maxPrice: null,
+      maxPrice: 10000000, // Reset to default 10 triệu
       averageRating: null
     };
     console.log('🔄 Resetting filters to default');
     setFilters(defaultFilters);
+    setIsPriceChanged(false); // Reset price change tracking
     // Pass empty object to clear all filters in the API
     console.log('📤 Sending empty filters to clear search');
     onFilterChange && onFilterChange({});
@@ -62,7 +80,8 @@ const FilterSidebar = ({ onFilterChange }) => {
       activeFilters.address = filters.address.trim();
       console.log('  ✓ Address filter:', activeFilters.address);
     }
-    if (filters.maxPrice !== null && filters.maxPrice > 0) {
+    // Only include maxPrice if user manually changed it
+    if (isPriceChanged && filters.maxPrice !== null && filters.maxPrice > 0) {
       activeFilters.maxPrice = filters.maxPrice;
       console.log('  ✓ MaxPrice filter:', activeFilters.maxPrice);
     }
@@ -86,18 +105,47 @@ const FilterSidebar = ({ onFilterChange }) => {
         <div className="flex items-center gap-2">
           <FilterOutlined />
           <span>Bộ lọc tìm kiếm</span>
+          {!isPlusMember() && (
+            <CrownOutlined className="text-yellow-500 ml-2" />
+          )}
         </div>
       }
-      className="filter-sidebar h-fit sticky w-full"
-      style={{ minWidth: '100%' }}
+      className="filter-sidebar h-fit sticky"
+      style={{
+        minWidth: '280px',
+        maxWidth: '280px',
+        width: '280px'
+      }}
       extra={
         <Button type="link" onClick={resetFilters} className="text-blue-500">
           Đặt lại
         </Button>
       }
     >
+      {/* Premium Feature Notice for Non-Members */}
+      {!isPlusMember() && (
+        <div className="bg-gradient-to-r from-blue-50 to-blue-100 border-2 border-blue-300 rounded-lg p-4 mb-4">
+          <div className="flex items-center gap-2 mb-2">
+            <CrownOutlined className="text-blue-600 text-lg" />
+            <span className="font-semibold text-blue-900">Tính năng Premium</span>
+          </div>
+          <p className="text-sm text-gray-700 mb-3">
+            Bộ lọc nâng cao chỉ dành cho thành viên Plus và Pro
+          </p>
+          <Button
+            type="primary"
+            size="small"
+            block
+            onClick={() => setUpgradeModalVisible(true)}
+            className="bg-blue-500 hover:bg-blue-600"
+          >
+            Xem gói nâng cấp
+          </Button>
+        </div>
+      )}
+
       {/* Địa chỉ */}
-      <div className="mb-6">
+      <div className="mb-6" style={{ opacity: !isPlusMember() ? 0.5 : 1, pointerEvents: !isPlusMember() ? 'none' : 'auto' }}>
         <h4 className="font-semibold mb-3 flex items-center gap-2">
           <EnvironmentOutlined className="text-blue-500" />
           Địa chỉ
@@ -114,28 +162,39 @@ const FilterSidebar = ({ onFilterChange }) => {
       <Divider />
 
       {/* Giá tối đa */}
-      <div className="mb-6">
+      <div className="mb-6" style={{ opacity: !isPlusMember() ? 0.5 : 1, pointerEvents: !isPlusMember() ? 'none' : 'auto' }}>
         <h4 className="font-semibold mb-3 flex items-center gap-2">
           <DollarOutlined className="text-green-500" />
           Giá tối đa
         </h4>
-        <InputNumber
-          placeholder="Nhập giá tối đa..."
-          value={filters.maxPrice}
-          onChange={(value) => handleFilterChange('maxPrice', value)}
-          min={0}
-          step={100000}
-          formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-          parser={value => value.replace(/\$\s?|(,*)/g, '')}
-          className="w-full"
-          addonAfter="VNĐ"
-        />
+        <div className="space-y-3">
+          <div className="text-center">
+            <span className="text-2xl font-bold text-blue-600">
+              {filters.maxPrice?.toLocaleString('vi-VN')} VNĐ
+            </span>
+          </div>
+          <Slider
+            min={1000000}
+            max={20000000}
+            step={500000}
+            value={filters.maxPrice}
+            onChange={(value) => handleFilterChange('maxPrice', value)}
+            tooltip={{
+              formatter: (value) => `${value?.toLocaleString('vi-VN')} VNĐ`
+            }}
+          />
+          <div className="flex justify-between text-xs text-gray-500 mt-1">
+            <span>1tr</span>
+            <span>10tr</span>
+            <span>20tr</span>
+          </div>
+        </div>
       </div>
 
       <Divider />
 
       {/* Điểm đánh giá */}
-      <div className="mb-6">
+      <div className="mb-6" style={{ opacity: !isPlusMember() ? 0.5 : 1, pointerEvents: !isPlusMember() ? 'none' : 'auto' }}>
         <h4 className="font-semibold mb-3 flex items-center gap-2">
           <StarFilled className="text-yellow-500" />
           Điểm đánh giá
@@ -164,14 +223,26 @@ const FilterSidebar = ({ onFilterChange }) => {
 
       {/* Button Tìm kiếm */}
       <div className="mt-6">
-        <Button
-          type="primary"
-          size="large"
-          className="w-full bg-blue-500 hover:bg-blue-600 border-blue-500"
-          onClick={applyFilters}
-        >
-          Tìm kiếm
-        </Button>
+        {!isPlusMember() ? (
+          <Button
+            type="primary"
+            size="large"
+            className="w-full bg-blue-500 hover:bg-blue-600 border-blue-500"
+            onClick={() => setUpgradeModalVisible(true)}
+            icon={<CrownOutlined />}
+          >
+            Nâng cấp để lọc
+          </Button>
+        ) : (
+          <Button
+            type="primary"
+            size="large"
+            className="w-full bg-blue-500 hover:bg-blue-600 border-blue-500"
+            onClick={applyFilters}
+          >
+            Tìm kiếm
+          </Button>
+        )}
       </div>
 
       {/* Upgrade Modal */}

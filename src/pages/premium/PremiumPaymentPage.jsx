@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Result, Button, Spin, Alert } from 'antd';
+import { Result, Button, Spin, Alert, message } from 'antd';
 import { CheckCircleOutlined, LoadingOutlined } from '@ant-design/icons';
 import { useSelector, useDispatch } from 'react-redux';
 import { PAYMENT_CONSTANTS } from '../../constants/payment.constant';
@@ -15,6 +15,14 @@ const PremiumPaymentPage = () => {
   const [searchParams] = useSearchParams();
   const dispatch = useDispatch();
   const { profile } = useSelector(state => state.user);
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!profile) {
+      message.warning('Vui lòng đăng nhập để xem trạng thái thanh toán');
+      navigate('/login', { state: { from: '/premium/payment' } });
+    }
+  }, [profile, navigate]);
 
   useEffect(() => {
     const checkPaymentStatus = async () => {
@@ -83,8 +91,12 @@ const PremiumPaymentPage = () => {
           break;
       }
     };
-    checkPaymentStatus()
-  }, []);
+
+    if (profile) {
+      checkPaymentStatus();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profile]);
 
   const handleRetry = () => {
     // Redirect to premium page to try payment again

@@ -81,6 +81,24 @@ export const router = createBrowserRouter([
           },
         ]
       },
+      // Premium - public access (login required for actions)
+      {
+        element: <PremiumLayout />,
+        children: [
+          {
+            path: 'premium',
+            element: <PremiumPage />
+          },
+          {
+            path: 'premium/payment-detail/:plan',
+            element: <PremiumPaymentDetailPage />
+          },
+          {
+            path: 'premium/payment',
+            element: <PremiumPaymentPage />
+          }
+        ]
+      },
 
       // Auth routes - không cần authentication
       {
@@ -194,23 +212,6 @@ export const router = createBrowserRouter([
                 path: 'admin/posts/:postId',
                 element: <PostDetailPage />
               }
-            ]
-          },
-          {
-            element: <PremiumLayout />,
-            children: [
-              {
-                path: 'premium',
-                element: <PremiumPage />
-              },
-              {
-                path: 'premium/payment-detail/:plan',
-                element: <PremiumPaymentDetailPage />
-              },
-              {
-                path: 'premium/payment',
-                element: <PremiumPaymentPage />
-              },
             ]
           },
           // Chat routes (Plus/Pro only)

@@ -19,7 +19,12 @@ const POST_API_ROUTES = {
 
 export const postApi = {
     createPost: async (postData) => callAPIWithFormData('POST', POST_API_ROUTES.CREATE_POST, postData),
-    getPosts: async () => {
+    getPosts: async (params) => {
+        // Support pagination for get all posts
+        if (params) {
+            const paramsURL = new URLSearchParams(params).toString();
+            return callAPI('GET', `${POST_API_ROUTES.GET_POSTS}?${paramsURL}`);
+        }
         return callAPI('GET', POST_API_ROUTES.GET_POSTS);
     },
     getAdminPost: async (params) => callAPI('GET', POST_API_ROUTES.GET_ADMIN_POST, params),

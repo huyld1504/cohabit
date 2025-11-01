@@ -18,8 +18,10 @@ const PricingCard = ({
 
   const handleSubscribe = () => {
     if (!profile) {
-      message.warning('Vui lòng đăng nhập để tiếp tục');
-      navigate('/login');
+      message.warning('Vui lòng đăng nhập để đăng ký gói Premium');
+      setTimeout(() => {
+        navigate('/login', { state: { from: `/premium/payment-detail/${variant}` } });
+      }, 500);
       return;
     }
 
@@ -63,7 +65,7 @@ const PricingCard = ({
             className={`w-full ${buttonStyles} font-semibold py-3 h-12 rounded-lg`}
             onClick={handleSubscribe}
           >
-            {buttonText}
+            {!profile ? 'Đăng nhập để đăng ký' : buttonText}
           </Button>
         </div>
 
