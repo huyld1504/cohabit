@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { profileApi } from '../../api/profile.api';
@@ -7,7 +7,7 @@ import UpdateProfileModal from '../../components/user/UpdateProfileModal';
 import UpdateCharacteristicsModal from '../../components/user/UpdateCharacteristicsModal';
 
 const UserSettingsPage = () => {
-  const {profile: user} = useSelector((state) => state.user);
+  const { profile: user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -17,14 +17,7 @@ const UserSettingsPage = () => {
   const [userCharacteristics, setUserCharacteristics] = useState([]);
   const [loadingCharacteristics, setLoadingCharacteristics] = useState(false);
 
-  // Load user characteristics on component mount
-  useEffect(() => {
-    if (user) {
-      loadUserCharacteristics();
-    }
-  }, [user]);
-
-  const loadUserCharacteristics = async () => {
+  const loadUserCharacteristics = useCallback(async () => {
     try {
       setLoadingCharacteristics(true);
       const response = await profileApi.getCharacteristics();
@@ -44,7 +37,14 @@ const UserSettingsPage = () => {
     } finally {
       setLoadingCharacteristics(false);
     }
-  };
+  }, [user]);
+
+  // Load user characteristics on component mount
+  useEffect(() => {
+    if (user) {
+      loadUserCharacteristics();
+    }
+  }, [user, loadUserCharacteristics]);
 
   const handleOpenProfileModal = () => {
     setIsProfileModalOpen(true);
@@ -73,6 +73,13 @@ const UserSettingsPage = () => {
   };
 
   const getSexLabel = (sex) => {
+    // API returns string values: "Male", "Female", "Other"
+    // Display them as-is or format if needed
+    if (typeof sex === 'string') {
+      // Capitalize first letter for better display
+      return sex.charAt(0).toUpperCase() + sex.slice(1).toLowerCase();
+    }
+    // Fallback for numeric values (if any)
     switch (sex) {
       case 0: return 'Male';
       case 1: return 'Female';
@@ -120,8 +127,8 @@ const UserSettingsPage = () => {
       {/* Tính cách của tôi */}
       <div className="flex items-center justify-between mt-8 mb-2">
         <h2 className="font-bold text-3xl">Tính cách của tôi</h2>
-        <button 
-          className="border border-[#1279a2] text-[#04537c] rounded-lg px-4 py-1 hover:bg-[#f0f8ff] cursor-pointer" 
+        <button
+          className="border border-[#1279a2] text-[#04537c] rounded-lg px-4 py-1 hover:bg-[#f0f8ff] cursor-pointer"
           onClick={handleOpenCharacteristicsModal}
           disabled={loadingCharacteristics}
         >

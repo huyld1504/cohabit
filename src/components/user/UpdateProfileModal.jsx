@@ -21,7 +21,7 @@ const UpdateProfileModal = ({ open, onClose, userProfile, onUpdateSuccess }) => 
         firstName: userProfile.firstName || '',
         lastName: userProfile.lastName || '',
         birthdate: userProfile.yob ? dayjs(`${userProfile.yob}-01-01`) : null,
-        sex: userProfile.sex,
+        sex: userProfile.sex, // API returns string values: 'Male', 'Female', 'Other'
       };
 
       // If firstName/lastName not available, try to split fullName
@@ -79,15 +79,6 @@ const UpdateProfileModal = ({ open, onClose, userProfile, onUpdateSuccess }) => 
     form.resetFields();
     setImageUrl(null);
     onClose();
-  };
-
-  const getSexLabel = (sex) => {
-    switch (sex) {
-      case 1: return 'Male';
-      case 2: return 'Female';
-      case 3: return 'Other';
-      default: return 'Not specified';
-    }
   };
 
   return (

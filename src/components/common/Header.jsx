@@ -62,6 +62,10 @@ const Header = ({ variant = 'default' }) => {
   const showDrawer = () => setIsDrawerOpen(true);
   const closeDrawer = () => setIsDrawerOpen(false);
 
+  const handleViewContract = () => {
+    window.open('https://drive.google.com/drive/folders/1DbBYhWtnVOqYxCB1YMr9tEogjdrNBKKI', '_blank');
+  };
+
   // Style variants
   const isPremium = variant === 'premium';
   const headerStyles = isPremium
@@ -189,12 +193,12 @@ const Header = ({ variant = 'default' }) => {
               >
                 Premium
               </Button>
-              <Link to="/properties" className={`${textStyles} font-bold whitespace-nowrap transition-colors`}>
+              <Link to="/properties" className={`${textStyles} font-bold whitespace-nowrap transition-colors !text-[#1279a1]`}>
                 Danh mục Nhà Trọ
               </Link>
-              <Link to="/contracts" className={`${textStyles} font-bold whitespace-nowrap transition-colors`}>
+              <span onClick={handleViewContract} className={`${textStyles} font-bold whitespace-nowrap transition-colors cursor-pointer !text-[#1279a1]`}>
                 Mẫu Hợp Đồng
-              </Link>
+              </span>
               {/* Create Post Button - Desktop */}
               <Link className="hidden lg:block" to={'user/posts/create'}>
                 <Badge status='processing' count={'Plus'} color='#1279a1'>

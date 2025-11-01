@@ -1,38 +1,82 @@
-import React from 'react';
-import { riverSunsetCity } from '../../assets';
+import React, { useState, useEffect } from 'react';
+import { Layout } from 'antd';
+import { profileApi } from '../../api/profile.api';
+import PropertyGrid from '../../components/properties/PropertyGrid';
+import { interiorBedroom } from '../../assets';
 
-const favorites = [
-  {
-    id: 1,
-    name: "Luna's home",
-    location: 'Dĩ an, Bình Dương',
-    image: riverSunsetCity,
-  },
-];
+const { Content } = Layout;
 
 const FavoritePage = () => {
+  const [favorites, setFavorites] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  // Load favorite posts on mount
+  useEffect(() => {
+    const loadFavorites = async () => {
+      try {
+        setLoading(true);
+        const response = await profileApi.getFavoritePosts();
+
+        if (response.success && response.data) {
+          // Map API response to PropertyCard format
+          const mappedFavorites = response.data.map(post => ({
+            id: post.postId,
+            title: post.title,
+            description: post.description,
+            price: post.price,
+            location: post.address,
+            image: post.imageUrl && post.imageUrl.length > 0 ? post.imageUrl[0] : interiorBedroom,
+            rating: post.averageRating || 0,
+            reviewCount: 0,
+            isLiked: true // All favorites are liked by definition
+          }));
+
+          setFavorites(mappedFavorites);
+        }
+      } catch (error) {
+        console.error('Error loading favorite posts:', error);
+        setFavorites([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadFavorites();
+  }, []);
+
+  const handleLike = (propertyId) => {
+    // Toggle like status locally
+    setFavorites(prev =>
+      prev.map(property =>
+        property.id === propertyId
+          ? { ...property, isLiked: !property.isLiked }
+          : property
+      )
+    );
+    // TODO: Call API to remove from favorites
+  };
+
   return (
-    <div className="max-w-2xl mx-auto p-6">
-      <h2 className="font-bold text-3xl mb-4">Yêu thích</h2>
-      {favorites.map(item => (
-        <div key={item.id} className="flex items-center bg-white px-4 py-4 mb-4">
-          <div className="w-24 h-24 rounded-lg mr-5 flex-shrink-0 overflow-hidden bg-gray-300 flex items-center justify-center">
-            {item.image ? (
-              <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
-            ) : (
-              <img src="https://via.placeholder.com/96x96?text=Room" alt="placeholder" className="w-full h-full object-cover" />
-            )}
-          </div>
-          <div>
-            <div className="font-bold text-lg mb-1">{item.name}</div>
-            <div className="flex items-center text-gray-700">
-              <img src="https://cdn-icons-png.flaticon.com/512/684/684908.png" alt="location" className="w-5 h-5 mr-1" />
-              <span>{item.location}</span>
-            </div>
-          </div>
+    <Layout className="min-h-screen bg-gray-50">
+      <Content className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header */}
+        <div className="bg-white p-6 rounded-lg shadow-sm mb-6">
+          <h2 className="text-2xl font-bold text-blue-600 mb-1">
+            Danh sách yêu thích
+          </h2>
+          <p className="text-gray-600">
+            {loading ? 'Đang tải...' : `Bạn có ${favorites.length} phòng trọ yêu thích`}
+          </p>
         </div>
-      ))}
-    </div>
+
+        {/* Favorites Grid */}
+        <PropertyGrid
+          properties={favorites}
+          loading={loading}
+          onLike={handleLike}
+        />
+      </Content>
+    </Layout>
   );
 };
 

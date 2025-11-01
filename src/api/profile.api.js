@@ -7,6 +7,7 @@ const PROFILE_API_BASE = {
     GET_CHARACTERISTICS: '/v1/Profile/Characteristics',
     UPDATE_CHARACTERISTICS: '/v1/Profile/Characteristics',
     ADD_CHARACTERISTICS: '/v1/Profile/Characteristics',
+    GET_FAVORITE_POSTS: '/v1/Profile/favorites',
 };
 
 const convertSexFieldToNumber = (sex) => {
@@ -35,4 +36,5 @@ export const profileApi = {
     getCharacteristics: async () => callAPI('GET', PROFILE_API_BASE.GET_CHARACTERISTICS),
     updateCharacteristics: async (characteristicsData) => callAPI('PUT', PROFILE_API_BASE.UPDATE_CHARACTERISTICS, characteristicsData),
     addCharacteristics: async (characteristicsData) => callAPI('POST', PROFILE_API_BASE.ADD_CHARACTERISTICS, characteristicsData),
+    getFavoritePosts: async () => callAPI('GET', PROFILE_API_BASE.GET_FAVORITE_POSTS),
 }
