@@ -15,11 +15,12 @@ const UpgradePrompt = ({ requiredRole, feature }) => {
     switch (requiredRole) {
       case USER_ROLES.PLUS_MEMBER:
         return {
-          title: 'Nâng cấp lên Plus Member',
-          description: 'Để sử dụng tính năng này, bạn cần nâng cấp tài khoản lên Plus Member',
+          title: 'Nâng cấp lên Plus',
+          description: 'Để sử dụng tính năng này, bạn cần nâng cấp tài khoản lên Plus',
           features: [
             'Đăng bài cho thuê không giới hạn',
             'Quản lý bài đăng chi tiết',
+            'Nhắn tin với chủ nhà',
             'Xem thống kê chi tiết',
             'Hỗ trợ ưu tiên'
           ],
@@ -27,14 +28,15 @@ const UpgradePrompt = ({ requiredRole, feature }) => {
         };
       case USER_ROLES.PRO_MEMBER:
         return {
-          title: 'Nâng cấp lên Pro Member',
-          description: 'Để sử dụng tính năng quản lý bài đăng, bạn cần nâng cấp tài khoản lên Pro Member',
+          title: 'Nâng cấp lên Pro',
+          description: 'Để sử dụng tính năng nâng cao này, bạn cần nâng cấp tài khoản lên Pro',
           features: [
-            'Tất cả tính năng Plus Member',
-            'Ẩn/hiện bài đăng',
+            'Tất cả tính năng Plus',
+            'Ẩn/hiện bài đăng linh hoạt',
             'Chỉnh sửa bài đăng không giới hạn',
-            'Thống kê nâng cao',
-            'API access'
+            'Thống kê và phân tích nâng cao',
+            'Ưu tiên hiển thị bài đăng',
+            'Hỗ trợ 24/7'
           ],
           plan: 'pro'
         };
@@ -47,9 +49,15 @@ const UpgradePrompt = ({ requiredRole, feature }) => {
         };
       default:
         return {
-          title: 'Yêu cầu nâng cấp tài khoản',
-          description: 'Bạn cần nâng cấp tài khoản để sử dụng tính năng này',
-          features: [],
+          title: 'Nâng cấp lên Plus',
+          description: 'Để sử dụng tính năng này, bạn cần nâng cấp tài khoản lên Plus',
+          features: [
+            'Đăng bài cho thuê không giới hạn',
+            'Quản lý bài đăng chi tiết',
+            'Nhắn tin với chủ nhà',
+            'Xem thống kê chi tiết',
+            'Hỗ trợ ưu tiên'
+          ],
           plan: 'plus'
         };
     }
@@ -59,7 +67,7 @@ const UpgradePrompt = ({ requiredRole, feature }) => {
 
   const handleUpgrade = () => {
     if (message.plan) {
-      navigate(`/payment/${message.plan}`);
+      navigate(`/premium`);
     }
   };
 

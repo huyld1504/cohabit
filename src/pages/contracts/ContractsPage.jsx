@@ -72,7 +72,7 @@ const ContractsPage = () => {
           </Paragraph>
         </div>
 
-        {/* Upgrade Prompt for Non-Plus Users */}
+        {/* Upgrade Prompt for Non-Plus Users
         {!isPlusMember() && (
           <Alert
             message={
@@ -103,7 +103,7 @@ const ContractsPage = () => {
             className="mb-8 !bg-yellow-50 !border-yellow-300"
             showIcon={false}
           />
-        )}
+        )} */}
 
         {/* Contracts Grid */}
         <Row gutter={[24, 24]} className="mb-12">

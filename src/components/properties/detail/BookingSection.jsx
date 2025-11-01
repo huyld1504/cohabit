@@ -264,20 +264,20 @@ const BookingSection = ({ property }) => {
       >
         <div className="text-center py-4">
           <div className="mb-6">
-            <h2 className="text-xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-3">
-              Tính năng chat chỉ dành cho thành viên Plus & Pro
+            <h2 className="text-xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent mb-3">
+              Nâng cấp lên Plus để sử dụng tính năng chat
             </h2>
             <p className="text-sm md:text-base text-gray-600">
-              Nâng cấp tài khoản để sử dụng tính năng nhắn tin trực tiếp với chủ nhà
+              Nhắn tin trực tiếp với chủ nhà và tận dụng nhiều tính năng khác
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6">
             {/* Plus Package */}
-            <div className="flex flex-col bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4 md:p-6 border-2 border-blue-200 hover:border-blue-400 transition-all hover:shadow-lg h-full">
+            <div className="flex flex-col bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4 md:p-6 border-2 border-blue-400 hover:border-blue-500 transition-all hover:shadow-xl h-full shadow-md">
               <div className="flex-1">
-                <div className="inline-block px-3 py-1 bg-blue-500 text-white text-xs font-semibold rounded-full mb-3">
-                  PHỔ BIẾN
+                <div className="inline-block px-3 py-1 bg-gradient-to-r from-blue-500 to-blue-600 text-white text-xs font-semibold rounded-full mb-3">
+                  KHUYẾN NGHỊ
                 </div>
                 <h3 className="text-xl md:text-2xl font-bold text-blue-600 mb-2">Plus</h3>
                 <div className="mb-4">
@@ -315,8 +315,8 @@ const BookingSection = ({ property }) => {
             {/* Pro Package */}
             <div className="flex flex-col bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-4 md:p-6 border-2 border-purple-200 hover:border-purple-400 transition-all hover:shadow-lg h-full">
               <div className="flex-1">
-                <div className="inline-block px-3 py-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs font-semibold rounded-full mb-3">
-                  KHUYẾN NGHỊ
+                <div className="inline-block px-3 py-1 bg-purple-500 text-white text-xs font-semibold rounded-full mb-3">
+                  NÂNG CAO
                 </div>
                 <h3 className="text-xl md:text-2xl font-bold text-purple-600 mb-2">Pro</h3>
                 <div className="mb-4">

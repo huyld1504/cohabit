@@ -189,20 +189,20 @@ const FilterSidebar = ({ onFilterChange }) => {
             <CrownOutlined className="text-5xl md:text-7xl text-yellow-500 animate-pulse" />
           </div>
           <h2 className="text-xl md:text-3xl font-bold text-gray-900 mb-3 px-2">
-            Nâng cấp tài khoản để sử dụng bộ lọc nâng cao
+            Nâng cấp lên Plus để sử dụng bộ lọc nâng cao
           </h2>
           <p className="text-gray-600 text-sm md:text-lg mb-6 md:mb-8 px-4">
-            Tính năng lọc nâng cao chỉ dành cho thành viên Plus và Pro.
+            Tìm kiếm chính xác hơn với bộ lọc nâng cao dành cho thành viên Plus.
             Hãy nâng cấp ngay để tận hưởng trải nghiệm tốt nhất!
           </p>
 
           {/* Package Options */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 px-2">
             {/* Plus Package */}
-            <div className="relative bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-6 border-2 border-blue-300 hover:border-blue-400 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col h-full">
+            <div className="relative bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-6 border-2 border-blue-400 hover:border-blue-500 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col h-full shadow-md">
               <div className="absolute top-4 right-4">
-                <div className="bg-blue-500 text-white px-4 py-1.5 rounded-full text-xs font-bold shadow-md">
-                  PHỔ BIẾN
+                <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-4 py-1.5 rounded-full text-xs font-bold shadow-md">
+                  KHUYẾN NGHỊ
                 </div>
               </div>
               <div className="mb-4 mt-2">
@@ -240,14 +240,14 @@ const FilterSidebar = ({ onFilterChange }) => {
             </div>
 
             {/* Pro Package */}
-            <div className="relative bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-2xl p-6 border-2 border-yellow-400 hover:border-yellow-500 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col h-full">
+            <div className="relative bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl p-6 border-2 border-purple-300 hover:border-purple-400 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col h-full">
               <div className="absolute top-4 right-4">
-                <div className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-4 py-1.5 rounded-full text-xs font-bold shadow-md">
-                  TỐT NHẤT
+                <div className="bg-purple-500 text-white px-4 py-1.5 rounded-full text-xs font-bold shadow-md">
+                  NÂNG CAO
                 </div>
               </div>
               <div className="mb-4 mt-2">
-                <h3 className="text-xl md:text-2xl font-bold text-yellow-600 mb-2">PRO</h3>
+                <h3 className="text-xl md:text-2xl font-bold text-purple-600 mb-2">PRO</h3>
                 <div className="flex items-baseline justify-center">
                   <span className="text-3xl md:text-4xl font-bold text-gray-900">80,000</span>
                   <span className="text-base md:text-lg text-gray-600 ml-1">đ/tháng</span>
@@ -256,19 +256,19 @@ const FilterSidebar = ({ onFilterChange }) => {
               <div className="bg-white rounded-xl p-4 mb-4 shadow-sm flex-grow">
                 <ul className="text-left text-sm text-gray-700 space-y-3">
                   <li className="flex items-start">
-                    <span className="text-yellow-600 mr-2 font-bold">✓</span>
+                    <span className="text-purple-500 mr-2 font-bold">✓</span>
                     <span>Tất cả tính năng Plus</span>
                   </li>
                   <li className="flex items-start">
-                    <span className="text-yellow-600 mr-2 font-bold">✓</span>
+                    <span className="text-purple-500 mr-2 font-bold">✓</span>
                     <span>Đăng tin không giới hạn</span>
                   </li>
                   <li className="flex items-start">
-                    <span className="text-yellow-600 mr-2 font-bold">✓</span>
+                    <span className="text-purple-500 mr-2 font-bold">✓</span>
                     <span>Ưu tiên hiển thị trên đầu</span>
                   </li>
                   <li className="flex items-start">
-                    <span className="text-yellow-600 mr-2 font-bold">✓</span>
+                    <span className="text-purple-500 mr-2 font-bold">✓</span>
                     <span>Quản lí nhà trọ được thuê</span>
                   </li>
                 </ul>
@@ -278,7 +278,7 @@ const FilterSidebar = ({ onFilterChange }) => {
                 size="large"
                 block
                 onClick={() => handleUpgrade('pro')}
-                className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 border-0 h-12 text-base font-semibold shadow-lg hover:shadow-xl transition-all mt-auto"
+                className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 border-0 h-12 text-base font-semibold shadow-lg hover:shadow-xl transition-all mt-auto"
               >
                 Chọn gói Pro
               </Button>
