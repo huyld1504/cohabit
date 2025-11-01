@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Card, Space, Modal, Form, Input, DatePicker, message } from 'antd';
-import { PhoneOutlined, MessageOutlined, CalendarOutlined } from '@ant-design/icons';
+import { MessageOutlined, CalendarOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useRole } from '../../../hooks/useRole';
 import { useChatContext } from '../../../contexts/ChatContext';
@@ -11,7 +11,6 @@ const BookingSection = ({ property }) => {
   const { createOrGetConversation } = useChatContext();
 
   const [bookingModalVisible, setBookingModalVisible] = useState(false);
-  const [contactModalVisible, setContactModalVisible] = useState(false);
   const [upgradeModalVisible, setUpgradeModalVisible] = useState(false);
   const [isCreatingConversation, setIsCreatingConversation] = useState(false);
   const [form] = Form.useForm();
@@ -21,10 +20,6 @@ const BookingSection = ({ property }) => {
     message.success('Yêu cầu thuê phòng đã được gửi thành công!');
     setBookingModalVisible(false);
     form.resetFields();
-  };
-
-  const handleContactOwner = () => {
-    setContactModalVisible(true);
   };
 
   const handleConfirmRental = async () => {
@@ -86,30 +81,11 @@ const BookingSection = ({ property }) => {
               type="primary"
               size="large"
               className="w-full bg-blue-600 hover:bg-blue-700"
+              icon={<MessageOutlined />}
               onClick={handleConfirmRental}
               loading={isCreatingConversation}
-              icon={<MessageOutlined />}
             >
               Xác nhận thuê
-            </Button>
-
-            <Button
-              type="default"
-              size="large"
-              className="w-full"
-              onClick={handleContactOwner}
-              icon={<PhoneOutlined />}
-            >
-              Liên hệ chủ nhà
-            </Button>
-
-            <Button
-              type="default"
-              size="large"
-              className="w-full"
-              icon={<MessageOutlined />}
-            >
-              Nhắn tin
             </Button>
           </Space>
 
@@ -212,45 +188,6 @@ const BookingSection = ({ property }) => {
             </Button>
           </div>
         </Form>
-      </Modal>
-
-      {/* Contact Modal */}
-      <Modal
-        title="Thông tin liên hệ"
-        open={contactModalVisible}
-        onCancel={() => setContactModalVisible(false)}
-        footer={[
-          <Button key="close" onClick={() => setContactModalVisible(false)}>
-            Đóng
-          </Button>
-        ]}
-      >
-        <div className="space-y-4">
-          <div>
-            <h4 className="font-semibold mb-2">Chủ nhà: Nguyễn Văn A</h4>
-            <p className="text-gray-600">Đã xác minh danh tính</p>
-          </div>
-
-          <div className="space-y-2">
-            <div className="flex items-center space-x-2">
-              <PhoneOutlined className="text-blue-600" />
-              <span className="font-medium">0901 234 567</span>
-              <Button size="small" type="link">Gọi ngay</Button>
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <MessageOutlined className="text-green-600" />
-              <span>Zalo: 0901 234 567</span>
-              <Button size="small" type="link">Nhắn tin</Button>
-            </div>
-          </div>
-
-          <div className="bg-blue-50 rounded-lg p-3">
-            <p className="text-sm text-blue-800">
-              <strong>Thời gian liên hệ tốt nhất:</strong> 8:00 - 22:00 hàng ngày
-            </p>
-          </div>
-        </div>
       </Modal>
 
       {/* Upgrade Modal - Plus/Pro Required */}

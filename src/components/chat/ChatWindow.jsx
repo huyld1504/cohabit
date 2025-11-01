@@ -11,7 +11,8 @@ const ChatWindow = ({ onBack }) => {
     currentConversation,
     messages,
     sendMessage,
-    loadMessages
+    loadMessages,
+    currentUserId
   } = useChatContext();
 
   const [messageText, setMessageText] = React.useState('');
@@ -64,8 +65,14 @@ const ChatWindow = ({ onBack }) => {
     }
   };
 
-  const otherUserName = currentConversation?.ownerName || currentConversation?.interestedUserName || 'Người dùng';
-  const otherUserImage = currentConversation?.ownerImage || currentConversation?.interestedUserImage;
+  // Determine who to display: if current user is owner, show interested user, else show owner
+  const isCurrentUserOwner = currentUserId === currentConversation?.ownerId;
+  const otherUserName = isCurrentUserOwner
+    ? (currentConversation?.interestedUserName || 'Người quan tâm')
+    : (currentConversation?.ownerName || 'Chủ nhà');
+  const otherUserImage = isCurrentUserOwner
+    ? currentConversation?.interestedUserImage
+    : currentConversation?.ownerImage;
 
   return (
     <div className="flex flex-col h-full bg-white">
@@ -131,9 +138,9 @@ const ChatWindow = ({ onBack }) => {
             {conversationMessages.map((message, index) => {
               const isOwn = message.isOwnMessage;
               const showAvatar = index === conversationMessages.length - 1 ||
-                                conversationMessages[index + 1]?.isOwnMessage !== isOwn;
+                conversationMessages[index + 1]?.isOwnMessage !== isOwn;
               const showTime = index === 0 ||
-                              Math.abs(dayjs(message.sentAt).diff(conversationMessages[index - 1]?.sentAt, 'minute')) > 5;
+                Math.abs(dayjs(message.sentAt).diff(conversationMessages[index - 1]?.sentAt, 'minute')) > 5;
 
               return (
                 <React.Fragment key={message.messageId || index}>

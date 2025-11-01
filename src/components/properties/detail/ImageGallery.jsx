@@ -3,7 +3,6 @@ import { Image, Alert } from 'antd';
 
 const ImageGallery = ({ images = [] }) => {
   const mainImage = images[0] || '';
-  const thumbnails = images.slice(1, 5) || [];
 
   // If no images, show alert
   if (!images || images.length === 0) {
@@ -21,59 +20,106 @@ const ImageGallery = ({ images = [] }) => {
   }
 
   return (
-    <div className="w-full max-w-full overflow-hidden">
+    <div className="w-full">
       <Image.PreviewGroup>
-        <div className="flex flex-col lg:flex-row gap-3 lg:gap-4 min-h-0">
-          {/* Main Image */}
-          <div className="flex-1 min-w-0 max-w-full">
+        {/* Single image - show full width */}
+        {images.length === 1 && (
+          <div className="w-full">
             <Image
               src={mainImage}
-              alt="Main property"
-              className="w-full h-5 object-cover rounded-lg cursor-pointer"
+              alt="Property image"
+              className="w-full object-cover rounded-lg"
+              style={{ height: '500px', objectFit: 'cover' }}
             />
           </div>
+        )}
 
-          {/* Thumbnail Grid */}
-          <div className="flex-shrink-0 w-full lg:w-64">
-            <div className="grid grid-cols-4 lg:grid-cols-2 gap-2 h-20 lg:h-80">
-              {thumbnails.map((image, index) => (
-                <div key={index + 1} className="aspect-square">
+        {/* Two images - 50/50 split */}
+        {images.length === 2 && (
+          <div className="grid grid-cols-2 gap-3">
+            {images.map((image, index) => (
+              <div key={index} style={{ height: '500px' }}>
+                <Image
+                  src={image}
+                  alt={`Property ${index + 1}`}
+                  className="w-full h-full object-cover rounded-lg"
+                />
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Three images - 2/3 + 1/3 split with 2 rows */}
+        {images.length === 3 && (
+          <div className="grid grid-cols-3 gap-3">
+            <div className="col-span-2" style={{ height: '500px' }}>
+              <Image
+                src={images[0]}
+                alt="Main property"
+                className="w-full h-full object-cover rounded-lg"
+              />
+            </div>
+            <div className="grid grid-rows-2 gap-3">
+              {images.slice(1, 3).map((image, index) => (
+                <div key={index + 1} style={{ height: '244px' }}>
                   <Image
                     src={image}
                     alt={`Property ${index + 2}`}
-                    className="w-full h-full object-cover rounded-lg cursor-pointer"
+                    className="w-full h-full object-cover rounded-lg"
                   />
                 </div>
               ))}
-
-              {/* Show more images if there are more than 5 */}
-              {images.length > 5 && thumbnails.length === 4 && (
-                <div className="relative aspect-square">
-                  <Image
-                    src={images[4]}
-                    alt="More images"
-                    className="w-full h-full object-cover rounded-lg cursor-pointer"
-                  />
-                  <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-lg pointer-events-none">
-                    <span className="text-white font-medium text-xs lg:text-sm">
-                      +{images.length - 4}
-                    </span>
-                  </div>
-                </div>
-              )}
             </div>
           </div>
-        </div>
+        )}
 
-        {/* Hidden images for preview group */}
-        {images.length > 5 && images.slice(5).map((image, index) => (
-          <Image
-            key={`hidden-${index}`}
-            src={image}
-            className="hidden"
-            alt={`Property image ${index + 6}`}
-          />
-        ))}
+        {/* Four images - 2/3 main + 1/3 grid with 2 rows */}
+        {images.length === 4 && (
+          <div className="grid grid-cols-3 gap-3">
+            <div className="col-span-2" style={{ height: '500px' }}>
+              <Image
+                src={images[0]}
+                alt="Main property"
+                className="w-full h-full object-cover rounded-lg"
+              />
+            </div>
+            <div className="grid grid-rows-2 gap-3">
+              {images.slice(1, 4).map((image, index) => (
+                <div key={index + 1} style={{ height: index === 2 ? '244px' : '161px' }}>
+                  <Image
+                    src={image}
+                    alt={`Property ${index + 2}`}
+                    className="w-full h-full object-cover rounded-lg"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Five images - 2/3 main + 1/3 grid with 3 rows */}
+        {images.length === 5 && (
+          <div className="grid grid-cols-3 gap-3">
+            <div className="col-span-2" style={{ height: '500px' }}>
+              <Image
+                src={images[0]}
+                alt="Main property"
+                className="w-full h-full object-cover rounded-lg"
+              />
+            </div>
+            <div className="grid grid-rows-4 gap-3">
+              {images.slice(1, 5).map((image, index) => (
+                <div key={index + 1} style={{ height: '119px' }}>
+                  <Image
+                    src={image}
+                    alt={`Property ${index + 2}`}
+                    className="w-full h-full object-cover rounded-lg"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </Image.PreviewGroup>
     </div>
   );

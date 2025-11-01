@@ -16,7 +16,8 @@ const ConversationList = ({ onSelectConversation }) => {
     conversations,
     currentConversation,
     unreadCounts,
-    openConversation
+    openConversation,
+    currentUserId
   } = useChatContext();
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -98,8 +99,15 @@ const ConversationList = ({ onSelectConversation }) => {
             {filteredConversations.map((conversation) => {
               const isActive = currentConversation?.conversationId === conversation.conversationId;
               const unreadCount = unreadCounts[conversation.conversationId] || 0;
-              const otherUserName = conversation.ownerName || conversation.interestedUserName || 'Người dùng';
-              const otherUserImage = conversation.ownerImage || conversation.interestedUserImage;
+
+              // Determine who to display: if current user is owner, show interested user, else show owner
+              const isCurrentUserOwner = currentUserId === conversation.ownerId;
+              const otherUserName = isCurrentUserOwner
+                ? (conversation.interestedUserName || 'Người quan tâm')
+                : (conversation.ownerName || 'Chủ nhà');
+              const otherUserImage = isCurrentUserOwner
+                ? conversation.interestedUserImage
+                : conversation.ownerImage;
 
               return (
                 <div

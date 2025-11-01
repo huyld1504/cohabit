@@ -6,6 +6,10 @@ import { useSelector } from 'react-redux';
 
 const ChatContext = createContext();
 
+// Constants for reconnection strategy
+const MAX_RECONNECT_ATTEMPTS = 5;
+const RECONNECT_DELAYS = [0, 1000, 2000, 5000, 10000]; // Exponential backoff in ms
+
 export const useChatContext = () => {
   const context = useContext(ChatContext);
   if (!context) {
@@ -23,6 +27,7 @@ export const ChatProvider = ({ children }) => {
   const [isConnected, setIsConnected] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
   const hasInitialized = useRef(false); // Track if connection has been attempted
+  const reconnectAttempts = useRef(0);
 
   // Chat state
   const [conversations, setConversations] = useState([]);
@@ -52,8 +57,9 @@ export const ChatProvider = ({ children }) => {
       if (success) {
         // Setup event listeners
         setupEventListeners();
+        reconnectAttempts.current = 0; // Reset on successful connection
       } else {
-        console.error('❌ Chat connection failed - isConnected remains FALSE');
+        hasInitialized.current = false; // Allow retry
       }
 
       return success;
@@ -64,6 +70,35 @@ export const ChatProvider = ({ children }) => {
       return false;
     }
   }, []); // Empty dependencies - function should not recreate
+
+  /**
+   * Retry connection with exponential backoff
+   */
+  const retryConnection = useCallback(async () => {
+    if (reconnectAttempts.current >= MAX_RECONNECT_ATTEMPTS) {
+      console.warn('⚠️ Max reconnection attempts reached');
+      return false;
+    }
+
+    const delay = RECONNECT_DELAYS[reconnectAttempts.current];
+    console.log(`🔄 Retrying SignalR connection (attempt ${reconnectAttempts.current + 1}/${MAX_RECONNECT_ATTEMPTS}) in ${delay}ms...`);
+
+    if (delay > 0) {
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+
+    reconnectAttempts.current += 1;
+    hasInitialized.current = false; // Allow reconnection attempt
+    
+    const success = await connectToChat();
+    
+    if (success) {
+      console.log('✅ Successfully reconnected to SignalR');
+      reconnectAttempts.current = 0; // Reset counter on success
+    }
+    
+    return success;
+  }, [connectToChat]);
 
   /**
    * Handle new message from SignalR or API
@@ -100,7 +135,7 @@ export const ChatProvider = ({ children }) => {
       const existingIndex = existingMessages.findIndex(m =>
         m.messageId === normalizedMessage.messageId || // Same real ID
         (m.isPending && m.senderId === normalizedMessage.senderId &&
-         Math.abs(new Date(m.sentAt) - new Date(normalizedMessage.createdAt || normalizedMessage.sentAt)) < 5000) // Within 5 seconds
+          Math.abs(new Date(m.sentAt) - new Date(normalizedMessage.createdAt || normalizedMessage.sentAt)) < 5000) // Within 5 seconds
       );
 
       if (existingIndex !== -1) {
@@ -126,10 +161,10 @@ export const ChatProvider = ({ children }) => {
       prev.map(conv =>
         conv.conversationId === conversationId
           ? {
-              ...conv,
-              lastMessage: mappedMessage.content,
-              lastMessageAt: mappedMessage.sentAt
-            }
+            ...conv,
+            lastMessage: mappedMessage.content,
+            lastMessageAt: mappedMessage.sentAt
+          }
           : conv
       )
     );
@@ -338,10 +373,10 @@ export const ChatProvider = ({ children }) => {
         prev.map(conv =>
           conv.conversationId === conversationId
             ? {
-                ...conv,
-                lastMessage: optimisticMessage.content,
-                lastMessageAt: optimisticMessage.sentAt
-              }
+              ...conv,
+              lastMessage: optimisticMessage.content,
+              lastMessageAt: optimisticMessage.sentAt
+            }
             : conv
         )
       );
@@ -354,13 +389,41 @@ export const ChatProvider = ({ children }) => {
 
           if (success) {
             return true;
-          } else {
-            console.warn('⚠️ SignalR send returned false, falling back to REST API');
           }
         } else {
-          console.warn('⚠️ SignalR not connected (isConnected=false), using REST API fallback');
+          // Try to reconnect with retry logic
+          console.log('⚠️ SignalR not connected, attempting to reconnect...');
+          let reconnected = false;
+          
+          for (let i = 0; i < MAX_RECONNECT_ATTEMPTS; i++) {
+            const delay = RECONNECT_DELAYS[i];
+            
+            if (delay > 0) {
+              console.log(`🔄 Retry attempt ${i + 1}/${MAX_RECONNECT_ATTEMPTS} in ${delay}ms...`);
+              await new Promise(resolve => setTimeout(resolve, delay));
+            }
+            
+            hasInitialized.current = false;
+            reconnected = await connectToChat();
+            
+            if (reconnected) {
+              console.log('✅ Reconnected successfully, retrying send...');
+              const success = await signalRService.sendMessage(conversationId, content.trim());
+              
+              if (success) {
+                return true;
+              }
+              break;
+            }
+          }
+          
+          if (!reconnected) {
+            console.warn('⚠️ Failed to reconnect after all attempts, using REST API fallback');
+          }
         }
 
+        // REST API fallback
+        console.log('📡 Using REST API to send message...');
         const response = await chatApi.sendNewMessage({
           conversationId,
           content: content.trim()
@@ -513,6 +576,9 @@ export const ChatProvider = ({ children }) => {
     isConnecting,
     connectToChat,
     disconnectFromChat,
+
+    // User info
+    currentUserId,
 
     // Conversations
     conversations,

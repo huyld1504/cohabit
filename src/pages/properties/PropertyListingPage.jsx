@@ -200,7 +200,7 @@ const PropertyListingPage = () => {
       <HeroBanner backgroundImage={bannerExe} />
 
       <Content className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Row gutter={[24, 24]} style={{ marginLeft: 0, marginRight: 0 }}>
+        <Row gutter={[32, 24]} style={{ marginLeft: 0, marginRight: 0 }}>
           {/* Filter Sidebar - Desktop Only */}
           <Col
             xs={0}
@@ -209,7 +209,8 @@ const PropertyListingPage = () => {
             style={{
               minWidth: '280px',
               maxWidth: '280px',
-              width: '280px'
+              width: '280px',
+              paddingRight: '16px'
             }}
           >
             <div className="hidden lg:block">
@@ -230,7 +231,7 @@ const PropertyListingPage = () => {
             ) : null}
 
             {/* Header với sorting và view options */}
-            <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
+            <div className="bg-white p-4 rounded-lg shadow-sm mb-6 ml-5">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
                   <h2 className="text-2xl font-bold text-blue-600 mb-1">
@@ -289,12 +290,14 @@ const PropertyListingPage = () => {
             </div>
 
             {/* Property Grid */}
-            <PropertyGrid
-              properties={properties}
-              loading={loading}
-              onLike={handleLike}
-              onViewDetails={handleViewDetails}
-            />
+            <div className="ml-5">
+              <PropertyGrid
+                properties={properties}
+                loading={loading}
+                onLike={handleLike}
+                onViewDetails={handleViewDetails}
+              />
+            </div>
 
             {/* Pagination */}
             {properties.length > 0 && (

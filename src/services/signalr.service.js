@@ -40,7 +40,7 @@ class SignalRService {
       this.isConnecting = true;
 
       // Get base URL from environment
-      let apiUrl = API_CONSTANTS.API_URL || 'http://cohabit.vn/api';
+      let apiUrl = API_CONSTANTS.API_URL || 'https://cohabit-api-postgres-fjdbhze4d0gqfmb9.canadacentral-01.azurewebsites.net/api';
 
       // Remove /api, /api/v1, or /v1 suffix to get the base domain
       const baseURL = apiUrl.replace(/\/(api|v1|api\/v1)$/i, '');
