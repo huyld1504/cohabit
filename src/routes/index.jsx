@@ -35,6 +35,7 @@ import CreatePostPage from "../pages/user-posts/CreatePostPage";
 import RentedPostsPage from "../pages/user-posts/RentedPostsPage";
 import RentalManagementPage from "../pages/user-posts/RentalManagementPage";
 import ChatPage from "../pages/chat/ChatPage";
+import ContractsPage from "../pages/contracts/ContractsPage";
 
 // layouts
 import UserPostLayout from "../components/layouts/UserPostLayout";
@@ -72,6 +73,11 @@ export const router = createBrowserRouter([
                 element: <PropertyDetailPage />,
               },
             ]
+          },
+          // Contracts - public access
+          {
+            path: "contracts",
+            element: <ContractsPage />,
           },
         ]
       },

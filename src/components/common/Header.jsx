@@ -196,9 +196,9 @@ const Header = ({ variant = 'default' }) => {
               <Link to="/properties" className={`${textStyles} font-bold whitespace-nowrap transition-colors !text-[#1279a1]`}>
                 Danh mục Nhà Trọ
               </Link>
-              <span onClick={handleViewContract} className={`${textStyles} font-bold whitespace-nowrap transition-colors cursor-pointer !text-[#1279a1]`}>
+              <Link to="/contracts" className={`${textStyles} font-bold whitespace-nowrap transition-colors !text-[#1279a1]`}>
                 Mẫu Hợp Đồng
-              </span>
+              </Link>
               {/* Create Post Button - Desktop */}
               <Link className="hidden lg:block" to={'user/posts/create'}>
                 <Badge status='processing' count={'Plus'} color='#1279a1'>
