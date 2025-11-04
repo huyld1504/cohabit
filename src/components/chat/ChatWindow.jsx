@@ -12,14 +12,18 @@ const ChatWindow = ({ onBack }) => {
     messages,
     sendMessage,
     loadMessages,
-    currentUserId
+    currentUserId,
+    isConnected,
+    isConnecting
   } = useChatContext();
 
   const [messageText, setMessageText] = React.useState('');
   const [loading, setLoading] = React.useState(true);
+  const [allowFallback, setAllowFallback] = React.useState(false);
   const messagesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
   const inputRef = useRef(null);
+  const timeoutRef = useRef(null);
 
   const conversationId = currentConversation?.conversationId;
   const conversationMessages = messages[conversationId] || [];
@@ -33,6 +37,30 @@ const ChatWindow = ({ onBack }) => {
   useEffect(() => {
     scrollToBottom();
   }, [conversationMessages]);
+
+  // Timeout fallback if SignalR takes too long
+  useEffect(() => {
+    // Clear existing timeout
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    // If still connecting/not connected, set timeout
+    if (isConnecting || !isConnected) {
+      timeoutRef.current = setTimeout(() => {
+        setAllowFallback(true);
+      }, 10000); // 10 seconds timeout
+    } else {
+      setAllowFallback(false);
+    }
+
+    // Cleanup timeout on unmount
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, [isConnecting, isConnected]);
 
   const loadMessagesForConversation = async () => {
     setLoading(true);
@@ -75,7 +103,16 @@ const ChatWindow = ({ onBack }) => {
     : currentConversation?.ownerImage;
 
   return (
-    <div className="flex flex-col h-full bg-white">
+    <div className="flex flex-col h-full bg-white relative">
+      {/* Connection Loading Overlay - Show until SignalR connected or timeout */}
+      {(isConnecting || (!isConnected && !allowFallback)) && (
+        <div className="absolute inset-0 bg-white bg-opacity-90 flex items-center justify-center z-50">
+          <Spin size="large" />
+        </div>
+      )}
+
+
+
       {/* Header - Instagram/Messenger Style */}
       <div className="flex items-center px-4 py-3 border-b border-gray-200 bg-white">
         <Button
@@ -107,6 +144,7 @@ const ChatWindow = ({ onBack }) => {
           <h3 className="font-semibold text-gray-900 text-[15px]">{otherUserName}</h3>
           <p className="text-xs text-gray-500 truncate">{currentConversation?.postTitle}</p>
         </div>
+
       </div>
 
       {/* Messages Area - Instagram/Messenger Style */}
@@ -223,9 +261,13 @@ const ChatWindow = ({ onBack }) => {
               onKeyPress={handleKeyPress}
               placeholder="Aa"
               rows={1}
-              className="w-full px-4 py-2 bg-gray-100 border-0 rounded-full resize-none
-                       focus:outline-none focus:bg-gray-200 transition-colors
-                       text-[15px]"
+              disabled={isConnecting || (!isConnected && !allowFallback)}
+              className={`w-full px-4 py-2 border-0 rounded-full resize-none
+                       focus:outline-none transition-colors text-[15px]
+                       ${(isConnecting || (!isConnected && !allowFallback))
+                         ? 'bg-gray-200 cursor-not-allowed text-gray-400' 
+                         : 'bg-gray-100 focus:bg-gray-200'
+                       }`}
               style={{
                 maxHeight: '100px',
                 minHeight: '36px'
@@ -239,11 +281,11 @@ const ChatWindow = ({ onBack }) => {
               type="primary"
               icon={<SendOutlined />}
               onClick={handleSendMessage}
-              disabled={!messageText.trim()}
+              disabled={!messageText.trim() || isConnecting || (!isConnected && !allowFallback)}
               className="flex-shrink-0 rounded-full w-9 h-9 p-0 flex items-center justify-center"
               style={{
-                backgroundColor: '#0084ff',
-                borderColor: '#0084ff'
+                backgroundColor: (isConnecting || (!isConnected && !allowFallback)) ? '#ccc' : '#0084ff',
+                borderColor: (isConnecting || (!isConnected && !allowFallback)) ? '#ccc' : '#0084ff'
               }}
             />
           ) : (

@@ -76,12 +76,10 @@ export const ChatProvider = ({ children }) => {
    */
   const retryConnection = useCallback(async () => {
     if (reconnectAttempts.current >= MAX_RECONNECT_ATTEMPTS) {
-      console.warn('⚠️ Max reconnection attempts reached');
       return false;
     }
 
     const delay = RECONNECT_DELAYS[reconnectAttempts.current];
-    console.log(`🔄 Retrying SignalR connection (attempt ${reconnectAttempts.current + 1}/${MAX_RECONNECT_ATTEMPTS}) in ${delay}ms...`);
 
     if (delay > 0) {
       await new Promise(resolve => setTimeout(resolve, delay));
@@ -89,18 +87,15 @@ export const ChatProvider = ({ children }) => {
 
     reconnectAttempts.current += 1;
     hasInitialized.current = false; // Allow reconnection attempt
-
+    
     const success = await connectToChat();
-
+    
     if (success) {
-      console.log('✅ Successfully reconnected to SignalR');
       reconnectAttempts.current = 0; // Reset counter on success
     }
-
+    
     return success;
-  }, [connectToChat]);
-
-  /**
+  }, [connectToChat]);  /**
    * Handle new message from SignalR or API
    */
   const handleNewMessage = useCallback((message) => {
@@ -417,13 +412,9 @@ export const ChatProvider = ({ children }) => {
             }
           }
 
-          if (!reconnected) {
-            console.warn('⚠️ Failed to reconnect after all attempts, using REST API fallback');
-          }
         }
 
         // REST API fallback
-        console.log('📡 Using REST API to send message...');
         const response = await chatApi.sendNewMessage({
           conversationId,
           content: content.trim()
