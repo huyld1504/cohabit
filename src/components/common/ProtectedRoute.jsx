@@ -76,9 +76,9 @@ export const ModeratorRoute = ({ children, ...props }) => (
   </ProtectedRoute>
 );
 
-// User post management - ProMember and PlusMember only (no Admin)
+// User post management - ProMember only
 export const UserPostRoute = ({ children, ...props }) => (
-  <ProtectedRoute allowedRoles={[USER_ROLES.PRO_MEMBER, USER_ROLES.PLUS_MEMBER]} {...props}>
+  <ProtectedRoute allowedRoles={[USER_ROLES.PRO_MEMBER]} {...props}>
     {children}
   </ProtectedRoute>
 );

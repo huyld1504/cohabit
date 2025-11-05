@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Button, Rate, Tooltip } from 'antd';
-import { EnvironmentOutlined, StarOutlined, StarFilled } from '@ant-design/icons';
+import { EnvironmentOutlined, HeartOutlined, HeartFilled } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import SafeHTMLRenderer from '../common/SafeHTMLRenderer';
 
@@ -37,14 +37,14 @@ const PropertyCard = ({
             src={image || 'https://via.placeholder.com/300x200?text=Room'}
             className="h-48 w-full object-cover rounded-t-lg"
           />
-          <div className="absolute top-3 left-3">
+          <div className="absolute top-3 right-3">
             <Button
               type="text"
               icon={
                 isLiked ? (
-                  <StarFilled className="!text-yellow-500 !text-2xl !bg-white !rounded-full p-1" />
+                  <HeartFilled className="!text-red-500 !text-xl" />
                 ) : (
-                  <StarOutlined className="!text-yellow-500 !text-2xl !bg-white !rounded-full p-1" />
+                  <HeartOutlined className="!text-white !text-xl" />
                 )}
               className="bg-black bg-opacity-40 border-none hover:bg-opacity-60 rounded-full w-10 h-10 flex items-center justify-center"
               onClick={handleLike}

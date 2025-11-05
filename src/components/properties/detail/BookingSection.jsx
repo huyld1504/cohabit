@@ -85,7 +85,7 @@ const BookingSection = ({ property }) => {
               onClick={handleConfirmRental}
               loading={isCreatingConversation}
             >
-              Xác nhận thuê
+              Liên hệ ngay
             </Button>
           </Space>
 

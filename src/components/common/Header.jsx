@@ -62,9 +62,7 @@ const Header = ({ variant = 'default' }) => {
   const showDrawer = () => setIsDrawerOpen(true);
   const closeDrawer = () => setIsDrawerOpen(false);
 
-  const handleViewContract = () => {
-    window.open('https://drive.google.com/drive/folders/1DbBYhWtnVOqYxCB1YMr9tEogjdrNBKKI', '_blank');
-  };
+
 
   // Style variants
   const isPremium = variant === 'premium';
@@ -150,21 +148,21 @@ const Header = ({ variant = 'default' }) => {
         </Link>
       </Menu.Item>
       <Menu.Item key="history" icon={<HistoryOutlined className='!text-xl !mt-2' />}>
-        <Link to="/my-posts">Lịch sử thuê</Link>
+        <Link to="/profile/history">Lịch sử thuê</Link>
       </Menu.Item>
       <Menu.Item key="favorite" icon={<HeartOutlined className='!text-xl !mt-2' />}>
-        <Link to="/my-posts">Danh sách yêu thích</Link>
+        <Link to="/profile/favorite">Danh sách yêu thích</Link>
       </Menu.Item>
-      <Menu.Item key="manage" icon={<EditOutlined className='!text-xl !mt-2' />}>
-        <Link to="/user/posts" className='flex gap-3'>
-          <span className='flex items-center gap-2 text-sm'>
-            Quản lí bài đăng
-          </span>
-          {(profile?.role === USER_ROLES.PLUS_MEMBER || profile?.role === USER_ROLES.PRO_MEMBER) && (
-            <Badge title='Plus' size={'default'} count={'Plus'} color='blue' />
-          )}
-        </Link>
-      </Menu.Item>
+      {profile?.role === USER_ROLES.PRO_MEMBER && (
+        <Menu.Item key="manage" icon={<EditOutlined className='!text-xl !mt-2' />}>
+          <Link to="/user/posts" className='flex gap-3'>
+            <span className='flex items-center gap-2 text-sm'>
+              Quản lí bài đăng
+            </span>
+            <Badge title='Pro' size={'default'} count={'Pro'} color='gold' />
+          </Link>
+        </Menu.Item>
+      )}
       <Menu.Divider />
       <Menu.Item key="logout" icon={<LogoutOutlined className='!text-xl !mt-2' />}>
         <span onClick={handleLogout} className="cursor-pointer">Đăng xuất</span>
@@ -200,21 +198,41 @@ const Header = ({ variant = 'default' }) => {
                 Mẫu Hợp Đồng
               </Link>
               {/* Create Post Button - Desktop */}
-              <Link className="hidden lg:block" to={'user/posts/create'}>
-                <Badge status='processing' count={'Plus'} color='#1279a1'>
-                  <Button
-                    type="primary"
-                    icon={<PlusOutlined />}
-                    className={isPremium
-                      ? "!bg-white/20 !border-white/30 !text-white hover:!bg-white/30 hover:!border-white/40 rounded-full px-6 font-medium backdrop-blur-sm"
-                      : "!bg-[#1279a1] border-blue-600 hover:bg-blue-700 hover:border-blue-700 rounded-full px-6 font-medium"
-                    }
-                    size="middle"
-                  >
-                    Tạo bài đăng
-                  </Button>
-                </Badge>
-              </Link>
+              {profile && profile.role === USER_ROLES.PRO_MEMBER ? (
+                <Link className="hidden lg:block" to={'user/posts/create'}>
+                  <Badge count={'Pro'} color='gold'>
+                    <Button
+                      type="primary"
+                      icon={<PlusOutlined />}
+                      className={isPremium
+                        ? "!bg-white/20 !border-white/30 !text-white hover:!bg-white/30 hover:!border-white/40 rounded-full px-6 font-medium backdrop-blur-sm"
+                        : "!bg-[#1279a1] border-blue-600 hover:bg-blue-700 hover:border-blue-700 rounded-full px-6 font-medium"
+                      }
+                      size="middle"
+                    >
+                      Tạo bài đăng
+                    </Button>
+                  </Badge>
+                </Link>
+              ) : (
+                <Link className="hidden lg:block" to={profile ? '/premium' : '/register'}>
+                  <Tooltip title={profile ? "Nâng cấp Pro để tạo bài đăng" : "Đăng ký tài khoản Pro"} placement="bottom">
+                    <Badge count={'Pro'} color='gold'>
+                      <Button
+                        type="primary"
+                        icon={<PlusOutlined />}
+                        className={isPremium
+                          ? "!bg-white/20 !border-white/30 !text-white hover:!bg-white/30 hover:!border-white/40 rounded-full px-6 font-medium backdrop-blur-sm"
+                          : "!bg-[#1279a1] border-blue-600 hover:bg-blue-700 hover:border-blue-700 rounded-full px-6 font-medium"
+                        }
+                        size="middle"
+                      >
+                        Tạo bài đăng
+                      </Button>
+                    </Badge>
+                  </Tooltip>
+                </Link>
+              )}
             </div>
           </nav>
 
@@ -366,26 +384,96 @@ const Header = ({ variant = 'default' }) => {
                       </Menu.Item>
                     </Menu.ItemGroup>
                   )}
-                  <Menu.Item key="profile" icon={<UserOutlined />}>
-                    <Link to="/profile" onClick={closeDrawer}>Tài khoản</Link>
-                  </Menu.Item>
-                  <Menu.Item key="history" icon={<HistoryOutlined />}>
-                    <Link to="/my-posts" onClick={closeDrawer}>Lịch sử thuê</Link>
-                  </Menu.Item>
-                  <Menu.Item key="favorite" icon={<HeartOutlined />}>
-                    <Link to="/my-posts" onClick={closeDrawer}>Danh sách yêu thích</Link>
-                  </Menu.Item>
-                  <Menu.Item key="manage" icon={<EditOutlined />}>
-                    <Link to="/user/posts" onClick={closeDrawer}>
-                      <span className='mr-2'>Quản lí bài đăng</span>
-                      <Badge title='Plus' size={'default'} count={'Plus'} color='blue' />
-                    </Link>
-                  </Menu.Item>
+
+                  {/* Navigation Items */}
+                  <Menu.ItemGroup
+                    title={
+                      <span className="text-xs font-semibold text-blue-600 uppercase tracking-wide">
+                        Danh mục
+                      </span>
+                    }
+                    className="!text-blue-600"
+                  >
+                    <Menu.Item key="properties" icon={<AppstoreOutlined />}>
+                      <Link to="/properties" onClick={closeDrawer}>Danh mục Nhà Trọ</Link>
+                    </Menu.Item>
+                    <Menu.Item key="contracts" icon={<FileTextOutlined />}>
+                      <Link to="/contracts" onClick={closeDrawer}>Mẫu Hợp Đồng</Link>
+                    </Menu.Item>
+                    <Menu.Item key="premium-nav" icon={<CrownOutlined />}>
+                      <Link to="/premium" onClick={closeDrawer}>Gói Premium</Link>
+                    </Menu.Item>
+                  </Menu.ItemGroup>
+
+                  <Menu.ItemGroup
+                    title={
+                      <span className="text-xs font-semibold text-green-600 uppercase tracking-wide">
+                        Tài khoản
+                      </span>
+                    }
+                    className="!text-green-600"
+                  >
+                    <Menu.Item key="profile" icon={<UserOutlined />}>
+                      <Link to="/profile" onClick={closeDrawer}>Tài khoản</Link>
+                    </Menu.Item>
+                    <Menu.Item key="history" icon={<HistoryOutlined />}>
+                      <Link to="/profile/history" onClick={closeDrawer}>Lịch sử thuê</Link>
+                    </Menu.Item>
+                    <Menu.Item key="favorite" icon={<HeartOutlined />}>
+                      <Link to="/profile/favorite" onClick={closeDrawer}>Danh sách yêu thích</Link>
+                    </Menu.Item>
+                    {profile?.role === USER_ROLES.PRO_MEMBER && (
+                      <Menu.Item key="manage" icon={<EditOutlined />}>
+                        <Link to="/user/posts" onClick={closeDrawer}>
+                          <span className='mr-2'>Quản lí bài đăng</span>
+                          <Badge title='Pro' size={'default'} count={'Pro'} color='gold' />
+                        </Link>
+                      </Menu.Item>
+                    )}
+                  </Menu.ItemGroup>
                   <Menu.Divider />
                   <Menu.Item key="logout" icon={<LogoutOutlined />}>
                     <span onClick={() => { handleLogout(); closeDrawer(); }} className="cursor-pointer">Đăng xuất</span>
                   </Menu.Item>
                 </Menu>
+
+                {/* Action Buttons for logged in user */}
+                <div className="mt-6 space-y-4 px-4">
+                  {profile?.role === USER_ROLES.PRO_MEMBER ? (
+                    <Link to="/user/posts/create" className="w-full" onClick={closeDrawer}>
+                      <Badge count={'Pro'} color='gold'>
+                        <Button
+                          type="primary"
+                          icon={<PlusOutlined />}
+                          className="w-full !h-12 !text-base !font-medium !bg-[#1279a1] !border-[#1279a1] rounded-lg"
+                        >
+                          Tạo bài đăng
+                        </Button>
+                      </Badge>
+                    </Link>
+                  ) : (
+                    <Link to="/premium" className="w-full" onClick={closeDrawer}>
+                      <Badge count={'Pro'} color='gold'>
+                        <Button
+                          type="primary"
+                          icon={<PlusOutlined />}
+                          className="w-full !h-12 !text-base !font-medium !bg-[#1279a1] !border-[#1279a1] rounded-lg"
+                        >
+                          Tạo bài đăng
+                        </Button>
+                      </Badge>
+                    </Link>
+                  )}
+
+                  <Link to="/premium" className="w-full" onClick={closeDrawer}>
+                    <Button
+                      icon={<CrownOutlined />}
+                      className="w-full !h-12 !text-base !font-medium !bg-yellow-400 !border-yellow-400 !text-white rounded-lg shadow-sm hover:!bg-yellow-500 hover:!border-yellow-500"
+                    >
+                      Khám phá gói Premium
+                    </Button>
+                  </Link>
+                </div>
               </div>
             ) : (
               <>
@@ -404,23 +492,25 @@ const Header = ({ variant = 'default' }) => {
                 </nav>
                 <Divider className="!my-6" />
                 <div className="space-y-4">
-                  <Button
-                    icon={<CrownOutlined />}
-                    className="w-full !h-12 !text-base !font-medium !bg-yellow-400 !border-yellow-400 !text-white rounded-lg shadow-sm hover:!bg-yellow-500 hover:!border-yellow-500 !mb-5"
-                    onClick={closeDrawer}
-                  >
-                    Nâng cấp Premium
-                  </Button>
-                  <Badge status='processing' count={'Plus'} color='#1279a1'>
+                  <Link to="/premium" className="w-full" onClick={closeDrawer}>
                     <Button
-                      type="primary"
-                      icon={<PlusOutlined />}
-                      className="w-full !h-12 !text-base !font-medium !bg-[#1279a1] !border-[#1279a1] rounded-lg"
-                      onClick={closeDrawer}
+                      icon={<CrownOutlined />}
+                      className="w-full !h-12 !text-base !font-medium !bg-yellow-400 !border-yellow-400 !text-white rounded-lg shadow-sm hover:!bg-yellow-500 hover:!border-yellow-500 !mb-5"
                     >
-                      Tạo bài đăng
+                      Nâng cấp Premium
                     </Button>
-                  </Badge>
+                  </Link>
+                  <Link to="/register" className="w-full" onClick={closeDrawer}>
+                    <Badge count={'Pro'} color='gold'>
+                      <Button
+                        type="primary"
+                        icon={<PlusOutlined />}
+                        className="w-full !h-12 !text-base !font-medium !bg-[#1279a1] !border-[#1279a1] rounded-lg"
+                      >
+                        Tạo bài đăng
+                      </Button>
+                    </Badge>
+                  </Link>
                 </div>
               </>
             )}

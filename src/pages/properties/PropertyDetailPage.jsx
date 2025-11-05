@@ -7,13 +7,15 @@ import PropertyTabs from '../../components/properties/detail/PropertyTabs';
 import BookingSection from '../../components/properties/detail/BookingSection';
 import { interiorBedroom } from '../../assets';
 import { postApi } from '../../api/post.api';
+import { profileApi } from '../../api/profile.api';
+import { useFavorites } from '../../hooks/useFavorites';
 
 const { Content } = Layout;
 
 const PropertyDetailPage = () => {
   const { id } = useParams();
+  const { toggleFavorite, isFavorited, setFavoriteStatus } = useFavorites();
   const [property, setProperty] = useState(null);
-  const [isLiked, setIsLiked] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -57,13 +59,27 @@ const PropertyDetailPage = () => {
       }
     };
 
+    const loadFavoriteStatus = async () => {
+      try {
+        const favoriteResponse = await profileApi.getFavoritePosts();
+        if (favoriteResponse && favoriteResponse.length > 0) {
+          const isFav = favoriteResponse.some(post => post.postId === id);
+          setFavoriteStatus(id, isFav);
+        }
+      } catch (error) {
+        console.error('❌ Error loading favorite status:', error);
+      }
+    };
+
     if (id) {
       loadPropertyDetail();
+      loadFavoriteStatus();
     }
-  }, [id]);
+  }, [id, setFavoriteStatus]);
 
-  const handleLikeToggle = () => {
-    setIsLiked(!isLiked);
+  const handleLikeToggle = async () => {
+    const newStatus = await toggleFavorite(id);
+    console.log('🔄 Favorite toggled for property:', id, 'New status:', newStatus);
   };
 
   if (loading) {
@@ -91,7 +107,7 @@ const PropertyDetailPage = () => {
             </div>
             <Button
               type="text"
-              icon={isLiked ? <HeartFilled className="!text-red-500" /> : <HeartOutlined className='!text-red-500' />}
+              icon={isFavorited(id) ? <HeartFilled className="!text-red-500" /> : <HeartOutlined className='!text-red-500' />}
               onClick={handleLikeToggle}
               className="text-lg self-start sm:self-auto hover:bg-red-50 rounded-full"
             />

@@ -10,7 +10,9 @@ import UpgradePrompt from '../../components/common/UpgradePrompt';
 import { bannerExe } from '../../assets';
 import { interiorBedroom } from '../../assets';
 import { postApi } from '../../api/post.api';
+import { profileApi } from '../../api/profile.api';
 import { useRole } from '../../hooks/useRole';
+import { useFavorites } from '../../hooks/useFavorites';
 import { USER_ROLES } from '../../constants/roles.constant';
 
 const { Content } = Layout;
@@ -18,6 +20,7 @@ const { Option } = Select;
 
 const PropertyListingPage = () => {
   const { hasRole } = useRole();
+  const { toggleFavorite, isFavorited, setFavorites } = useFavorites();
   const [searchParams, setSearchParams] = useSearchParams();
 
   // Initialize states from URL search params
@@ -115,7 +118,7 @@ const PropertyListingPage = () => {
           image: post.imageUrl && post.imageUrl.length > 0 ? post.imageUrl[0] : interiorBedroom,
           rating: post.averageRating || 0,
           reviewCount: 0,
-          isLiked: false
+          isLiked: isFavorited(post.postId)
         }));
 
         setProperties(mappedProperties);
@@ -132,11 +135,29 @@ const PropertyListingPage = () => {
     } finally {
       setLoading(false);
     }
-  }, [currentPage, pageSize, filters, hasActiveFilters, canUseSearch]);
+  }, [currentPage, pageSize, filters, hasActiveFilters, canUseSearch, isFavorited]);
 
   useEffect(() => {
     loadPosts();
   }, [loadPosts]);
+
+  // Load user's favorite posts when component mounts
+  useEffect(() => {
+    const loadUserFavorites = async () => {
+      try {
+        const favoriteResponse = await profileApi.getFavoritePosts();
+        if (favoriteResponse && favoriteResponse.length > 0) {
+          const favoritePostIds = favoriteResponse.map(post => post.postId);
+          setFavorites(favoritePostIds);
+        }
+      } catch (error) {
+        console.error('❌ Error loading user favorites:', error);
+        // Don't show error to user - favorites are not critical
+      }
+    };
+
+    loadUserFavorites();
+  }, [setFavorites]);
 
   const handleFilterChange = (newFilters) => {
     console.log('📥 PropertyListingPage received new filters:', newFilters);
@@ -165,14 +186,18 @@ const PropertyListingPage = () => {
     console.log('📝 URL params updated:', params.toString());
   };
 
-  const handleLike = (propertyId) => {
-    setProperties(prev =>
-      prev.map(property =>
+  const handleLike = async (propertyId) => {
+    console.log('🔄 Toggling favorite for property:', propertyId);
+    const newStatus = await toggleFavorite(propertyId);
+
+    if (newStatus !== null) {
+      // Update the local properties state
+      setProperties(prev => prev.map(property =>
         property.id === propertyId
-          ? { ...property, isLiked: !property.isLiked }
+          ? { ...property, isLiked: newStatus }
           : property
-      )
-    );
+      ));
+    }
   };
 
   const handleViewDetails = (propertyId) => {

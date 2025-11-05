@@ -87,13 +87,13 @@ export const ChatProvider = ({ children }) => {
 
     reconnectAttempts.current += 1;
     hasInitialized.current = false; // Allow reconnection attempt
-    
+
     const success = await connectToChat();
-    
+
     if (success) {
       reconnectAttempts.current = 0; // Reset counter on success
     }
-    
+
     return success;
   }, [connectToChat]);  /**
    * Handle new message from SignalR or API

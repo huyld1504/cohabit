@@ -1,4 +1,4 @@
-import {callAPI} from "./axios.instance";
+import { callAPI } from "./axios.instance";
 
 const PROFILE_API_BASE = {
     GET_PROFILE: '/v1/Profile',
@@ -23,7 +23,7 @@ const convertSexFieldToNumber = (sex) => {
         default:
             return 3;
     }
-}
+};
 
 export const profileApi = {
     getProfile: async () => callAPI('GET', PROFILE_API_BASE.GET_PROFILE),
@@ -41,4 +41,4 @@ export const profileApi = {
     getFavoritePosts: async () => callAPI('GET', PROFILE_API_BASE.GET_FAVORITE_POSTS),
     addFavoritePost: async (postId) => callAPI('POST', PROFILE_API_BASE.ADD_FAVORITE_POST(postId)),
     removeFavoritePost: async (postId) => callAPI('DELETE', PROFILE_API_BASE.REMOVE_FAVORITE_POST(postId)),
-}
+};

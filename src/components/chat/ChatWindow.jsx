@@ -265,9 +265,9 @@ const ChatWindow = ({ onBack }) => {
               className={`w-full px-4 py-2 border-0 rounded-full resize-none
                        focus:outline-none transition-colors text-[15px]
                        ${(isConnecting || (!isConnected && !allowFallback))
-                         ? 'bg-gray-200 cursor-not-allowed text-gray-400' 
-                         : 'bg-gray-100 focus:bg-gray-200'
-                       }`}
+                  ? 'bg-gray-200 cursor-not-allowed text-gray-400'
+                  : 'bg-gray-100 focus:bg-gray-200'
+                }`}
               style={{
                 maxHeight: '100px',
                 minHeight: '36px'
