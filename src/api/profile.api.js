@@ -8,8 +8,8 @@ const PROFILE_API_BASE = {
     UPDATE_CHARACTERISTICS: '/v1/Profile/Characteristics',
     ADD_CHARACTERISTICS: '/v1/Profile/Characteristics',
     GET_FAVORITE_POSTS: '/v1/Profile/favorites',
-    ADD_FAVORITE_POST: (postId) => `/v1/Profile/favorites/${postId}`,
-    REMOVE_FAVORITE_POST: (postId) => `/v1/Profile/favorites/${postId}`,
+    ADD_FAVORITE_POST: (postId) => `/v1/Post/favorites/${postId}`,
+    REMOVE_FAVORITE_POST: (postId) => `/v1/Post/favorites/${postId}`,
 };
 
 const convertSexFieldToNumber = (sex) => {
