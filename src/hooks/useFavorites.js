@@ -36,17 +36,7 @@ export const useFavorites = () => {
 
       return !isCurrentlyFavorited; // Return new status
     } catch (error) {
-      // Show specific error message based on status code
-      if (error.response?.status === 401) {
-        message.error('Vui lòng đăng nhập để sử dụng tính năng này');
-      } else if (error.response?.status === 403) {
-        message.error('Bạn không có quyền thực hiện thao tác này');
-      } else if (error.response?.status === 404) {
-        message.error('Không tìm thấy bài đăng');
-      } else {
-        message.error('Có lỗi xảy ra. Vui lòng thử lại sau!');
-      }
-
+      message.error(error?.data);
       return null; // Indicate failure
     } finally {
       setLoading(false);

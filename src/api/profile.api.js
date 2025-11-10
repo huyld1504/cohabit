@@ -7,9 +7,9 @@ const PROFILE_API_BASE = {
     GET_CHARACTERISTICS: '/v1/Profile/Characteristics',
     UPDATE_CHARACTERISTICS: '/v1/Profile/Characteristics',
     ADD_CHARACTERISTICS: '/v1/Profile/Characteristics',
-    GET_FAVORITE_POSTS: '/v1/Profile/favorites',
-    ADD_FAVORITE_POST: (postId) => `/v1/Profile/favorites/${postId}`,
-    REMOVE_FAVORITE_POST: (postId) => `/v1/Profile/favorites/${postId}`,
+    GET_FAVORITE_POSTS: '/Post/favorites',
+    ADD_FAVORITE_POST: (postId) => `/Post/favorites/${postId}`,
+    REMOVE_FAVORITE_POST: (postId) => `/Post/favorites/${postId}`,
 };
 
 const convertSexFieldToNumber = (sex) => {

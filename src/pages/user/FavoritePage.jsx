@@ -16,11 +16,11 @@ const FavoritePage = () => {
       try {
         setLoading(true);
         const response = await profileApi.getFavoritePosts();
-        console.log(response);
+        // console.log(response);
 
-        if (response.length > 0) {
+        if (response.success) {
           // Map API response to PropertyCard format
-          const mappedFavorites = response.map(post => ({
+          const mappedFavorites = response.data.map(post => ({
             id: post.postId,
             title: post.title,
             description: post.description,
