@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Result, Button, Spin, Alert, message } from 'antd';
 import { CheckCircleOutlined, LoadingOutlined } from '@ant-design/icons';
@@ -13,16 +13,17 @@ const PremiumPaymentPage = () => {
   const [hasProcessed, setHasProcessed] = useState(false); // Prevent multiple processing
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const dispatch = useDispatch();
+  const [profile, setProfile] = useState(null);
   // const { profile } = useSelector(state => state.user);
 
   // Redirect to login if not authenticated
   useEffect(() => {
     const checkAuth = async () => {
-      const profile = await profileApi.getProfile();
-      if (!profile) {
+      const profileRes = await profileApi.getProfile();
+      if (!profileRes) {
         message.warning('Vui lòng đăng nhập để xem trạng thái thanh toán');
         navigate('/login', { state: { from: '/premium/payment' } });
+        setProfile(profileRes);
       }
     };
     checkAuth();

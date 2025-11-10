@@ -23,7 +23,7 @@ const PaymentDetailSection = () => {
       price: '30,000đ',
       period: '1 tháng',
       amount: 30000,
-      subscriptionId: 1,
+      SubcriptionId: 1,
       features: [
         'Tính năng tìm bạn ở ghép',
         'Có thể nhận tin trực tiếp trong hệ thống (chatbot)',
