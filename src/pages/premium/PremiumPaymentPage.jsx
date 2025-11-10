@@ -14,7 +14,7 @@ const PremiumPaymentPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [profile, setProfile] = useState(null);
-  // const { profile } = useSelector(state => state.user);
+  const dispatch = useDispatch();
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -24,10 +24,11 @@ const PremiumPaymentPage = () => {
         message.warning('Vui lòng đăng nhập để xem trạng thái thanh toán');
         navigate('/login', { state: { from: '/premium/payment' } });
         setProfile(profileRes);
+        dispatch(setUserProfile(profileRes));
       }
     };
     checkAuth();
-  }, [navigate]);
+  }, [navigate, dispatch]);
 
   useEffect(() => {
     const checkPaymentStatus = async () => {
@@ -97,11 +98,9 @@ const PremiumPaymentPage = () => {
       }
     };
 
-    if (profile) {
-      checkPaymentStatus();
-    }
+    checkPaymentStatus();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profile]);
+  }, [searchParams]);
 
   const handleRetry = () => {
     // Redirect to premium page to try payment again
