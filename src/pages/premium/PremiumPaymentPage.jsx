@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Result, Button, Spin, Alert, message } from 'antd';
 import { CheckCircleOutlined, LoadingOutlined } from '@ant-design/icons';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { PAYMENT_CONSTANTS } from '../../constants/payment.constant';
 import { setUserProfile } from '../../redux/features/user.slice';
 import { profileApi } from '../../api/profile.api';
@@ -14,15 +14,19 @@ const PremiumPaymentPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const dispatch = useDispatch();
-  const { profile } = useSelector(state => state.user);
+  // const { profile } = useSelector(state => state.user);
 
   // Redirect to login if not authenticated
   useEffect(() => {
-    if (!profile) {
-      message.warning('Vui lòng đăng nhập để xem trạng thái thanh toán');
-      navigate('/login', { state: { from: '/premium/payment' } });
-    }
-  }, [profile, navigate]);
+    const checkAuth = async () => {
+      const  profile  = await profileApi.getProfile();
+      if (!profile) {
+        message.warning('Vui lòng đăng nhập để xem trạng thái thanh toán');
+        navigate('/login', { state: { from: '/premium/payment' } });
+      }
+    };
+    checkAuth();
+  }, [navigate]);
 
   useEffect(() => {
     const checkPaymentStatus = async () => {
