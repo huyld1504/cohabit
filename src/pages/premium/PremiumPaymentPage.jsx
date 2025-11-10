@@ -19,7 +19,7 @@ const PremiumPaymentPage = () => {
   // Redirect to login if not authenticated
   useEffect(() => {
     const checkAuth = async () => {
-      const  profile  = await profileApi.getProfile();
+      const profile = await profileApi.getProfile();
       if (!profile) {
         message.warning('Vui lòng đăng nhập để xem trạng thái thanh toán');
         navigate('/login', { state: { from: '/premium/payment' } });
