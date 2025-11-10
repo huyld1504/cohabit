@@ -23,7 +23,7 @@ const PaymentDetailSection = () => {
       price: '30,000đ',
       period: '1 tháng',
       amount: 30000,
-      SubcriptionId: 1,
+      subscriptionId: 1,
       features: [
         'Tính năng tìm bạn ở ghép',
         'Có thể nhận tin trực tiếp trong hệ thống (chatbot)',
@@ -71,7 +71,7 @@ const PaymentDetailSection = () => {
       const paymentData = {
         amount: currentPlan.amount,
         description,
-        subscriptionId: currentPlan.subscriptionId,
+        SubcriptionId: currentPlan.subscriptionId,
         returnUrl: `${API_CONSTANTS.API_URL}/v1/Payment/update-status`,
         cancelUrl: `${API_CONSTANTS.API_URL}/v1/Payment/update-status`
       };
