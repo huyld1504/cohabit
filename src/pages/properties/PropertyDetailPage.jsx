@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Layout, Row, Col, Button, Space } from 'antd';
-import { HeartOutlined, HeartFilled } from '@ant-design/icons';
+import { HeartOutlined, HeartFilled, ArrowLeftOutlined } from '@ant-design/icons';
 import ImageGallery from '../../components/properties/detail/ImageGallery';
 import PropertyTabs from '../../components/properties/detail/PropertyTabs';
 import BookingSection from '../../components/properties/detail/BookingSection';
+import FeedbackSection from '../../components/properties/detail/FeedbackSection';
 import { interiorBedroom } from '../../assets';
 import { postApi } from '../../api/post.api';
 import { profileApi } from '../../api/profile.api';
@@ -14,6 +15,7 @@ const { Content } = Layout;
 
 const PropertyDetailPage = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { toggleFavorite, isFavorited, setFavoriteStatus } = useFavorites();
   const [property, setProperty] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -93,6 +95,17 @@ const PropertyDetailPage = () => {
   return (
     <Layout className="min-h-screen bg-white">
       <Content className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+        {/* Navigation */}
+        <div className="mb-4">
+          <Button
+            icon={<ArrowLeftOutlined />}
+            onClick={() => navigate('/properties')}
+            className="flex items-center gap-2 hover:bg-gray-50 mb-4"
+          >
+            Quay lại danh sách
+          </Button>
+        </div>
+
         {/* Header Section */}
         <div className="mb-4 sm:mb-6">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-4">
@@ -138,6 +151,11 @@ const PropertyDetailPage = () => {
             </div>
           </Col>
         </Row>
+
+        {/* Full Width Feedback Section */}
+        <div className="w-full mt-8">
+          <FeedbackSection postId={id} />
+        </div>
       </Content>
     </Layout>
   );

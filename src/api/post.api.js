@@ -14,7 +14,9 @@ const POST_API_ROUTES = {
     UPDATE_FURNITURE: (postId) => `Post/furniture/${postId}`,
     SEARCH_POSTS: (params) => {
         return `/Post/search?${params}`;
-    }
+    },
+    GET_POST_FEEDBACK: (postId) => `/Post/feedback/${postId}`,
+    ADD_FEEDBACK: '/Post/feedback'
 };
 
 export const postApi = {
@@ -39,5 +41,25 @@ export const postApi = {
     searchPost: async (params) => {
         const paramsURL = new URLSearchParams(params).toString();
         return callAPI('GET', POST_API_ROUTES.SEARCH_POSTS(paramsURL));
-    }
+    },
+    getPostFeedback: async (postId, params = {}) => {
+        // Build query parameters including currentPage, pageSize, rating
+        const queryParams = new URLSearchParams();
+
+        if (params.currentPage || params.page) {
+            queryParams.append('currentPage', params.currentPage || params.page);
+        }
+        if (params.pageSize) {
+            queryParams.append('pageSize', params.pageSize);
+        }
+        if (params.rating) {
+            queryParams.append('rating', params.rating);
+        }
+
+        const queryString = queryParams.toString();
+        const url = queryString ? `${POST_API_ROUTES.GET_POST_FEEDBACK(postId)}?${queryString}` : POST_API_ROUTES.GET_POST_FEEDBACK(postId);
+
+        return callAPI('GET', url);
+    },
+    addFeedback: async (feedbackData) => callAPI('POST', POST_API_ROUTES.ADD_FEEDBACK, feedbackData),
 };
