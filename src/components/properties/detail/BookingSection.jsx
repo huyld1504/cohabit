@@ -4,6 +4,7 @@ import { MessageOutlined, CalendarOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useRole } from '../../../hooks/useRole';
 import { useChatContext } from '../../../contexts/ChatContext';
+import { orderApi } from '../../../api/order.api';
 
 const BookingSection = ({ property }) => {
   const navigate = useNavigate();
@@ -33,9 +34,14 @@ const BookingSection = ({ property }) => {
     try {
       setIsCreatingConversation(true);
       console.log('🆕 Creating conversation for post:', property.id);
+      console.log('🆕 Creating conversation and order for post:', property.id);
 
-      // Create or get existing conversation
-      const conversation = await createOrGetConversation(property.id);
+      // Create or get existing conversation and create order simultaneously
+      const [conversation, orderResult] = await Promise.allSettled([
+        createOrGetConversation(property.id),
+        orderApi.createOrder(property.id)
+      ]);
+      console.log(orderResult);
 
       if (conversation) {
         console.log('✅ Conversation created:', conversation.conversationId);
@@ -47,7 +53,7 @@ const BookingSection = ({ property }) => {
         message.error('Không thể tạo cuộc trò chuyện. Vui lòng thử lại.');
       }
     } catch (error) {
-      console.error('❌ Error creating conversation:', error);
+      console.error('❌ Error in handleConfirmRental:', error);
       message.error('Có lỗi xảy ra. Vui lòng thử lại sau.');
     } finally {
       setIsCreatingConversation(false);

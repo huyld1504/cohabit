@@ -36,6 +36,7 @@ import RentedPostsPage from "../pages/user-posts/RentedPostsPage";
 import RentalManagementPage from "../pages/user-posts/RentalManagementPage";
 import ChatPage from "../pages/chat/ChatPage";
 import ContractsPage from "../pages/contracts/ContractsPage";
+import ComingSoonPage from "../pages/ComingSoonPage";
 
 // layouts
 import UserPostLayout from "../components/layouts/UserPostLayout";
@@ -78,6 +79,11 @@ export const router = createBrowserRouter([
           {
             path: "contracts",
             element: <ContractsPage />,
+          },
+          // Coming Soon - public access
+          {
+            path: "coming-soon",
+            element: <ComingSoonPage />,
           },
         ]
       },

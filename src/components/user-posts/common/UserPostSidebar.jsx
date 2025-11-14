@@ -40,15 +40,15 @@ const UserPostSidebar = ({ collapsed, setCollapsed }) => {
       label: 'Bài đăng của tôi',
     },
     {
-      key: '/user/rentals',
+      key: '/coming-soon',
       icon: <HomeOutlined />,
       label: 'Quản lí nhà trọ',
     },
-    {
-      key: '/user/terms',
-      icon: <FileTextOutlined />,
-      label: 'Điều khoản cho bài đăng',
-    },
+    // {
+    //   key: '/user/terms',
+    //   icon: <FileTextOutlined />,
+    //   label: 'Điều khoản cho bài đăng',
+    // },
     {
       key: '/user/posts/rented',
       icon: <CheckCircleOutlined />,
