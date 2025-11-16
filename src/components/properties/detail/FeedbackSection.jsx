@@ -66,7 +66,7 @@ const FeedbackSection = ({ postId }) => {
       }
     } catch (error) {
       console.error('Error loading feedbacks:', error);
-      message.error('Không thể tải đánh giá');
+      // message.error('Không thể tải đánh giá');
     } finally {
       setLoading(false);
     }
