@@ -50,11 +50,11 @@ const ComingSoonPage = () => {
             <div className="w-16 h-16 bg-blue-500 rounded-full mx-auto flex items-center justify-center mb-6">
               <span className="text-2xl">🚀</span>
             </div>
-            
+
             <Title level={1} className="!text-3xl md:!text-4xl !font-bold !text-gray-800 !mb-4">
               Tính Năng Mới Sắp Ra Mắt
             </Title>
-            
+
             <Text className="text-lg text-gray-600">
               Chúng tôi đang phát triển những tính năng tuyệt vời cho bạn.
             </Text>
@@ -67,7 +67,7 @@ const ComingSoonPage = () => {
                 <Text className="text-gray-600 block">
                   Nhập email để nhận thông báo khi ra mắt:
                 </Text>
-                
+
                 <div className="flex gap-2">
                   <Input
                     size="large"

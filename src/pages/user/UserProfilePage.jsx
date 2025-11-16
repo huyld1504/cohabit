@@ -1,5 +1,5 @@
 import { Avatar, List, Divider } from 'antd';
-import { UserOutlined, HistoryOutlined, HeartOutlined, LogoutOutlined } from '@ant-design/icons';
+import { UserOutlined, HistoryOutlined, HeartOutlined, LogoutOutlined, MessageOutlined } from '@ant-design/icons';
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, Outlet } from 'react-router-dom';
@@ -49,6 +49,7 @@ const UserProfilePage = () => {
             dataSource={[
               { key: 'settings', label: 'Hồ sơ của tôi', icon: <UserOutlined className="mr-2 text-xl" /> },
               { key: 'history', label: 'Lịch sử', icon: <HistoryOutlined className="mr-2 text-xl" /> },
+              { key: 'order-history', label: 'Lịch sử liên hệ', icon: <MessageOutlined className="mr-2 text-xl text-green-500" /> },
               { key: 'favorite', label: 'Yêu thích', icon: <HeartOutlined className="mr-2 text-xl text-pink-500" /> },
             ]}
             renderItem={item => (

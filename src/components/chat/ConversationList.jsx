@@ -40,6 +40,7 @@ const ConversationList = ({ onSelectConversation }) => {
     const query = searchQuery.toLowerCase();
     return (
       conv.postTitle?.toLowerCase().includes(query) ||
+      conv.postAddress?.toLowerCase().includes(query) ||
       conv.ownerName?.toLowerCase().includes(query) ||
       conv.interestedUserName?.toLowerCase().includes(query)
     );
@@ -152,6 +153,18 @@ const ConversationList = ({ onSelectConversation }) => {
                       )}
                     </div>
 
+                    {/* Post Title - Below User Name */}
+                    <p className="text-sm text-blue-600 truncate mb-1 font-medium">
+                      {conversation.postTitle}
+                    </p>
+
+                    {/* Post Address - Below Post Title */}
+                    {conversation.postAddress && (
+                      <p className="text-xs text-gray-500 truncate mb-1">
+                        {conversation.postAddress}
+                      </p>
+                    )}
+
                     {/* Last Message */}
                     <div className="flex items-center justify-between">
                       <p className={`text-[13px] truncate flex-1 ${unreadCount > 0 ? 'font-medium text-gray-900' : 'text-gray-500'}`}>
@@ -167,11 +180,6 @@ const ConversationList = ({ onSelectConversation }) => {
                         </div>
                       )}
                     </div>
-
-                    {/* Post Title - Subtle */}
-                    <p className="text-[11px] text-gray-400 truncate mt-0.5">
-                      {conversation.postTitle}
-                    </p>
                   </div>
                 </div>
               );

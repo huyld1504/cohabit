@@ -1,72 +1,77 @@
 import React, { useState, useEffect } from 'react';
-import { Spin, Empty, Row, Col } from 'antd';
+import { Spin, Empty, Row, Col, message, Pagination, Button } from 'antd';
+import { orderApi } from '../../../api/order.api';
 import RentedPostCard from './RentedPostCard';
 
 const RentedPostsList = () => {
   const [rentedPosts, setRentedPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [pagination, setPagination] = useState({
+    currentPage: 1,
+    pageSize: 10,
+    totalCount: 0,
+    totalPages: 0
+  });
 
-  // Mock data - replace with real API call
-  useEffect(() => {
-    const fetchRentedPosts = async () => {
-      try {
-        setLoading(true);
+  // Load rented posts from API
+  const fetchRentedPosts = async (page = 1, size = 10) => {
+    try {
+      setLoading(true);
+      const response = await orderApi.getOwnerOrders(page, size);
+      console.log('Owner Orders Response:', response);
 
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
-
-        const mockData = [
-          {
-            id: 1,
-            title: 'Phòng trọ 20m² gần ĐH Bách Khoa',
-            price: 2500000,
-            address: 'Hẻm 494 CMT8, P.11, Q.3, TP.HCM',
-            image: '/images/room1.jpg',
-            renter: {
-              name: 'Nguyễn Văn A',
-              phone: '0901234567',
-              message: 'Tôi cần thuê phòng để ở thể gia đình vào tuần sau.',
-            },
-            rentStartDate: '2024-12-07T00:00:00.000Z',
+      if (response.success && response.data) {
+        // Map API data to component format
+        const mappedPosts = (response.data.items || []).map(order => ({
+          id: order.postId,
+          orderId: order.orderId,
+          title: order.postTitle,
+          address: order.postAddress,
+          image: '/images/room1.jpg', // Default image, có thể cập nhật sau
+          renter: {
+            name: order.userName,
+            message: `Đã liên hệ thuê phòng`,
           },
-          {
-            id: 2,
-            title: 'Căn hộ mini 25m² full nội thất',
-            price: 3200000,
-            address: '123 Lê Văn Sỹ, P.14, Q.3, TP.HCM',
-            image: '/images/room2.jpg',
-            renter: {
-              name: 'Trần Thị B',
-              phone: '0907654321',
-              message: 'Em muốn thuê phòng ở lâu dài, có thể gia hạn hợp đồng.',
-            },
-            rentStartDate: '2024-11-15T00:00:00.000Z',
-          },
-          {
-            id: 3,
-            title: 'Phòng studio 30m² view đẹp',
-            price: 4500000,
-            address: '456 Nguyễn Trãi, P.8, Q.5, TP.HCM',
-            image: '/images/room3.jpg',
-            renter: {
-              name: 'Lê Minh C',
-              phone: '0912345678',
-              message: 'Anh cần phòng để ở một mình, yên tĩnh để làm việc.',
-            },
-            rentStartDate: '2024-10-20T00:00:00.000Z',
-          }
-        ];
+          rentStartDate: order.createdAt,
+          conversationId: order.conversationId,
+          ownerId: order.ownerId,
+          userId: order.userId
+        }));
 
-        setRentedPosts(mockData);
-      } catch (error) {
-        console.error('Error fetching rented posts:', error);
-      } finally {
-        setLoading(false);
+        setRentedPosts(mappedPosts);
+        setPagination({
+          currentPage: response.data.currentPage || 1,
+          pageSize: response.data.pageSize || 10,
+          totalCount: response.data.totalCount || 0,
+          totalPages: response.data.totalPages || 0
+        });
+
+        console.log('Pagination set to:', {
+          currentPage: response.data.currentPage || 1,
+          pageSize: response.data.pageSize || 10,
+          totalCount: response.data.totalCount || 0,
+          totalPages: response.data.totalPages || 0
+        });
+      } else {
+        setRentedPosts([]);
       }
-    };
+    } catch (error) {
+      console.error('Error fetching rented posts:', error);
+      message.error('Không thể tải danh sách bài đăng đã được thuê. Vui lòng thử lại!');
+      setRentedPosts([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchRentedPosts();
   }, []);
+
+  // Handle pagination change
+  const handlePageChange = (page, pageSize) => {
+    fetchRentedPosts(page, pageSize);
+  };
 
   if (loading) {
     return (
@@ -81,9 +86,15 @@ const RentedPostsList = () => {
       <div className="py-12">
         <Empty
           description={
-            <span className="text-gray-500">
-              Chưa có bài đăng nào được thuê
-            </span>
+            <div>
+              <div className="text-gray-400 text-6xl mb-4">🏠</div>
+              <span className="text-gray-500">
+                Chưa có bài đăng nào được thuê
+              </span>
+              <p className="text-gray-400 text-sm mt-2">
+                Các bài đăng của bạn chưa có ai liên hệ thuê
+              </p>
+            </div>
           }
           className="text-gray-500"
         />
@@ -93,35 +104,56 @@ const RentedPostsList = () => {
 
   return (
     <div className="space-y-4">
-      <Row gutter={[0, 16]}>
-        {rentedPosts.map((post) => (
-          <Col span={24} key={post.id}>
-            <RentedPostCard post={post} />
-          </Col>
-        ))}
-      </Row>
+      <style jsx>{`
+        .custom-pagination .ant-pagination-item {
+          border-radius: 6px;
+          border: 1px solid #e5e7eb;
+        }
+        .custom-pagination .ant-pagination-item-active {
+          background: #3b82f6;
+          border-color: #3b82f6;
+        }
+        .custom-pagination .ant-pagination-item-active a {
+          color: white;
+        }
+        .custom-pagination .ant-pagination-options-size-changer {
+          margin-left: 16px;
+        }
+        .custom-pagination .ant-pagination-jump-prev,
+        .custom-pagination .ant-pagination-jump-next {
+          border-radius: 6px;
+        }
+      `}</style>
 
-      {/* Stats */}
-      <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-        <div className="flex justify-between items-center text-sm">
-          <span className="text-gray-700">
-            Tổng bài đăng đã cho thuê:
-          </span>
-          <span className="text-blue-600 font-semibold">
-            {rentedPosts.length} bài đăng
-          </span>
-        </div>
-        <div className="flex justify-between items-center text-sm mt-2">
-          <span className="text-gray-700">
-            Tổng doanh thu ước tính/tháng:
-          </span>
-          <span className="text-green-600 font-semibold">
-            {new Intl.NumberFormat('vi-VN').format(
-              rentedPosts.reduce((total, post) => total + post.price, 0)
-            )}đ
-          </span>
-        </div>
+      {/* Posts List */}
+      <div className="space-y-3">
+        <Row gutter={[0, 12]}>
+          {rentedPosts.map((post) => (
+            <Col span={24} key={post.orderId || post.id}>
+              <RentedPostCard post={post} />
+            </Col>
+          ))}
+        </Row>
       </div>
+
+      {/* Pagination */}
+      {rentedPosts.length > 0 && (
+        <div className="mt-6 pt-4 border-t border-gray-100">
+          {/* Simple Pagination */}
+          <div className="flex justify-end">
+            <Pagination
+              current={pagination.currentPage}
+              total={Math.max(pagination.totalCount, 1)}
+              pageSize={pagination.pageSize}
+              onChange={(page) => handlePageChange(page, pagination.pageSize)}
+              showSizeChanger={false}
+              showQuickJumper={false}
+              showTotal={false}
+              className="simple-pagination"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

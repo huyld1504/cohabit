@@ -142,7 +142,14 @@ const ChatWindow = ({ onBack }) => {
         </div>
         <div className="ml-3 flex-1 min-w-0">
           <h3 className="font-semibold text-gray-900 text-[15px]">{otherUserName}</h3>
-          <p className="text-xs text-gray-500 truncate">{currentConversation?.postTitle}</p>
+          <p className="text-base text-blue-600 truncate font-medium">
+            {currentConversation?.postTitle}
+          </p>
+          {currentConversation?.postAddress && (
+            <p className="text-sm text-gray-500 truncate">
+              {currentConversation?.postAddress}
+            </p>
+          )}
         </div>
 
       </div>
@@ -164,8 +171,16 @@ const ChatWindow = ({ onBack }) => {
               />
             </div>
             <h3 className="text-lg font-semibold text-gray-900 mb-1">{otherUserName}</h3>
+            <p className="text-lg text-blue-600 mb-2 font-medium">
+              {currentConversation?.postTitle}
+            </p>
+            {currentConversation?.postAddress && (
+              <p className="text-base text-gray-600 mb-2">
+                {currentConversation?.postAddress}
+              </p>
+            )}
             <p className="text-sm text-gray-500 mb-4">
-              Bạn đang kết nối về: {currentConversation?.postTitle}
+              Bạn đang kết nối về bài đăng này
             </p>
             <p className="text-xs text-gray-400">
               Hãy bắt đầu cuộc trò chuyện với một tin nhắn thân thiện
