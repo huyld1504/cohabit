@@ -19,6 +19,7 @@
     "axios": "^1.12.2",
     "dayjs": "^1.11.18",
     "dompurify": "^3.2.6",
+    "js-cookie": "^3.0.5",
     "prop-types": "^15.8.1",
     "query-string": "^9.3.1",
     "quill": "^2.0.3",

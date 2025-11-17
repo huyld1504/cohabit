@@ -24,6 +24,7 @@ import { removeToken } from '../../utils/token.store.util';
 import { toast } from 'react-toastify';
 import { USER_ROLES } from '../../constants/roles.constant';
 import { useChatContext } from '../../contexts/ChatContext';
+import Cookies from 'js-cookie';
 
 const Header = ({ variant = 'default' }) => {
   const { profile } = useSelector(state => state.user);
@@ -49,7 +50,8 @@ const Header = ({ variant = 'default' }) => {
       dispatch(clearUserData());
       // Show success message
       toast.success('Đăng xuất thành công!');
-
+      Cookies.remove('AccessToken');
+      Cookies.remove('refresh_token');
       setTimeout(() => window.location.href = '/', 1000);
       clearTimeout();
 
