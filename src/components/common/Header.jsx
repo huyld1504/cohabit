@@ -25,6 +25,7 @@ import { toast } from 'react-toastify';
 import { USER_ROLES } from '../../constants/roles.constant';
 import { useChatContext } from '../../contexts/ChatContext';
 import Cookies from 'js-cookie';
+import { authAPI } from '../../api/auth.api';
 
 const Header = ({ variant = 'default' }) => {
   const { profile } = useSelector(state => state.user);
@@ -41,17 +42,15 @@ const Header = ({ variant = 'default' }) => {
     return userProfile?.fullName || userProfile?.name || 'User';
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     try {
-      // Clear token from storage
-      removeToken();
-      // Clear Redux state
       dispatch(logout());
       dispatch(clearUserData());
-      // Show success message
-      toast.success('Đăng xuất thành công!');
-      Cookies.remove('AccessToken');
-      Cookies.remove('refresh_token');
+      const logoutRes = await authAPI.logout();
+      removeToken();
+      if (logoutRes.success) {
+        toast.success(logoutRes.message);
+      }
       setTimeout(() => window.location.href = '/', 1000);
       clearTimeout();
 
