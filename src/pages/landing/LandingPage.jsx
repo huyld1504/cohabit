@@ -1,5 +1,6 @@
 import React from 'react';
-import { HeroSection, ServicesSection, MissionSection, VisionSection } from '../../components/landing';
+import { HeroSection, ServicesSection, MissionSection } from '../../components/landing';
+import AppFeedbackSection from '../../components/landing/VisionSection';
 
 const LandingPage = () => {
   return (
@@ -7,7 +8,7 @@ const LandingPage = () => {
       <HeroSection />
       <ServicesSection />
       <MissionSection />
-      <VisionSection />
+      <AppFeedbackSection />
     </div>
   );
 };

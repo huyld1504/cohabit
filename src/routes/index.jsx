@@ -37,6 +37,7 @@ import RentalManagementPage from "../pages/user-posts/RentalManagementPage";
 import ChatPage from "../pages/chat/ChatPage";
 import ContractsPage from "../pages/contracts/ContractsPage";
 import ComingSoonPage from "../pages/ComingSoonPage";
+import FeedbackListPage from "../pages/feedback/FeedbackListPage";
 
 // layouts
 import UserPostLayout from "../components/layouts/UserPostLayout";
@@ -84,6 +85,11 @@ export const router = createBrowserRouter([
           {
             path: "coming-soon",
             element: <ComingSoonPage />,
+          },
+          // Feedbacks - public access
+          {
+            path: "feedbacks",
+            element: <FeedbackListPage />,
           },
         ]
       },
