@@ -1,6 +1,7 @@
 import { Layout } from 'antd';
 import { Outlet } from 'react-router-dom';
 import { Footer, Header } from '../common';
+import FloatingChatButton from '../chat/FloatingChatButton';
 import { Content } from 'antd/es/layout/layout';
 
 const MainLayout = () => {
@@ -11,6 +12,9 @@ const MainLayout = () => {
         <Outlet />
       </Content>
       <Footer />
+
+      {/* AI Chat Assistant */}
+      <FloatingChatButton />
     </Layout>
   );
 };

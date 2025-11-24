@@ -1,104 +1,69 @@
-import React, { useState } from 'react';
-import { Card } from 'antd';
-import { toast } from 'react-toastify';
+import React, { useState, useEffect } from 'react';
+import { Card, message } from 'antd';
 import AdminPaper from '../../components/admin/AdminPaper';
-import {
-  RentalStats,
-  RentalToolbar,
-  RentalTable
-} from '../../components/admin/rental-history';
-import { mockRentalData, mockRentalStats } from '../../components/admin/rental-history/mockData';
+import { PaymentTable } from '../../components/admin/payment-management';
+import { paymentAPI } from '../../api/payment.api';
 
 const RentalHistoryPage = () => {
-  const [rentals, setRentals] = useState(mockRentalData);
+  const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [searchText, setSearchText] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [dateRange, setDateRange] = useState(null);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [pagination] = useState({
-    current: 1,
-    pageSize: 10,
-    total: mockRentalData.length,
-  });
 
-  // Filter rentals based on search text, status, and date range
-  const filteredRentals = rentals.filter(rental => {
-    // Search filter
-    const matchesSearch = searchText === '' ||
-      rental.id.toLowerCase().includes(searchText.toLowerCase()) ||
-      rental.customer.name.toLowerCase().includes(searchText.toLowerCase()) ||
-      rental.customer.email.toLowerCase().includes(searchText.toLowerCase()) ||
-      rental.room.toLowerCase().includes(searchText.toLowerCase());
+  // Fetch payments từ API
+  const fetchPayments = async () => {
+    try {
+      setLoading(true);
+      const response = await paymentAPI.getAllPayments();
 
-    // Status filter
-    const matchesStatus = statusFilter === 'all' ||
-      rental.status.toLowerCase() === statusFilter.toLowerCase() ||
-      (statusFilter === 'active' && rental.status === 'Đang thuê') ||
-      (statusFilter === 'completed' && rental.status === 'Hoàn thành') ||
-      (statusFilter === 'cancelled' && rental.status === 'Đã hủy');
+      if (response) {
+        // Sử dụng response trực tiếp từ API
+        const paymentsWithKey = response.map((payment, index) => ({
+          ...payment,
+          key: payment.subcriptionId || index // Thêm key để Table hoạt động
+        }));
 
-    return matchesSearch && matchesStatus;
-  });
-
-  const handleFilter = () => {
-    toast.info('Đã áp dụng bộ lọc');
-  };
-
-  const handleExport = () => {
-    toast.info('Tính năng xuất Excel đang được phát triển');
+        setPayments(paymentsWithKey);
+      }
+    } catch (error) {
+      console.error('Error fetching payments:', error);
+      message.error('Không thể tải danh sách thanh toán');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleView = (record) => {
-    console.log('View rental:', record);
-    toast.info(`Xem chi tiết đơn thuê ${record.id}`);
+    console.log('View payment:', record);
+    message.info(`Xem chi tiết thanh toán SUB${record.subcriptionId}`);
   };
 
   const handleEdit = (record) => {
-    console.log('Edit rental:', record);
-    toast.info(`Chỉnh sửa đơn thuê ${record.id}`);
+    console.log('Edit payment:', record);
+    message.info(`Chỉnh sửa thanh toán SUB${record.subcriptionId}`);
   };
 
   const handleDelete = (record) => {
-    console.log('Delete rental:', record);
-    setRentals(rentals.filter(rental => rental.id !== record.id));
-    toast.success(`Đã xóa đơn thuê ${record.id}`);
+    console.log('Delete payment:', record);
+    setPayments(payments.filter(payment => payment.key !== record.key));
+    message.success(`Đã xóa thanh toán ${record.subcriptionId}`);
   };
 
-  return (
+  // Load data khi component mount
+  useEffect(() => {
+    fetchPayments();
+  }, []); return (
     <AdminPaper
-      title="Lịch sử thuê"
-      subtitle="Quản lý lịch sử thuê phòng trọ"
+      title="Quản lý thanh toán"
+      subtitle="Quản lý các giao dịch thanh toán premium"
     >
-      {/* Statistics Cards */}
-      <RentalStats
-        totalRentals={mockRentalStats.totalRentals}
-        activeRentals={mockRentalStats.activeRentals}
-        availableRooms={mockRentalStats.availableRooms}
-        revenue={mockRentalStats.revenue}
-      />
-
       {/* Main Content */}
       <Card bordered={false}>
-        {/* Toolbar */}
-        <RentalToolbar
-          searchText={searchText}
-          onSearchChange={setSearchText}
-          statusFilter={statusFilter}
-          onStatusChange={setStatusFilter}
-          dateRange={dateRange}
-          onDateRangeChange={setDateRange}
-          onFilter={handleFilter}
-          onExport={handleExport}
-        />
-
         {/* Table */}
-        <RentalTable
-          data={filteredRentals}
+        <PaymentTable
+          data={payments}
           loading={loading}
           selectedRowKeys={selectedRowKeys}
           onSelectionChange={setSelectedRowKeys}
-          pagination={pagination}
           onView={handleView}
           onEdit={handleEdit}
           onDelete={handleDelete}

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Rate, Avatar, Button } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { UserOutlined, StarFilled } from '@ant-design/icons';
+import { UserOutlined, StarFilled, EditOutlined } from '@ant-design/icons';
+import { useSelector } from 'react-redux';
 import Slider from 'react-slick';
 import { feedbackApi } from '../../api/feedback.api';
+import FeedbackModal from '../feedback/FeedbackModal';
 import dayjs from 'dayjs';
 import 'dayjs/locale/vi';
 
@@ -12,7 +14,9 @@ dayjs.locale('vi');
 const AppFeedbackSection = () => {
   const [feedbacks, setFeedbacks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const navigate = useNavigate();
+  const user = useSelector(state => state.user.profile);
 
   const settings = {
     dots: true,
@@ -129,6 +133,15 @@ const AppFeedbackSection = () => {
     navigate('/feedbacks');
   };
 
+  const handleOpenFeedbackModal = () => {
+    setShowFeedbackModal(true);
+  };
+
+  const handleFeedbackSuccess = () => {
+    // Refresh feedbacks after successful submission
+    fetchFeedbacks();
+  };
+
   return (
     <section className="bg-gray-50 py-16 lg:py-20">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -178,18 +191,35 @@ const AppFeedbackSection = () => {
 
         {/* View More Button */}
         {feedbacks.length > 0 && (
-          <div className="text-center">
-            <Button
-              type="primary"
-              size="large"
-              onClick={handleViewMore}
-              className="bg-blue-600 hover:bg-blue-700 border-blue-600 px-8 py-2 h-12 rounded-lg font-medium"
-            >
-              Xem tất cả đánh giá
-            </Button>
+          <div className="text-center space-y-4">
+            <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+              <Button
+                type="primary"
+                size="large"
+                onClick={handleViewMore}
+                className="bg-blue-600 hover:bg-blue-700 border-blue-600 px-8 py-2 h-12 rounded-lg font-medium"
+              >
+                Xem tất cả đánh giá
+              </Button>
+              <Button
+                icon={<EditOutlined />}
+                size="large"
+                onClick={handleOpenFeedbackModal}
+                className="border-blue-600 text-blue-600 hover:bg-blue-50 px-8 py-2 h-12 rounded-lg font-medium"
+              >
+                Viết đánh giá
+              </Button>
+            </div>
           </div>
         )}
       </div>
+
+      {/* Feedback Modal */}
+      <FeedbackModal
+        visible={showFeedbackModal}
+        onClose={() => setShowFeedbackModal(false)}
+        onSuccess={handleFeedbackSuccess}
+      />
     </section>
   );
 };

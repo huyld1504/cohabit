@@ -2,7 +2,7 @@ import { callAPI } from "./axios.instance";
 
 const FEEDBACK_API_ROUTES = {
     GET_FEEDBACKS: '/AppFeedback',
-    ADD_FEEDBACK: '/Feedback'
+    ADD_FEEDBACK: '/AppFeedback'
 };
 
 export const feedbackApi = {
@@ -10,5 +10,6 @@ export const feedbackApi = {
         const queryParams = new URLSearchParams(params).toString();
         const url = queryParams ? `${FEEDBACK_API_ROUTES.GET_FEEDBACKS}?${queryParams}` : FEEDBACK_API_ROUTES.GET_FEEDBACKS;
         return callAPI('GET', url);
-    }
-}
+    },
+    createFeedback: async (feedbackData) => await callAPI('POST', FEEDBACK_API_ROUTES.ADD_FEEDBACK, feedbackData)
+};

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Rate, Avatar, Card, Typography, Spin, Empty } from 'antd';
-import { UserOutlined, StarFilled, ArrowLeftOutlined } from '@ant-design/icons';
+import { Rate, Avatar, Card, Typography, Spin, Empty, Button } from 'antd';
+import { UserOutlined, StarFilled, ArrowLeftOutlined, EditOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { feedbackApi } from '../../api/feedback.api';
+import FeedbackModal from '../../components/feedback/FeedbackModal';
 import dayjs from 'dayjs';
 import 'dayjs/locale/vi';
 
@@ -13,6 +14,7 @@ const { Title, Paragraph } = Typography;
 const FeedbackListPage = () => {
   const [feedbacks, setFeedbacks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,7 +26,7 @@ const FeedbackListPage = () => {
       setLoading(true);
       // Lấy tất cả feedback (không giới hạn pageSize)
       const response = await feedbackApi.getFeedbacks();
-      
+
       if (response?.success && response?.data) {
         setFeedbacks(response.data);
       }
@@ -44,14 +46,14 @@ const FeedbackListPage = () => {
         {/* Quote icon */}
         <div className="absolute top-0 right-0 text-blue-100">
           <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z"/>
+            <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
           </svg>
         </div>
 
         {/* Left: Avatar and User Info */}
         <div className="flex-shrink-0">
           <div className="relative">
-            <Avatar 
+            <Avatar
               size={80}
               src={feedback.avatarUrl}
               icon={!feedback.avatarUrl && <UserOutlined />}
@@ -72,17 +74,13 @@ const FeedbackListPage = () => {
               </svg>
               <span>{dayjs(feedback.createdAt).format('DD/MM/YYYY HH:mm')}</span>
             </div>
-            <div className="flex items-center">
-              <div className="w-2 h-2 bg-blue-400 rounded-full mr-2"></div>
-              <span className="text-xs text-gray-400 uppercase tracking-wide">Thành viên CoHabit</span>
-            </div>
           </div>
 
           {/* Rating */}
           <div className="flex items-center mb-4">
-            <Rate 
-              disabled 
-              defaultValue={feedback.rating} 
+            <Rate
+              disabled
+              defaultValue={feedback.rating}
               character={<StarFilled style={{ fontSize: '20px' }} />}
               className="text-yellow-400 mr-3"
             />
@@ -110,8 +108,17 @@ const FeedbackListPage = () => {
     navigate(-1);
   };
 
+  const handleOpenFeedbackModal = () => {
+    setShowFeedbackModal(true);
+  };
+
+  const handleFeedbackSuccess = () => {
+    // Refresh feedbacks after successful submission
+    fetchAllFeedbacks();
+  };
+
   // Tính toán stats
-  const averageRating = feedbacks.length > 0 
+  const averageRating = feedbacks.length > 0
     ? (feedbacks.reduce((sum, feedback) => sum + feedback.rating, 0) / feedbacks.length).toFixed(1)
     : 0;
 
@@ -125,18 +132,32 @@ const FeedbackListPage = () => {
       {/* Header */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center">
-            <button
-              onClick={handleGoBack}
-              className="mr-4 p-2 rounded-lg hover:bg-gray-50 transition-colors duration-200 flex-shrink-0"
-            >
-              <ArrowLeftOutlined className="text-xl text-gray-700" />
-            </button>
-            <div className="flex-1">
-              <Title level={2} className="!mb-2 !text-gray-900">
-                Tất cả đánh giá về CoHabit
-              </Title>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <button
+                onClick={handleGoBack}
+                className="mr-4 p-2 rounded-lg hover:bg-gray-50 transition-colors duration-200 flex-shrink-0"
+              >
+                <ArrowLeftOutlined className="text-xl text-gray-700" />
+              </button>
+              <div className="flex-1">
+                <Title level={2} className="!mb-1 !text-gray-900">
+                  Tất cả đánh giá về CoHabit
+                </Title>
+                <Paragraph className="!mb-0 text-gray-600">
+                  Khám phá những phản hồi chân thực từ cộng đồng người dùng CoHabit
+                </Paragraph>
+              </div>
             </div>
+            <Button
+              type="primary"
+              icon={<EditOutlined />}
+              size="large"
+              onClick={handleOpenFeedbackModal}
+              className="bg-blue-600 hover:bg-blue-700 border-blue-600 rounded-lg font-medium"
+            >
+              Viết đánh giá
+            </Button>
           </div>
         </div>
       </div>
@@ -187,6 +208,13 @@ const FeedbackListPage = () => {
           </div>
         )}
       </div>
+
+      {/* Feedback Modal */}
+      <FeedbackModal
+        visible={showFeedbackModal}
+        onClose={() => setShowFeedbackModal(false)}
+        onSuccess={handleFeedbackSuccess}
+      />
     </div>
   );
 };

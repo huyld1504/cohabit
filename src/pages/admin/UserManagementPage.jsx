@@ -1,228 +1,116 @@
-import { useState } from 'react';
-import {
-  Card,
-  Form,
-  Space,
-  Button
-} from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Card, message } from 'antd';
 import AdminPaper from '../../components/admin/AdminPaper';
 import {
   UserToolbar,
-  UserSelectedActions,
-  UserModal,
-  UserViewModal,
-  UserDeleteModal,
   UserTable
-} from '../../components/admin/users-management';
-import { toast } from 'react-toastify';
-import {
-  PlusOutlined,
-  DownloadOutlined
-} from '@ant-design/icons';
-import dayjs from 'dayjs';
-
-// Mock data for users
-const mockUsers = [
-  {
-    id: 1,
-    name: 'Nguyễn Văn A',
-    email: 'nguyenvana@email.com',
-    phone: '0123456789',
-    city: 'TP.HCM',
-    joinDate: '2025-07-21',
-    grade: 'Pro',
-    status: 'active',
-    avatar: null,
-  },
-  {
-    id: 2,
-    name: 'Nguyễn Văn B',
-    email: 'nguyenvanb@email.com',
-    phone: '0123456790',
-    city: 'Vũng Tàu',
-    joinDate: '2025-07-21',
-    grade: 'Plus',
-    status: 'active',
-    avatar: null,
-  },
-  {
-    id: 3,
-    name: 'Nguyễn Văn C',
-    email: 'nguyenvanc@email.com',
-    phone: '0123456791',
-    city: 'Vũng Tàu',
-    joinDate: '2025-07-21',
-    grade: 'Free',
-    status: 'active',
-    avatar: null,
-  },
-  {
-    id: 4,
-    name: 'Nguyễn Văn D',
-    email: 'nguyenvand@email.com',
-    phone: '0123456792',
-    city: 'Vũng Tàu',
-    joinDate: '2025-07-21',
-    grade: 'Pro',
-    status: 'inactive',
-    avatar: null,
-  },
-  {
-    id: 5,
-    name: 'Nguyễn Văn E',
-    email: 'nguyenvane@email.com',
-    phone: '0123456793',
-    city: 'Vũng Tàu',
-    joinDate: '2025-07-21',
-    grade: 'Plus',
-    status: 'active',
-    avatar: null,
-  },
-  {
-    id: 6,
-    name: 'Nguyễn Văn F',
-    email: 'nguyenvanf@email.com',
-    phone: '0123456794',
-    city: 'Vũng Tàu',
-    joinDate: '2025-07-21',
-    grade: 'Free',
-    status: 'active',
-    avatar: null,
-  },
-];
+} from '../../components/admin/user-management';
+import { userAPI } from '../../api/user.api';
 
 const UserManagementPage = () => {
-  const [users, setUsers] = useState(mockUsers);
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchText, setSearchText] = useState('');
+  const [roleFilter, setRoleFilter] = useState('');
+  const [sexFilter, setSexFilter] = useState('');
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [editingUser, setEditingUser] = useState(null);
-  const [isViewModalVisible, setIsViewModalVisible] = useState(false);
-  const [viewingUser, setViewingUser] = useState(null);
-  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
-  const [deletingUser, setDeletingUser] = useState(null);
-  const [form] = Form.useForm();
-  const [pagination] = useState({
-    current: 1,
+  const [pagination, setPagination] = useState({
+    currentPage: 1,
     pageSize: 10,
-    total: mockUsers.length,
+    totalCount: 0,
+    totalPages: 0
   });
 
-  // Filter users based on search text
-  const filteredUsers = users.filter(user =>
-    user.name.toLowerCase().includes(searchText.toLowerCase()) ||
-    user.email.toLowerCase().includes(searchText.toLowerCase()) ||
-    user.phone.includes(searchText)
-  );
-
-  const getGradeColor = (grade) => {
-    switch (grade) {
-      case 'Pro': return 'gold';
-      case 'Plus': return 'blue';
-      case 'Free': return 'default';
-      default: return 'default';
-    }
-  };
-
-  const getStatusColor = (status) => {
-    return status === 'active' ? 'success' : 'default';
-  };
-
-  const handleEdit = (record) => {
-    setEditingUser(record);
-    form.setFieldsValue({
-      ...record,
-      joinDate: dayjs(record.joinDate),
-    });
-    setIsModalVisible(true);
-  };
-
-  const handleDelete = (record) => {
-    console.log('handleDelete called with record:', record);
-    setDeletingUser(record);
-    setIsDeleteModalVisible(true);
-  };
-
-  const confirmDelete = () => {
-    if (deletingUser) {
-      setUsers(users.filter(user => user.id !== deletingUser.id));
-      toast.success('Đã xóa người dùng thành công');
-      setIsDeleteModalVisible(false);
-      setDeletingUser(null);
-    }
-  };
-
-  const handleView = (record) => {
-    console.log('handleView called with record:', record);
-    setViewingUser(record);
-    setIsViewModalVisible(true);
-  };
-
-  const handleSave = async (values) => {
+  // Fetch users từ API với pagination
+  const fetchUsers = async (page = 1, pageSize = 10) => {
     try {
       setLoading(true);
-      const userData = {
-        ...values,
-        joinDate: values.joinDate.format('YYYY-MM-DD'),
+      const params = {
+        CurrentPage: page,
+        PageSize: pageSize
       };
 
-      if (editingUser) {
-        // Update existing user
-        setUsers(users.map(user =>
-          user.id === editingUser.id ? { ...user, ...userData } : user
-        ));
-        toast.success('Cập nhật người dùng thành công');
-      } else {
-        // Add new user
-        const newUser = {
-          ...userData,
-          id: Date.now(),
-          avatar: null,
-        };
-        setUsers([...users, newUser]);
-        toast.success('Thêm người dùng thành công');
+      const response = await userAPI.getAllUsers(params);
+      
+      if (response && response.data) {
+        setUsers(response.data.items || []);
+        setPagination({
+          currentPage: response.data.currentPage,
+          pageSize: response.data.pageSize,
+          totalCount: response.data.totalCount,
+          totalPages: response.data.totalPages
+        });
       }
-
-      setIsModalVisible(false);
-      setEditingUser(null);
-      form.resetFields();
-    } catch {
-      toast.error('Có lỗi xảy ra, vui lòng thử lại');
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      message.error('Không thể tải danh sách người dùng');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleExport = () => {
-    toast.info('Tính năng xuất file đang được phát triển');
+  // Filter users dựa trên search và filter
+  const filteredUsers = users.filter(user => {
+    // Search filter
+    const matchesSearch = searchText === '' ||
+      (user.fullName && user.fullName.toLowerCase().includes(searchText.toLowerCase())) ||
+      (user.phone && user.phone.includes(searchText)) ||
+      (user.id && user.id.toLowerCase().includes(searchText.toLowerCase()));
+
+    // Role filter
+    const matchesRole = roleFilter === '' || user.role === roleFilter;
+
+    // Sex filter
+    const matchesSex = sexFilter === '' || user.sex === sexFilter;
+
+    return matchesSearch && matchesRole && matchesSex;
+  });
+
+  const handlePaginationChange = (page, pageSize) => {
+    fetchUsers(page, pageSize);
   };
+
+  const handleRefresh = () => {
+    setSearchText('');
+    setRoleFilter('');
+    setSexFilter('');
+    fetchUsers(1, pagination.pageSize);
+    message.success('Đã làm mới dữ liệu');
+  };
+
+  const handleAddUser = () => {
+    message.info('Tính năng thêm người dùng đang được phát triển');
+  };
+
+  const handleExport = () => {
+    message.info('Tính năng xuất Excel đang được phát triển');
+  };
+
+  const handleView = (record) => {
+    console.log('View user:', record);
+    message.info(`Xem chi tiết người dùng ${record.fullName || record.phone}`);
+  };
+
+  const handleEdit = (record) => {
+    console.log('Edit user:', record);
+    message.info(`Chỉnh sửa người dùng ${record.fullName || record.phone}`);
+  };
+
+  const handleDelete = (record) => {
+    console.log('Delete user:', record);
+    // Trong thực tế sẽ gọi API delete
+    message.success(`Đã xóa người dùng ${record.fullName || record.phone}`);
+  };
+
+  // Load data khi component mount
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
   return (
     <AdminPaper
-      title="Người dùng"
-      subtitle="Quản lý thông tin người dùng hệ thống"
-      // headerAction={
-      //   <Space>
-      //     <Button
-      //       icon={<DownloadOutlined />}
-      //       onClick={handleExport}
-      //     >
-      //       Xuất file
-      //     </Button>
-      //     <Button
-      //       type="primary"
-      //       icon={<PlusOutlined />}
-      //       onClick={() => {
-      //         setEditingUser(null);
-      //         form.resetFields();
-      //         setIsModalVisible(true);
-      //       }}
-      //     >
-      //       Thêm người dùng
-      //     </Button>
-      //   </Space>
-      // }
+      title="Quản lý người dùng"
+      subtitle="Quản lý tài khoản và thông tin người dùng"
     >
       {/* Main Content */}
       <Card bordered={false}>
@@ -230,72 +118,30 @@ const UserManagementPage = () => {
         <UserToolbar
           searchText={searchText}
           onSearchChange={setSearchText}
-          onFilter={() => toast.info('Tính năng bộ lọc đang được phát triển')}
+          roleFilter={roleFilter}
+          onRoleChange={setRoleFilter}
+          sexFilter={sexFilter}
+          onSexChange={setSexFilter}
+          onRefresh={handleRefresh}
+          onAddUser={handleAddUser}
           onExport={handleExport}
-          onAddUser={() => {
-            setEditingUser(null);
-            form.resetFields();
-            setIsModalVisible(true);
-          }}
-        />
-
-        {/* Selected Actions */}
-        <UserSelectedActions
-          selectedCount={selectedRowKeys.length}
-          onDelete={() => toast.info('Tính năng xóa nhiều đang được phát triển')}
-          onExport={() => toast.info('Tính năng xuất nhiều đang được phát triển')}
         />
 
         {/* Table */}
         <UserTable
-          users={filteredUsers}
+          data={filteredUsers}
           loading={loading}
           selectedRowKeys={selectedRowKeys}
           onSelectionChange={setSelectedRowKeys}
           pagination={pagination}
+          onPaginationChange={handlePaginationChange}
+          onView={handleView}
           onEdit={handleEdit}
           onDelete={handleDelete}
-          onView={handleView}
-          getGradeColor={getGradeColor}
         />
       </Card>
-
-      {/* User Modal */}
-      <UserModal
-        isVisible={isModalVisible}
-        editingUser={editingUser}
-        form={form}
-        loading={loading}
-        onCancel={() => {
-          setIsModalVisible(false);
-          setEditingUser(null);
-          form.resetFields();
-        }}
-        onSubmit={handleSave}
-      />
-
-      {/* View User Modal */}
-      <UserViewModal
-        isVisible={isViewModalVisible}
-        user={viewingUser}
-        onClose={() => {
-          setIsViewModalVisible(false);
-          setViewingUser(null);
-        }}
-        getGradeColor={getGradeColor}
-        getStatusColor={getStatusColor}
-      />
-
-      {/* Delete User Modal */}
-      <UserDeleteModal
-        isVisible={isDeleteModalVisible}
-        user={deletingUser}
-        onCancel={() => {
-          setIsDeleteModalVisible(false);
-          setDeletingUser(null);
-        }}
-        onConfirm={confirmDelete}
-      />
     </AdminPaper>
   );
-}; export default UserManagementPage;
+};
+
+export default UserManagementPage;
