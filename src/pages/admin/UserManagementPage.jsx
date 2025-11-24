@@ -31,7 +31,7 @@ const UserManagementPage = () => {
       };
 
       const response = await userAPI.getAllUsers(params);
-      
+
       if (response && response.data) {
         setUsers(response.data.items || []);
         setPagination({

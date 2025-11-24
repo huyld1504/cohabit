@@ -1,17 +1,17 @@
 import React from 'react';
-import { 
-  Input, 
-  Select, 
-  Button, 
-  Space, 
-  Row, 
-  Col 
+import {
+  Input,
+  Select,
+  Button,
+  Space,
+  Row,
+  Col
 } from 'antd';
-import { 
-  SearchOutlined, 
-  ReloadOutlined, 
+import {
+  SearchOutlined,
+  ReloadOutlined,
   UserAddOutlined,
-  DownloadOutlined 
+  DownloadOutlined
 } from '@ant-design/icons';
 
 const { Option } = Select;

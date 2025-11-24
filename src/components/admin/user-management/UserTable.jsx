@@ -1,17 +1,17 @@
 import React from 'react';
-import { 
-  Table, 
-  Tag, 
-  Button, 
-  Space, 
-  Avatar, 
-  Typography, 
-  Tooltip, 
-  Dropdown 
+import {
+  Table,
+  Tag,
+  Button,
+  Space,
+  Avatar,
+  Typography,
+  Tooltip,
+  Dropdown
 } from 'antd';
-import { 
-  EyeOutlined, 
-  EditOutlined, 
+import {
+  EyeOutlined,
+  EditOutlined,
   DeleteOutlined,
   MoreOutlined,
   UserOutlined,
@@ -46,13 +46,13 @@ const UserTable = ({
       'Moderator': { color: 'orange', text: 'Moderator' },
       'Admin': { color: 'red', text: 'Admin' },
     };
-    
+
     const config = roleConfig[role] || { color: 'default', text: role };
     return <Tag color={config.color}>{config.text}</Tag>;
   };
 
   const getSexIcon = (sex) => {
-    switch(sex) {
+    switch (sex) {
       case 'Male': return <ManOutlined style={{ color: '#1890ff' }} />;
       case 'Female': return <WomanOutlined style={{ color: '#eb2f96' }} />;
       default: return <UserOutlined style={{ color: '#666' }} />;
@@ -60,7 +60,7 @@ const UserTable = ({
   };
 
   const getSexText = (sex) => {
-    switch(sex) {
+    switch (sex) {
       case 'Male': return 'Nam';
       case 'Female': return 'Nữ';
       default: return 'Khác';
@@ -96,7 +96,7 @@ const UserTable = ({
       width: 250,
       render: (_, record) => (
         <div className="flex items-center gap-3">
-          <Avatar 
+          <Avatar
             src={record.avatarUrl || null}
             icon={!record.avatarUrl && <UserOutlined />}
             size={40}
@@ -153,16 +153,16 @@ const UserTable = ({
       render: (_, record) => (
         <Space size="small">
           <Tooltip title="Xem chi tiết">
-            <Button 
-              type="text" 
-              icon={<EyeOutlined />} 
+            <Button
+              type="text"
+              icon={<EyeOutlined />}
               onClick={() => onView(record)}
               size="small"
               className="text-blue-600 hover:bg-blue-50"
             />
           </Tooltip>
           <Dropdown
-            menu={{ 
+            menu={{
               items: getActionItems(record).map(item => ({
                 ...item,
                 onClick: undefined
@@ -175,9 +175,9 @@ const UserTable = ({
             trigger={['click']}
             placement="bottomRight"
           >
-            <Button 
-              type="text" 
-              icon={<MoreOutlined />} 
+            <Button
+              type="text"
+              icon={<MoreOutlined />}
               size="small"
               className="text-gray-600 hover:bg-gray-50"
             />

@@ -37,7 +37,6 @@ const FeedbackModal = ({ visible, onClose, onSuccess }) => {
         experienceScore: values.experienceScore,
         mostFavoriteFeature: values.mostFavoriteFeature
       };
-
       const response = await feedbackApi.createFeedback(feedbackData);
 
       if (response?.success) {
@@ -135,34 +134,46 @@ const FeedbackModal = ({ visible, onClose, onSuccess }) => {
             <Form.Item
               label={<span className="font-semibold">Đánh giá tổng thể về CoHabit</span>}
               name="rating"
-              rules={[{ required: true, message: 'Vui lòng chọn đánh giá!' }]}
+              rules={[
+                {
+                  required: true,
+                  message: 'Vui lòng chọn đánh giá!'
+                }
+              ]}
             >
-              <div className="text-center p-4 bg-gray-50 rounded-lg">
-                <Rate
-                  character={<StarFilled style={{ fontSize: '24px' }} />}
-                  className="text-yellow-400 text-2xl"
-                />
-                <p className="text-sm text-gray-500 mt-2">
-                  Chọn số sao để đánh giá
-                </p>
-              </div>
+              <Rate
+                character={<StarFilled style={{ fontSize: '24px' }} />}
+                className="text-yellow-400 text-2xl"
+                allowHalf={false}
+                count={5}
+                onChange={(value) => form.setFieldValue('rating', value)}
+              />
+              <p className="text-sm text-gray-500 mt-2 text-center">
+                Chọn số sao để đánh giá
+              </p>
             </Form.Item>
 
             {/* Điểm trải nghiệm */}
             <Form.Item
               label={<span className="font-semibold">Điểm trải nghiệm người dùng</span>}
               name="experienceScore"
-              rules={[{ required: true, message: 'Vui lòng chọn điểm trải nghiệm!' }]}
+              rules={[
+                {
+                  required: true,
+                  message: 'Vui lòng chọn điểm trải nghiệm!'
+                }
+              ]}
             >
-              <div className="text-center p-4 bg-gray-50 rounded-lg">
-                <Rate
-                  character={<StarFilled style={{ fontSize: '20px' }} />}
-                  className="text-orange-400"
-                />
-                <p className="text-sm text-gray-500 mt-2">
-                  Đánh giá về trải nghiệm sử dụng ứng dụng
-                </p>
-              </div>
+              <Rate
+                character={<StarFilled style={{ fontSize: '20px' }} />}
+                className="text-orange-400"
+                allowHalf={false}
+                count={5}
+                onChange={(value) => form.setFieldValue('experienceScore', value)}
+              />
+              <p className="text-sm text-gray-500 mt-2 text-center">
+                Đánh giá về trải nghiệm sử dụng ứng dụng
+              </p>
             </Form.Item>
 
             {/* Tính năng yêu thích */}

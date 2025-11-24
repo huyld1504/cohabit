@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
 import { Button, Badge } from 'antd';
 import { MessageOutlined, CloseOutlined, RobotOutlined } from '@ant-design/icons';
+import { useSelector } from 'react-redux';
 import ChatContent from './ChatContent';
 
 const FloatingChatButton = () => {
   const [chatVisible, setChatVisible] = useState(false);
   const [hasNewMessage, setHasNewMessage] = useState(true);
+  const user = useSelector(state => state.user.profile);
+  
+  // Chỉ hiển thị khi user đã đăng nhập
+  const isLoggedIn = !!user;
 
   const handleOpenChat = () => {
     setChatVisible(true);
@@ -15,6 +20,11 @@ const FloatingChatButton = () => {
   const handleCloseChat = () => {
     setChatVisible(false);
   };
+
+  // Không hiển thị nếu chưa đăng nhập
+  if (!isLoggedIn) {
+    return null;
+  }
 
   return (
     <>
