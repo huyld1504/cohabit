@@ -45,7 +45,7 @@ const AdminSidebar = ({ collapsed, setCollapsed }) => {
     {
       key: '/admin/rental-history',
       icon: <CalendarOutlined />,
-      label: <Link to="/admin/rental-history">Lịch sử thuê</Link>,
+      label: <Link to="/admin/rental-history">Quản lí thanh toán</Link>,
     },
     {
       key: '/admin/posts-management',
